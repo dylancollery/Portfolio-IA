@@ -1,0 +1,778 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>🧠 Quiz Ardoise — Par Cycles</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=DM+Sans:wght@400;600;700&display=swap" rel="stylesheet">
+<style>
+/* ── RESET ── */
+*{box-sizing:border-box;margin:0;padding:0;}
+:root{
+  --bg:#0E0E1A;--border:rgba(255,255,255,.1);--muted:rgba(255,255,255,.38);
+  --accent:#1642A8;
+}
+body{
+  font-family:'DM Sans','Segoe UI',sans-serif;
+  background:var(--bg);color:#F0EEFF;
+  min-height:100vh;display:flex;flex-direction:column;
+  -webkit-font-smoothing:antialiased;
+}
+
+/* ── SCREENS ── */
+.screen{display:none;flex-direction:column;flex:1;}
+.screen.on{display:flex;}
+
+/* ── HOME SCREEN ── */
+#s-home{
+  align-items:center;justify-content:center;gap:30px;padding:30px 20px;
+  background:linear-gradient(160deg,#0E0E1A 0%,#0A1228 100%);
+}
+#s-home h1{
+  font-family:'Bebas Neue',sans-serif;
+  font-size:clamp(52px,10vw,88px);letter-spacing:.04em;
+  text-align:center;line-height:.92;
+  background:linear-gradient(135deg,#F5C842,#F59E0B);
+  -webkit-background-clip:text;-webkit-text-fill-color:transparent;
+  text-shadow:none;
+}
+#s-home h1 span{
+  font-family:'DM Sans',sans-serif;font-size:.32em;font-weight:400;
+  -webkit-text-fill-color:rgba(255,255,255,.42);letter-spacing:.04em;display:block;
+}
+#s-home p{color:var(--muted);font-size:11pt;text-align:center;max-width:400px;line-height:1.6;}
+
+/* ── CYCLE/MAT SELECTION ── */
+#s-cycle,#s-mat{align-items:center;justify-content:center;gap:24px;padding:30px 20px;}
+#s-cycle h2,#s-mat h2{
+  font-family:'Bebas Neue',sans-serif;font-size:clamp(28px,5vw,40px);
+  letter-spacing:.06em;color:#F5C842;text-align:center;
+}
+.cycle-grid{display:flex;gap:16px;flex-wrap:wrap;justify-content:center;}
+.cycle-card{
+  width:200px;border:2px solid transparent;border-radius:18px;
+  padding:26px 16px;text-align:center;cursor:pointer;
+  transition:all .22s cubic-bezier(.34,1.56,.64,1);
+  display:flex;flex-direction:column;gap:10px;
+  box-shadow:0 6px 30px rgba(0,0,0,.35);
+}
+.cycle-card:hover{transform:translateY(-6px) scale(1.02);filter:brightness(1.12);}
+.cycle-card .cy-emoji{font-size:38pt;}
+.cycle-card .cy-title{font-family:'Bebas Neue',sans-serif;letter-spacing:.06em;font-size:1.2rem;}
+.cycle-card .cy-sub{font-size:8.5pt;opacity:.72;line-height:1.4;font-family:'DM Sans',sans-serif;}
+.c2d{background:linear-gradient(135deg,#1a4a7a,#2471a3);border-color:#3498db;}
+.c2f{background:linear-gradient(135deg,#1a5c38,#27ae60);border-color:#2ecc71;}
+.c3{background:linear-gradient(135deg,#4a1a7a,#8e44ad);border-color:#9b59b6;}
+.mat-grid{display:flex;gap:20px;flex-wrap:wrap;justify-content:center;}
+.mat-card{
+  width:220px;border:2px solid transparent;border-radius:18px;
+  padding:30px 16px;text-align:center;cursor:pointer;
+  transition:all .22s cubic-bezier(.34,1.56,.64,1);
+  box-shadow:0 6px 30px rgba(0,0,0,.35);
+}
+.mat-card:hover{transform:translateY(-6px) scale(1.02);filter:brightness(1.12);}
+.mat-card .m-emoji{font-size:44pt;}
+.mat-card .m-title{font-family:'Bebas Neue',sans-serif;letter-spacing:.06em;font-size:1.3rem;margin-top:10px;}
+.mat-card .m-sub{font-size:9pt;opacity:.72;margin-top:4px;font-family:'DM Sans',sans-serif;}
+.m-fr{background:linear-gradient(135deg,#1a2a6c,#2563eb);border-color:#3b82f6;}
+.m-ma{background:linear-gradient(135deg,#6c1a1a,#dc2626);border-color:#ef4444;}
+
+/* ── QUIZ SCREEN ── */
+#s-quiz{flex-direction:column;}
+.quiz-header{
+  background:#FEFAF2;border-top:4px solid #1642A8;border-bottom:1px solid #E0D0B8;
+  padding:10px 20px;display:flex;align-items:center;gap:14px;
+}
+.quiz-header h1{
+  font-family:'Bebas Neue','Segoe UI',sans-serif;font-size:1.5rem;letter-spacing:.06em;
+  flex:1;color:#1A1208;background:none;-webkit-text-fill-color:#1A1208;
+}
+.quiz-progress{font-size:10pt;color:#7B6A52;font-family:'DM Sans',sans-serif;}
+.quiz-score-display{
+  background:rgba(22,66,168,.1);border:1px solid rgba(22,66,168,.28);
+  border-radius:8px;padding:5px 14px;font-weight:700;color:#1642A8;
+  font-family:'Bebas Neue',sans-serif;font-size:16px;letter-spacing:.06em;
+}
+.quiz-main{flex:1;display:flex;flex-direction:column;align-items:center;justify-content:center;padding:20px;gap:18px;}
+.question-card{
+  width:100%;max-width:720px;
+  background:#12122A;border:2px solid rgba(255,255,255,.07);border-radius:20px;
+  padding:32px 30px;position:relative;min-height:200px;display:flex;flex-direction:column;justify-content:center;
+  box-shadow:0 12px 60px rgba(0,0,0,.4);
+}
+.q-type{
+  font-size:10px;font-weight:700;letter-spacing:.12em;text-transform:uppercase;
+  margin-bottom:12px;color:rgba(255,255,255,.3);font-family:'DM Sans',sans-serif;
+}
+.q-text{font-size:17pt;font-weight:700;line-height:1.5;white-space:pre-wrap;color:#F0EEFF;}
+.answer-card{
+  width:100%;max-width:720px;
+  background:rgba(16,185,129,.08);border:2px solid rgba(16,185,129,.28);
+  border-radius:18px;padding:24px 28px;display:none;
+  box-shadow:0 8px 40px rgba(0,0,0,.3);
+}
+.answer-card.show{display:block;animation:ansIn .25s ease;}
+@keyframes ansIn{from{transform:scale(.94);opacity:0;}to{transform:scale(1);opacity:1;}}
+.a-label{font-size:10px;font-weight:700;color:#6EE7B7;letter-spacing:.1em;text-transform:uppercase;margin-bottom:8px;font-family:'DM Sans',sans-serif;}
+.a-text{font-size:15pt;font-weight:700;color:#86EFAC;white-space:pre-wrap;line-height:1.5;}
+.a-tip{font-size:9.5pt;color:rgba(134,239,172,.62);margin-top:8px;font-style:italic;}
+
+/* ── TIMER ── */
+.timer-zone{width:100%;max-width:720px;}
+.timer-row{display:flex;align-items:center;gap:12px;}
+.tbar-bg{flex:1;background:rgba(255,255,255,.05);border-radius:100px;height:8px;overflow:hidden;border:none;}
+.tbar{height:100%;border-radius:100px;transition:width .2s linear;}
+.tbar.green{background:linear-gradient(90deg,#16a34a,#4ade80);}
+.tbar.orange{background:linear-gradient(90deg,#d97706,#fbbf24);}
+.tbar.red{background:linear-gradient(90deg,#dc2626,#f87171);animation:pulse-r .5s infinite alternate;}
+@keyframes pulse-r{from{opacity:1;}to{opacity:.6;}}
+.tnum{
+  font-family:'Bebas Neue',sans-serif;
+  font-size:clamp(44px,6vw,64px);line-height:.9;letter-spacing:.04em;
+  min-width:62px;text-align:center;
+}
+.tnum.urgent{color:#EF4444;}
+
+/* ── CONTROLS ── */
+.quiz-controls{display:flex;gap:12px;flex-wrap:wrap;justify-content:center;max-width:720px;}
+.btn{
+  padding:12px 26px;border:none;border-radius:12px;
+  font-family:'Bebas Neue',sans-serif;font-size:19px;letter-spacing:.08em;
+  cursor:pointer;transition:filter .15s,transform .12s;
+}
+.btn:hover{filter:brightness(1.12);}
+.btn:active{transform:scale(.95);}
+.btn-reveal{background:#F59E0B;color:#fff;}
+.btn-start{background:#22C55E;color:#fff;}
+.btn-next{background:#2563EB;color:#fff;}
+.btn-back{
+  background:rgba(255,255,255,.07);color:rgba(255,255,255,.55);
+  border:1px solid rgba(255,255,255,.1);font-size:14px;padding:8px 16px;
+  font-family:'DM Sans',sans-serif;font-weight:700;letter-spacing:.02em;
+}
+
+/* ── END SCREEN ── */
+#s-end{align-items:center;justify-content:center;gap:22px;padding:30px;}
+.end-title{
+  font-family:'Bebas Neue',sans-serif;
+  font-size:clamp(48px,8vw,72px);letter-spacing:.04em;color:#F5C842;text-align:center;
+}
+.end-score{font-family:'Bebas Neue',sans-serif;font-size:clamp(32px,5vw,44px);letter-spacing:.04em;text-align:center;}
+.end-msg{font-size:12pt;color:var(--muted);text-align:center;max-width:400px;line-height:1.5;}
+.btn-restart{
+  background:linear-gradient(135deg,#D97706,#F59E0B);color:#fff;
+  font-family:'Bebas Neue',sans-serif;font-size:22px;letter-spacing:.08em;
+  padding:15px 42px;border-radius:15px;border:none;cursor:pointer;transition:.2s;
+}
+.btn-restart:hover{filter:brightness(1.1);transform:scale(1.03);}
+.bank-info{font-size:9pt;color:var(--muted);text-align:center;}
+</style>
+</head>
+<body>
+
+<div class="screen on" id="s-home">
+  <h1>Quiz Ardoise<span>Révisions par cycles</span></h1>
+  <p>Choisissez votre niveau puis la matière.<br>Chaque élève répond sur ardoise et la lève au signal !</p>
+  <button class="btn btn-start" style="font-size:20px;padding:15px 44px;border-radius:14px;" onclick="show('s-cycle')">🎯 COMMENCER</button>
+  <button class="btn btn-back" onclick="window.location='Portail_Canicule.html'">← Retour au portail</button>
+</div>
+
+<div class="screen" id="s-cycle">
+  <div style="flex:1;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:24px;padding:30px 20px;">
+  <h2>📚 Choisissez votre niveau</h2>
+  <div class="cycle-grid">
+    <div class="cycle-card c2d" onclick="selectCycle('c2d')">
+      <div class="cy-emoji">🔵</div>
+      <div class="cy-title">CP / CE1</div>
+      <div class="cy-sub">Cycle 2 — Début<br>Nombres jusqu'à 100<br>Lecture · Sons · Accord simple</div>
+    </div>
+    <div class="cycle-card c2f" onclick="selectCycle('c2f')">
+      <div class="cy-emoji">🟢</div>
+      <div class="cy-title">CE2 / CM1</div>
+      <div class="cy-sub">Cycle 2 — Fin · Cycle 3 Début<br>Multiplication · Division<br>Conjugaison · GN · Accord</div>
+    </div>
+    <div class="cycle-card c3" onclick="selectCycle('c3')">
+      <div class="cy-emoji">🟣</div>
+      <div class="cy-title">CM1 / CM2</div>
+      <div class="cy-sub">Cycle 3<br>Fractions · Décimaux · Géométrie<br>COD/COI · Passé simple · Accord PP</div>
+    </div>
+  </div>
+  <button class="btn btn-back" onclick="show('s-home')">← Retour</button>
+  </div>
+</div>
+
+<div class="screen" id="s-mat">
+  <div style="flex:1;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:24px;padding:30px 20px;">
+  <h2 id="mat-title">📚 Choisissez la matière</h2>
+  <div class="mat-grid">
+    <div class="mat-card m-fr" onclick="startQuiz('fr')">
+      <div class="m-emoji">📝</div>
+      <div class="m-title">Français</div>
+      <div class="m-sub" id="fr-sub">Grammaire · Conjugaison · Orthographe</div>
+    </div>
+    <div class="mat-card m-ma" onclick="startQuiz('ma')">
+      <div class="m-emoji">🔢</div>
+      <div class="m-title">Mathématiques</div>
+      <div class="m-sub" id="ma-sub">Calcul · Géométrie · Mesures</div>
+    </div>
+  </div>
+  <div class="bank-info" id="bank-info"></div>
+  <button class="btn btn-back" onclick="show('s-cycle')">← Retour</button>
+  </div>
+</div>
+
+<div class="screen" id="s-quiz">
+  <div class="quiz-header">
+    <h1 id="qh-title">Quiz</h1>
+    <span class="quiz-progress" id="qh-prog"></span>
+    <span class="quiz-score-display" id="qh-score">0 ✓</span>
+    <button class="btn btn-back" onclick="show('s-mat')">← Quitter</button>
+  </div>
+  <div class="quiz-main">
+    <div class="question-card">
+      <div class="q-type" id="q-type"></div>
+      <div class="q-text" id="q-text"></div>
+    </div>
+    <div class="answer-card" id="ans-card">
+      <div class="a-label">✅ Réponse</div>
+      <div class="a-text" id="a-text"></div>
+      <div class="a-tip" id="a-tip"></div>
+    </div>
+    <div class="timer-zone">
+      <div class="timer-row">
+        <div class="tbar-bg"><div class="tbar green" id="tbar" style="width:100%;"></div></div>
+        <div class="tnum" id="tnum">–</div>
+      </div>
+    </div>
+    <div class="quiz-controls">
+      <button class="btn btn-start" id="btn-start" onclick="startTimer()">▶ Démarrer</button>
+      <button class="btn btn-reveal" onclick="revealAnswer()">👁 Révéler la réponse</button>
+      <button class="btn btn-next" onclick="nextQuestion()">⏭ Question suivante</button>
+    </div>
+  </div>
+</div>
+
+<div class="screen" id="s-end">
+  <div class="end-title">🏆 Terminé !</div>
+  <div class="end-score" id="end-score"></div>
+  <div class="end-msg" id="end-msg"></div>
+  <button class="btn-restart" onclick="show('s-cycle')">🔄 Rejouer</button>
+  <button class="btn btn-back" onclick="window.location='Portail_Canicule.html'">← Portail</button>
+</div>
+
+<script>
+// ════ BANQUES DE QUESTIONS ════════════════════════════════════════════════════
+const BANKS = {
+c2d_fr:[
+  {type:'Syllabes',t:15,q:`Combien de syllabes dans le mot :
+« ma-ri-on-net-te » ?`,a:`5 syllabes`,tip:`Compte les sons voyelles prononcés`},
+  {type:'Syllabes',t:12,q:`Combien de syllabes dans :
+« pa-pi-llon » ?`,a:`3 syllabes (pa · pi · llon)`,tip:`le ll+on fait 1 syllabe : llon`},
+  {type:'Syllabes',t:12,q:`Combien de syllabes dans :
+« feu » ?`,a:`1 syllabe`,tip:`Feu = 1 seul son voyelle → 1 syllabe`},
+  {type:'Son/Graphie',t:15,q:`Quel son fait la lettre « s » dans « maison » ?`,a:`Son [z] — entre deux voyelles, s = [z]`,tip:`Entre deux voyelles : maison, poison, raison…`},
+  {type:'Son/Graphie',t:15,q:`Comment s'écrit le son [f] dans « éléphant » ?`,a:`ph (é-lé-phant)`,tip:`Le son [f] peut s'écrire f, ff ou ph`},
+  {type:'Son/Graphie',t:15,q:`Quel son entend-on dans « in », « ain », « ein » ?
+Ex : lapin, main, plein`,a:`Le son [ɛ̃] — son nasal comme IN`,tip:`Trois graphies différentes pour le même son`},
+  {type:'Son/Graphie',t:15,q:`Quel est le son commun dans :
+« eau », « au », « o » ?`,a:`Le son [o]`,tip:`Trois façons d'écrire le même son [o]`},
+  {type:'Pluriel',t:15,q:`Mets au pluriel :
+« un chapeau »`,a:`des chapeaux`,tip:`Les mots en -eau prennent -x au pluriel`},
+  {type:'Pluriel',t:15,q:`Mets au pluriel :
+« un genou »`,a:`des genoux`,tip:`7 mots en -ou prennent -x : bijou, caillou, chou, genou, hibou, joujou, pou`},
+  {type:'Pluriel',t:15,q:`Mets au pluriel :
+« un œil »`,a:`des yeux`,tip:`Pluriel irrégulier : un œil → des yeux`},
+  {type:'Pluriel',t:15,q:`Mets au pluriel :
+« un bal »`,a:`des bals`,tip:`bal, carnaval, festival : pluriel régulier en -s`},
+  {type:'Féminin',t:15,q:`Mets au féminin :
+« un boulanger »`,a:`une boulangère`,tip:`-er → -ère : boulanger/boulangère`},
+  {type:'Féminin',t:15,q:`Mets au féminin :
+« un acteur »`,a:`une actrice`,tip:`-eur → -rice : acteur/actrice, directeur/directrice`},
+  {type:'Féminin',t:15,q:`Mets au féminin :
+« vieux »`,a:`vieille`,tip:`vieux → vieille (comme beau/belle, nouveau/nouvelle)`},
+  {type:'Féminin',t:15,q:`Mets au féminin :
+« un chanteur »`,a:`une chanteuse`,tip:`-eur → -euse : chanteur/chanteuse`},
+  {type:'Conjugaison',t:20,q:`Conjugue « chanter » au présent :
+« nous »`,a:`nous chantons`,tip:`Terminaison -ons pour nous au présent des -er`},
+  {type:'Conjugaison',t:20,q:`Conjugue « avoir » au présent :
+« ils »`,a:`ils ont`,tip:`Avoir : j'ai, tu as, il a, nous avons, vous avez, ils ont`},
+  {type:'Conjugaison',t:20,q:`Conjugue « être » au présent :
+« vous »`,a:`vous êtes`,tip:`Être : je suis, tu es, il est, nous sommes, vous êtes, ils sont`},
+  {type:'Conjugaison',t:20,q:`Conjugue « aller » au présent :
+« je »`,a:`je vais`,tip:`Aller : je vais, tu vas, il va, nous allons, vous allez, ils vont`},
+  {type:'Conjugaison',t:20,q:`Conjugue « faire » au présent :
+« nous »`,a:`nous faisons`,tip:`Faire : je fais, tu fais, il fait, nous faisons, vous faites, ils font`},
+  {type:'Conjugaison',t:20,q:`Conjugue « vouloir » au présent :
+« il »`,a:`il veut`,tip:`Vouloir : je veux, tu veux, il veut, nous voulons…`},
+  {type:'Trouver le sujet',t:20,q:`Trouve le sujet :
+« Le petit chien court dans le jardin. »`,a:`Le petit chien`,tip:`Qui est-ce qui court ? → Le petit chien`},
+  {type:'Trouver le sujet',t:20,q:`Trouve le sujet :
+« Tous les matins, Marie mange une pomme. »`,a:`Marie`,tip:`CC de temps d'abord — le sujet est Marie`},
+  {type:'Trouver le sujet',t:20,q:`Trouve le sujet :
+« Dans la forêt vivent des loups. »`,a:`des loups`,tip:`Sujet inversé : qui vit dans la forêt ? des loups`},
+  {type:'Trouver le verbe',t:20,q:`Trouve le verbe conjugué :
+« Les oiseaux chantent dans les arbres. »`,a:`chantent`,tip:`Le verbe dit ce que fait le sujet`},
+  {type:'Trouver le verbe',t:20,q:`Quel est le verbe conjugué ?
+« À sept heures, le soleil se lève. »`,a:`se lève`,tip:`Verbe pronominal : se lever — le sujet est le soleil`},
+  {type:'Accord GN',t:20,q:`Accorde le GN :
+« un (petit) garçon → deux _____ garçons »`,a:`deux petits garçons`,tip:`Adjectif masc. pl. → ajoute -s`},
+  {type:'Accord GN',t:20,q:`Accorde correctement :
+« une fille (grand) »`,a:`une grande fille`,tip:`grand → grande (on entend le D !)`},
+  {type:'Accord GN',t:20,q:`Accorde : « des arbres (vieux) »`,a:`des vieux arbres`,tip:`vieux : pas de changement au masculin pluriel`},
+  {type:'Ponctuation',t:15,q:`Quelle ponctuation manque ?
+« Est-ce que tu viens avec nous _____ »`,a:`? (point d'interrogation)`,tip:`Une question se termine par ?`},
+  {type:'Ponctuation',t:15,q:`Quelle ponctuation convient ?
+« Quel beau gâteau _____ »`,a:`! (point d'exclamation)`,tip:`L'exclamation exprime une émotion forte`},
+  {type:'Type de phrase',t:15,q:`Est-ce une phrase ou pas ?
+« Le chat noir dort. »`,a:`OUI — c'est une phrase
+(majuscule · sujet · verbe · point)`,tip:`Une phrase commence par une majuscule et se termine par un point`},
+  {type:'Type de phrase',t:15,q:`Est-ce une phrase ou pas ?
+« chien jardin court »`,a:`NON — pas de majuscule, pas de verbe conjugué`,tip:`Une phrase doit avoir un sujet ET un verbe conjugué`},
+  {type:'Ordre alphabétique',t:15,q:`Range dans l'ordre alphabétique :
+lapin, chat, âne, renard`,a:`âne, chat, lapin, renard`,tip:`Regarde la première lettre : â < c < l < r`},
+  {type:'Sens du mot',t:15,q:`Que veut dire « rapide » ?
+Donne un mot de la même famille.`,a:`Rapide = qui va vite
+Famille : rapidement, rapidité`,tip:`Cherche la base du mot : rapid-`},
+],
+c2d_ma:[
+  {type:'Addition',t:12,q:`7 + 8 = ?`,a:`15`,tip:`7+3=10, il reste 5 → 15`},
+  {type:'Soustraction',t:12,q:`15 − 7 = ?`,a:`8`,tip:`Je connais 7+8=15, donc 15−7=8`},
+  {type:'Multiplication',t:12,q:`3 × 4 = ?`,a:`12`,tip:`3×4 = 4+4+4 = 12`},
+  {type:'Table de 2',t:10,q:`2 × 7 = ?`,a:`14`,tip:`Compte de 2 en 2 : 2,4,6,8,10,12,14`},
+  {type:'Table de 5',t:10,q:`5 × 6 = ?`,a:`30`,tip:`Table de 5 : finit par 0 ou 5`},
+  {type:'Table de 10',t:10,q:`10 × 8 = ?`,a:`80`,tip:`×10 : ajoute un zéro → 80`},
+  {type:'Table de 3',t:12,q:`3 × 7 = ?`,a:`21`,tip:`3×7 = 3×5+3×2 = 15+6 = 21`},
+  {type:'Table de 4',t:12,q:`4 × 6 = ?`,a:`24`,tip:`4×6 = 4×5+4 = 20+4 = 24`},
+  {type:'Moitié',t:15,q:`Moitié de 10 = ?`,a:`5`,tip:`10÷2=5 — couper en deux parts égales`},
+  {type:'Moitié',t:15,q:`Moitié de 18 = ?`,a:`9`,tip:`18÷2=9`},
+  {type:'Double',t:12,q:`Double de 7 = ?`,a:`14`,tip:`Double = ×2 → 7×2=14`},
+  {type:'Double',t:12,q:`Double de 13 = ?`,a:`26`,tip:`13×2 = 10×2+3×2 = 20+6 = 26`},
+  {type:'Nombres',t:12,q:`Quel nombre vient juste après 99 ?`,a:`100 (cent)`,tip:`99+1=100 — on passe à la centaine`},
+  {type:'Nombres',t:12,q:`Combien de dizaines dans 47 ?`,a:`4 dizaines (et 7 unités)`,tip:`4×10=40 → 4 dizaines`},
+  {type:'Nombres',t:12,q:`Quel nombre est entre 62 et 64 ?`,a:`63`,tip:`62, 63, 64 — 63 est entre les deux`},
+  {type:'Nombres',t:12,q:`Pair ou impair : 27 ?`,a:`Impair (27=2×13+1)`,tip:`Un nombre pair se termine par 0,2,4,6,8 — impair par 1,3,5,7,9`},
+  {type:'Nombres',t:12,q:`Pair ou impair : 84 ?`,a:`Pair (84 se termine par 4)`,tip:`84÷2=42, pas de reste → pair`},
+  {type:'Comparaison',t:12,q:`Écris le bon signe < ou > :
+48 ___ 84`,a:`48 < 84`,tip:`Le signe pointe vers le plus petit`},
+  {type:'Comparaison',t:12,q:`Quel est le plus grand ?
+73 ou 37`,a:`73`,tip:`On compare les dizaines : 7 > 3`},
+  {type:'Addition posée',t:18,q:`24 + 37 = ?`,a:`61`,tip:`4+7=11 → écris 1 retiens 1 — 2+3+1=6`},
+  {type:'Soustraction',t:18,q:`40 − 16 = ?`,a:`24`,tip:`40−10=30, 30−6=24`},
+  {type:'Partage',t:15,q:`Je partage 12 bonbons en 3 parts égales.
+Combien dans chaque part ?`,a:`4 bonbons`,tip:`12÷3=4`},
+  {type:'Partage',t:15,q:`Je partage 15 images en 5 lots égaux.
+Combien par lot ?`,a:`3 images`,tip:`15÷5=3`},
+  {type:'Problème',t:20,q:`Il y a 8 filles et 7 garçons dans la cour.
+Combien d'élèves en tout ?`,a:`15 élèves`,tip:`8+7=15`},
+  {type:'Problème',t:20,q:`J'ai 20 billes. J'en perds 6.
+Combien me reste-t-il ?`,a:`14 billes`,tip:`20−6=14`},
+  {type:'Géométrie',t:15,q:`Comment s'appelle une figure
+à 3 côtés et 3 angles ?`,a:`Un triangle`,tip:`Tri = 3 en latin`},
+  {type:'Géométrie',t:15,q:`Combien de côtés a un carré ?`,a:`4 côtés (tous égaux)`,tip:`Le carré a 4 côtés égaux et 4 angles droits`},
+  {type:'Géométrie',t:15,q:`Combien de côtés a un hexagone ?`,a:`6 côtés`,tip:`Hexa = 6 en grec`},
+  {type:'Mesures',t:15,q:`Combien de centimètres
+dans 1 mètre ?`,a:`100 centimètres`,tip:`centi = 1/100 → 1m = 100cm`},
+  {type:'Mesures',t:15,q:`Combien de grammes
+dans 1 kilogramme ?`,a:`1000 grammes`,tip:`kilo = 1000 → 1kg = 1000g`},
+  {type:'Mesures',t:15,q:`Combien de minutes
+dans 1 heure ?`,a:`60 minutes`,tip:`1h = 60min, 1min = 60s`},
+  {type:'Heure',t:18,q:`Quelle heure est-il ?
+« 8 h 30 »`,a:`Huit heures trente
+(ou : huit heures et demie)`,tip:`30 minutes = une demi-heure`},
+  {type:'Heure',t:18,q:`Le film commence à 14h.
+Il dure 1h30.
+À quelle heure finit-il ?`,a:`15h30`,tip:`14h+1h=15h, +30min=15h30`},
+  {type:'Numération',t:15,q:`Écris en lettres : 57`,a:`cinquante-sept`,tip:`50 = cinquante, 7 = sept → trait d'union`},
+  {type:'Numération',t:15,q:`Décompose 85 :
+___ dizaines et ___ unités`,a:`8 dizaines et 5 unités
+(= 80 + 5)`,tip:`Le chiffre des dizaines est 8, celui des unités est 5`},
+],
+c2f_fr:[
+  {type:'Accord GN',t:20,q:`Accorde correctement :
+« une histoire (passionnant) »`,a:`une histoire passionnante`,tip:`passionnant → féminin : passionnante (on entend le T !)`},
+  {type:'Accord GN',t:20,q:`Accorde correctement :
+« des garçons (courageux) »`,a:`des garçons courageux`,tip:`courageux se termine en -x → ne change pas au masculin pluriel`},
+  {type:'Conjugaison imparfait',t:20,q:`Conjugue « finir » à l'imparfait :
+« il »`,a:`il finissait`,tip:`Imparfait en -ir : -issais, -issait, -issions…`},
+  {type:'Conjugaison passé composé',t:20,q:`Conjugue « manger » au passé composé :
+« elle »`,a:`elle a mangé`,tip:`Auxiliaire avoir + participe passé : a + mangé`},
+  {type:'Conjugaison futur',t:20,q:`Conjugue « être » au futur :
+« nous »`,a:`nous serons`,tip:`Futur de être : serai, seras, sera, serons, serez, seront`},
+  {type:'Conjugaison futur',t:20,q:`Conjugue « partir » au futur :
+« il »`,a:`il partira`,tip:`Futur verbes en -ir réguliers : infinitif + terminaisons`},
+  {type:'Conjugaison imparfait',t:20,q:`Conjugue « aller » à l'imparfait :
+« vous »`,a:`vous alliez`,tip:`Aller à l'imparfait : j'allais, nous allions, vous alliez…`},
+  {type:'Conjugaison conditionnel',t:20,q:`Conjugue « vouloir » au conditionnel présent :
+« je »`,a:`je voudrais`,tip:`Conditionnel = futur radical + terminaisons de l'imparfait`},
+  {type:'Participe passé',t:20,q:`Donne le participe passé de :
+« prendre »`,a:`pris`,tip:`prendre → pris (comme : mis, dit, fait, vu, eu…)`},
+  {type:'Participe passé',t:20,q:`Donne le participe passé de :
+« voir »`,a:`vu`,tip:`voir → vu — participe passé irrégulier`},
+  {type:'Nature des mots',t:20,q:`Dans « une grande maison bleue » :
+identifie déterminant, nom, adjectifs`,a:`Dét : une — Nom : maison — Adj : grande, bleue`,tip:`Le nom est le mot principal du GN`},
+  {type:'Nature des mots',t:20,q:`Quelle est la nature de « rapidement » ?`,a:`Un adverbe`,tip:`Les adverbes en -ment sont formés sur l'adjectif féminin`},
+  {type:'Adverbe',t:20,q:`Transforme l'adjectif en adverbe :
+« lent » → ?`,a:`lentement`,tip:`Adjectif féminin + -ment : lente → lentement`},
+  {type:'Adverbe',t:20,q:`Transforme en adverbe :
+« doux » → ?`,a:`doucement`,tip:`doux → douce (féminin) → doucement`},
+  {type:'Fonctions',t:20,q:`Identifie le sujet :
+« Chaque matin, les enfants arrivent à l'école. »`,a:`les enfants`,tip:`Qui arrive ? les enfants → sujet`},
+  {type:'Fonctions',t:20,q:`Identifie le CC de temps :
+« Hier, nous avons joué au football. »`,a:`Hier`,tip:`CC de temps : répond à QUAND ? — déplaçable et supprimable`},
+  {type:'Fonctions',t:20,q:`Identifie le CC de lieu :
+« Les enfants jouent dans le jardin. »`,a:`dans le jardin`,tip:`CC de lieu : répond à OÙ ?`},
+  {type:'Fonctions',t:20,q:`Identifie le CC de manière :
+« Il parle doucement. »`,a:`doucement`,tip:`CC de manière : répond à COMMENT ?`},
+  {type:'Orthographe',t:20,q:`Accorde : « Les filles sont (content) »`,a:`Les filles sont contentes`,tip:`content → féminin pluriel → contentes`},
+  {type:'Orthographe',t:20,q:`Règle du m devant m, b, p :
+Ex : « im___ossible »`,a:`impossible — devant m,b,p on écrit m
+(immense, tambour, emporter)`,tip:`Sauf : bonbon, néanmoins, embonpoint`},
+  {type:'Type de phrase',t:15,q:`Quel est le type de cette phrase ?
+« Ferme la porte ! »`,a:`Phrase injonctive (ou impérative)`,tip:`Donne un ordre — verbe à l'impératif`},
+  {type:'Type de phrase',t:15,q:`Quel est le type de cette phrase ?
+« Comme ce paysage est beau ! »`,a:`Phrase exclamative`,tip:`Exprime un sentiment fort — se termine par !`},
+  {type:'Type de phrase',t:15,q:`Quel type est cette phrase ?
+« Le soleil se lève à l'est. »`,a:`Phrase déclarative`,tip:`Affirme quelque chose — se termine par un point`},
+  {type:'Complément du nom',t:20,q:`Identifie le complément du nom :
+« une tasse de café »`,a:`de café (complément du nom tasse)`,tip:`Introduit par de, à, en… — précise le nom`},
+  {type:'Synonymes',t:15,q:`Donne un synonyme de « beau »`,a:`joli, magnifique, splendide… (au choix)`,tip:`Synonyme = mot de sens proche`},
+  {type:'Antonymes',t:15,q:`Donne l'antonyme (contraire) de « courageux »`,a:`lâche, peureux, poltron…`,tip:`Antonyme = mot de sens opposé`},
+  {type:'Déterminants',t:15,q:`Quel type de déterminant est « ce » dans
+« ce livre » ?`,a:`Déterminant démonstratif`,tip:`Démonstratifs : ce, cet, cette, ces — montrent l'objet`},
+  {type:'Déterminants',t:15,q:`Quel type de déterminant est « mon » dans
+« mon cahier » ?`,a:`Déterminant possessif`,tip:`Possessifs : mon/ma/mes, ton/ta/tes, son/sa/ses…`},
+  {type:'Préfixe',t:15,q:`Quel préfixe donne le contraire de « possible » ?`,a:`im- → impossible`,tip:`Préfixes négatifs : im-, in-, il-, ir-, dé-…`},
+  {type:'Champ lexical',t:15,q:`Donne 3 mots du champ lexical
+de la mer`,a:`plage, vague, marée, bateau, phare… (au choix)`,tip:`Champ lexical = ensemble de mots liés au même thème`},
+  {type:'Pronom relatif',t:20,q:`Quel pronom relatif utiliser ?
+« Le livre ___ j'ai lu est passionnant. »`,a:`que (le livre que j'ai lu)`,tip:`qui = sujet — que = COD de la relative`},
+  {type:'Pronom relatif',t:20,q:`Quel pronom relatif utiliser ?
+« La fille ___ chante est ma cousine. »`,a:`qui (la fille qui chante)`,tip:`qui remplace le sujet dans la proposition relative`},
+  {type:'Accord attribut',t:20,q:`Accorde l'attribut :
+« Les fleurs semblent (beau). »`,a:`Les fleurs semblent belles`,tip:`Attribut s'accorde avec le sujet : fleurs (f.pl.) → belles`},
+  {type:'Conjugaison passé simple',t:20,q:`Conjugue « chanter » au passé simple :
+« il »`,a:`il chanta`,tip:`Passé simple -er : -ai,-as,-a,-âmes,-âtes,-èrent`},
+  {type:'Conjugaison passé simple',t:20,q:`Conjugue « vendre » au passé simple :
+« nous »`,a:`nous vendîmes`,tip:`Passé simple -re : -is,-is,-it,-îmes,-îtes,-irent`},
+],
+c2f_ma:[
+  {type:'Multiplication posée',t:15,q:`47 × 3 = ?`,a:`141`,tip:`7×3=21 écris 1 retiens 2 — 4×3=12+2=14`},
+  {type:'Tables',t:12,q:`8 × 7 = ?`,a:`56`,tip:`8×7=56`},
+  {type:'Tables',t:12,q:`9 × 6 = ?`,a:`54`,tip:`9×6 = 9×5+9 = 45+9 = 54`},
+  {type:'Tables',t:12,q:`7 × 8 = ?`,a:`56`,tip:`7×8=56 — mémorise : 56=7×8`},
+  {type:'Tables',t:12,q:`6 × 6 = ?`,a:`36`,tip:`6×6=36 — carré de 6`},
+  {type:'Double',t:15,q:`Double de 64 = ?`,a:`128`,tip:`64×2 : 60×2=120 et 4×2=8 → 128`},
+  {type:'Division',t:18,q:`84 ÷ 7 = ?`,a:`12`,tip:`7×12=84`},
+  {type:'Division',t:18,q:`72 ÷ 9 = ?`,a:`8`,tip:`9×8=72`},
+  {type:'Division',t:18,q:`56 ÷ 8 = ?`,a:`7`,tip:`8×7=56`},
+  {type:'Calcul mental',t:15,q:`25 × 4 = ?`,a:`100`,tip:`25×4=100 — quart de 100`},
+  {type:'Calcul mental',t:15,q:`50 × 6 = ?`,a:`300`,tip:`50×6 = 5×6×10 = 30×10 = 300`},
+  {type:'Soustraction posée',t:18,q:`503 − 248 = ?`,a:`255`,tip:`Technique de soustraction avec retenue`},
+  {type:'Calcul mental ×10/100',t:12,q:`3,5 × 10 = ?`,a:`35`,tip:`×10 : déplace la virgule d'un rang à droite`},
+  {type:'Calcul mental ×10/100',t:12,q:`0,7 × 100 = ?`,a:`70`,tip:`×100 : déplace la virgule de 2 rangs → 70`},
+  {type:'Mesures longueurs',t:15,q:`Combien de mètres dans 1 km ?`,a:`1000 mètres`,tip:`kilo = 1000 → 1km = 1000m`},
+  {type:'Mesures longueurs',t:15,q:`Convertis : 250 cm = ___ m`,a:`2,5 m`,tip:`÷100 : 250÷100 = 2,5`},
+  {type:'Mesures longueurs',t:15,q:`Convertis : 3,2 km = ___ m`,a:`3200 m`,tip:`×1000 : 3,2×1000 = 3200`},
+  {type:'Mesures masses',t:15,q:`Convertis : 2,5 kg = ___ g`,a:`2500 g`,tip:`×1000 : 2,5×1000 = 2500`},
+  {type:'Périmètre',t:15,q:`Périmètre d'un carré de côté 5 cm = ?`,a:`20 cm`,tip:`Périmètre carré = 4×côté = 4×5 = 20cm`},
+  {type:'Périmètre',t:18,q:`Périmètre d'un rectangle
+8 cm × 3 cm = ?`,a:`22 cm`,tip:`P = 2×(L+l) = 2×(8+3) = 2×11 = 22cm`},
+  {type:'Aire',t:18,q:`Aire d'un rectangle de 6 cm × 4 cm = ?`,a:`24 cm²`,tip:`Aire = longueur × largeur = 6×4 = 24cm²`},
+  {type:'Aire',t:18,q:`Aire d'un carré de côté 7 cm = ?`,a:`49 cm²`,tip:`Aire carré = côté² = 7×7 = 49cm²`},
+  {type:'Numération',t:15,q:`Écris en chiffres : cinq cent quatre-vingt-douze`,a:`592`,tip:`5 centaines + 9 dizaines + 2 unités`},
+  {type:'Numération',t:15,q:`Décompose 347 en c, d, u`,a:`3 centaines · 4 dizaines · 7 unités
+= 300+40+7`,tip:`C×100 + D×10 + U`},
+  {type:'Fractions simples',t:18,q:`Quelle fraction représente 3 parts
+sur 4 parts au total ?`,a:`3/4`,tip:`Numérateur = parts prises — Dénominateur = parts totales`},
+  {type:'Fractions simples',t:18,q:`1/2 de 20 = ?`,a:`10`,tip:`1/2 = moitié : 20÷2 = 10`},
+  {type:'Fractions simples',t:18,q:`1/4 de 40 = ?`,a:`10`,tip:`1/4 = 40÷4 = 10`},
+  {type:'Durées',t:18,q:`Un film commence à 14h20 et dure 1h45.
+À quelle heure se termine-t-il ?`,a:`16h05`,tip:`14h20+1h=15h20, +45min=16h05`},
+  {type:'Problème',t:20,q:`J'ai 240 €. J'achète 3 livres à 12 € chacun.
+Combien me reste-t-il ?`,a:`240 − 36 = 204 €`,tip:`3×12=36 — puis 240−36`},
+  {type:'Problème',t:20,q:`Un agriculteur a 4 champs de 35 m².
+Quelle est la surface totale ?`,a:`140 m²`,tip:`4×35 = 4×30+4×5 = 120+20 = 140m²`},
+  {type:'Angles',t:18,q:`Quel est l'angle dans chaque coin
+d'un carré ?`,a:`Angle droit = 90°`,tip:`Un carré a 4 angles droits de 90°`},
+  {type:'Angles',t:18,q:`Un angle aigu mesure :
+< 90°, = 90°, ou > 90° ?`,a:`< 90° (inférieur à 90°)`,tip:`Aigu < 90° — Droit = 90° — Obtus > 90°`},
+  {type:'Symétrie',t:18,q:`Combien d'axes de symétrie
+a un rectangle (non carré) ?`,a:`2 axes de symétrie`,tip:`Un rectangle a 2 axes (horizontal et vertical)`},
+  {type:'Numération décimale',t:15,q:`Place dans l'ordre croissant :
+4,5 — 4,15 — 4,09`,a:`4,09 < 4,15 < 4,5`,tip:`Compare d'abord les entiers, puis les dixièmes`},
+  {type:'Numération décimale',t:15,q:`Quel chiffre est à la place
+des dixièmes dans 3,47 ?`,a:`4 (3,4̲7)`,tip:`3,47 : 3 = unités — 4 = dixièmes — 7 = centièmes`},
+],
+c3_fr:[
+  {type:'COD',t:20,q:`Identifie le COD :
+« Harry mange une pomme. »`,a:`COD : une pomme
+(mange QUOI ?)`,tip:`COD : verbe + qui/quoi directement, sans préposition`},
+  {type:'COI',t:20,q:`Identifie le COI :
+« Elle pense à ses amis. »`,a:`COI : à ses amis
+(pense À QUI ?)`,tip:`COI : complément avec préposition (à, de, pour…)`},
+  {type:'COD ou COI',t:20,q:`COD ou COI ?
+« Il offre un cadeau à Marie. »`,a:`COD : un cadeau (offre QUOI ?)
+COI : à Marie (offre À QUI ?)`,tip:`La même phrase peut avoir les deux !`},
+  {type:'COD',t:20,q:`Identifie le COD :
+« Le professeur explique la leçon. »`,a:`COD : la leçon
+(explique QUOI ?)`,tip:`COD : complète directement le verbe, sans préposition`},
+  {type:'COI',t:20,q:`Identifie le COI :
+« Les enfants rêvent de vacances. »`,a:`COI : de vacances
+(rêvent DE QUOI ?)`,tip:`Rêver de = verbe + préposition de → COI`},
+  {type:'Passé simple',t:20,q:`Conjugue « venir » au passé simple :
+« il »`,a:`il vint`,tip:`Passé simple de venir : je vins, tu vins, il vint…`},
+  {type:'Passé simple',t:20,q:`Conjugue « finir » au passé simple :
+« ils »`,a:`ils finirent`,tip:`Passé simple -ir : -is,-it,-îmes,-îtes,-irent`},
+  {type:'Passé simple',t:20,q:`Conjugue « être » au passé simple :
+« il »`,a:`il fut`,tip:`Passé simple être : je fus, tu fus, il fut, nous fûmes…`},
+  {type:'Passé simple',t:20,q:`Conjugue « avoir » au passé simple :
+« ils »`,a:`ils eurent`,tip:`Passé simple avoir : j'eus, tu eus, il eut, nous eûmes, ils eurent`},
+  {type:'Accord participe passé',t:25,q:`Accorde le participe passé :
+« La lettre qu'il a (écrire)... »`,a:`La lettre qu'il a écrite
+(accord avec le COD placé avant)`,tip:`Avec avoir : accord si le COD est AVANT le verbe`},
+  {type:'Accord participe passé',t:25,q:`Accord du participe passé :
+« Elle est (partir). »`,a:`Elle est partie
+(avec être : accord avec le sujet)`,tip:`Avec être : accord toujours avec le sujet`},
+  {type:'Accord participe passé',t:25,q:`Accord :
+« Les fleurs qu'il a (cueillir). »`,a:`Les fleurs qu'il a cueillies
+(COD 'fleurs' f.pl., avant avoir)`,tip:`Cueillir → cueilli → cueillies (f.pl.)`},
+  {type:'Voix passive',t:25,q:`Transforme à la voix passive :
+« Le chat mange la souris. »`,a:`La souris est mangée par le chat.`,tip:`Sujet↔COD — ajouter par — auxiliaire être+PP`},
+  {type:'Voix passive',t:25,q:`Identifie la voix :
+« Le gâteau a été mangé par les enfants. »`,a:`Voix passive
+(sujet = gâteau qui subit l'action)`,tip:`Voix passive : sujet + être + PP (+ par + complément agent)`},
+  {type:'Subordonnée relative',t:20,q:`Identifie la relative et son antécédent :
+« Le livre que tu lis est passionnant. »`,a:`Relative : que tu lis
+Antécédent : le livre`,tip:`La relative complète un nom = son antécédent`},
+  {type:'Subordonnée relative',t:20,q:`Quel pronom relatif utiliser ?
+« La maison ___ j'habite est ancienne. »`,a:`où (lieu : la maison où j'habite)`,tip:`où = lieu — que = COD — qui = sujet — dont = de+GN`},
+  {type:'Subordonnée cause',t:20,q:`Identifie la subordonnée de cause :
+« Il est absent parce qu'il est malade. »`,a:`parce qu'il est malade
+(répond à POURQUOI ?)`,tip:`Cause : parce que, car, puisque, comme`},
+  {type:'Subordonnée conséquence',t:20,q:`Quelle conjonction exprime la conséquence ?
+« Il a tellement mangé ___ il a eu mal. »`,a:`qu' (tellement… qu'…)`,tip:`Conséquence : donc, si bien que, tellement… que…`},
+  {type:'Homophones',t:15,q:`a / à — lequel choisir ?
+« Il ___ beaucoup de devoirs. »`,a:`a (verbe avoir : il a)
+Remplacer par 'avait' → si ça marche = verbe`,tip:`a = verbe avoir — à = préposition`},
+  {type:'Homophones',t:15,q:`on / ont — lequel choisir ?
+« Elles ___ fini leur travail. »`,a:`ont (verbe avoir : elles ont)`,tip:`ont = verbe avoir (pluriel) — on = pronom singulier`},
+  {type:'Homophones',t:15,q:`ou / où — lequel choisir ?
+« Va ___ tu veux. »`,a:`où (lieu : là où tu veux)
+(remplacer par 'ou bien' → impossible)`,tip:`où = lieu/temps — ou = choix (= 'ou bien')`},
+  {type:'Type de phrase',t:15,q:`Type et forme :
+« Ne parle pas la bouche pleine ! »`,a:`Type : injonctive — Forme : négative`,tip:`4 types : décl./inter./inj./excl. · 2 formes : aff./nég.`},
+  {type:'Fonctions',t:20,q:`Analyse : sujet, verbe, COD, COI :
+« Mozart offrait des symphonies au roi. »`,a:`Sujet : Mozart — Verbe : offrait
+COD : des symphonies — COI : au roi`,tip:`au roi = à+le roi → COI`},
+  {type:'Conjugaison',t:20,q:`Conjugue « lire » au plus-que-parfait :
+« il »`,a:`il avait lu`,tip:`Plus-que-parfait = imparfait auxiliaire + participe passé`},
+  {type:'Conjugaison',t:20,q:`Mode et temps de « que tu finisses » ?`,a:`Subjonctif présent`,tip:`Subjonctif : après vouloir que, il faut que, bien que…`},
+  {type:'Adjectif verbal',t:20,q:`Participe présent ou adjectif verbal ?
+« une eau courante »`,a:`Adjectif verbal
+(qualifie 'eau' — s'accorde)`,tip:`Adjectif verbal = s'accorde — participe présent = invariable`},
+  {type:'Champ lexical',t:15,q:`Donne 4 mots du champ lexical
+de la lecture`,a:`livre, page, roman, chapitre, bibliothèque, auteur…`,tip:`Champ lexical = mots liés au même univers`},
+  {type:'Figure de style',t:20,q:`Identifie la figure de style :
+« Ses yeux sont des étoiles. »`,a:`Métaphore
+(comparaison sans 'comme')`,tip:`Comparaison = comme/tel — Métaphore = sans outil`},
+  {type:'Figure de style',t:20,q:`Identifie la figure de style :
+« Il court comme le vent. »`,a:`Comparaison
+(outil de comparaison : 'comme')`,tip:`Comparaison : comme, tel, pareil à, semblable à…`},
+  {type:'Propositions',t:20,q:`Coordonnée ou juxtaposée ?
+« Il pleut, mais je sors quand même. »`,a:`Coordonnée
+(reliée par la conjonction 'mais')`,tip:`Coordonnée = conjonction (mais, ou, et, donc, or, ni, car)`},
+  {type:'Propositions',t:20,q:`Combien de propositions dans :
+« Le chien aboie et le chat dort. »`,a:`2 propositions indépendantes coordonnées
+(reliées par 'et')`,tip:`1 verbe conjugué = 1 proposition`},
+  {type:'Infinitif ou participe',t:15,q:`Infinitif ou participe passé ?
+« Il a décidé de (partir / parti). »`,a:`partir (infinitif)
+Après 'de' précédant un verbe → infinitif`,tip:`Après de/à/pour → infinitif — après avoir/être → participe passé`},
+  {type:'Sens figuré',t:15,q:`Sens propre ou figuré ?
+« Ce garçon a une tête de cochon. »`,a:`Sens figuré
+(= il est têtu)`,tip:`Sens propre = littéral — Sens figuré = image`},
+  {type:'Accord',t:20,q:`Accorde le participe passé avec être :
+« Les enfants sont (rentrer) chez eux. »`,a:`Les enfants sont rentrés
+(rentré accordé avec 'enfants', masc.pl.)`,tip:`Avec être : accord avec le sujet en genre et nombre`},
+],
+c3_ma:[
+  {type:'Fractions',t:18,q:`3/4 de 40 = ?`,a:`30`,tip:`40÷4=10 → 10×3=30`},
+  {type:'Fractions',t:18,q:`2/3 de 60 = ?`,a:`40`,tip:`60÷3=20 → 20×2=40`},
+  {type:'Fractions',t:18,q:`3/5 + 2/5 = ?`,a:`5/5 = 1`,tip:`Même dénominateur → additionne les numérateurs`},
+  {type:'Fractions',t:18,q:`1/2 + 1/4 = ?`,a:`3/4`,tip:`1/2=2/4 — puis 2/4+1/4=3/4`},
+  {type:'Fractions',t:18,q:`3/4 − 1/4 = ?`,a:`2/4 = 1/2`,tip:`Même dénominateur → soustrait les numérateurs`},
+  {type:'Fractions',t:20,q:`Simplifie : 6/9 = ?`,a:`2/3
+(divise par 3 : 6÷3=2, 9÷3=3)`,tip:`Cherche le plus grand diviseur commun (ici 3)`},
+  {type:'Fractions',t:20,q:`Compare : 3/5 et 2/3
+Lequel est le plus grand ?`,a:`2/3 > 3/5
+(2/3=10/15 et 3/5=9/15)`,tip:`Réduis au même dénominateur : ppcm de 5 et 3 = 15`},
+  {type:'Décimaux',t:15,q:`2,5 × 4 = ?`,a:`10`,tip:`2×4=8 et 0,5×4=2 → 10`},
+  {type:'Décimaux',t:15,q:`0,36 × 100 = ?`,a:`36`,tip:`×100 : déplace la virgule de 2 rangs → 36`},
+  {type:'Décimaux',t:15,q:`7,2 ÷ 0,9 = ?`,a:`8`,tip:`7,2÷0,9 = 72÷9 = 8`},
+  {type:'Décimaux',t:15,q:`Additionne : 3,45 + 2,7 = ?`,a:`6,15`,tip:`Aligne les virgules : 3,45 + 2,70 = 6,15`},
+  {type:'Décimaux',t:15,q:`Soustrait : 5,3 − 2,48 = ?`,a:`2,82`,tip:`5,30 − 2,48 = 2,82`},
+  {type:'Calcul mental',t:15,q:`15 × 99 = ?`,a:`1485`,tip:`15×100−15 = 1500−15 = 1485`},
+  {type:'Calcul mental',t:15,q:`45 × 20 = ?`,a:`900`,tip:`45×2=90 → ×10=900`},
+  {type:'Calcul mental',t:15,q:`125 × 8 = ?`,a:`1000`,tip:`125×8 = 1000 (1/8 de 1000)`},
+  {type:'Calcul mental',t:15,q:`36 ÷ 0,6 = ?`,a:`60`,tip:`36÷0,6 = 360÷6 = 60`},
+  {type:'Pourcentages',t:20,q:`15 % de 200 = ?`,a:`30`,tip:`15/100 × 200 = 30`},
+  {type:'Pourcentages',t:20,q:`20 % de 150 = ?`,a:`30`,tip:`20% = 1/5 → 150÷5=30`},
+  {type:'Pourcentages',t:20,q:`Un article vaut 80 €. Solde −25 %.
+Nouvel prix = ?`,a:`60 €`,tip:`25% de 80=20 — 80−20=60€`},
+  {type:'Proportionnalité',t:20,q:`Si 3 stylos coûtent 2,40 €,
+combien coûtent 5 stylos ?`,a:`4,00 €`,tip:`1 stylo=0,80€ → 5×0,80=4€`},
+  {type:'Proportionnalité',t:20,q:`Un robinet remplit 15 L en 3 min.
+Combien en 7 min ?`,a:`35 L`,tip:`Débit = 15÷3=5 L/min → 5×7=35L`},
+  {type:'Problème',t:25,q:`Un train roule à 180 km/h pendant 2h30.
+Quelle distance a-t-il parcourue ?`,a:`450 km`,tip:`2h30=2,5h → 180×2,5=450km`},
+  {type:'Problème',t:25,q:`Un rectangle a un périmètre de 36 cm.
+Sa longueur est 11 cm.
+Quelle est sa largeur ?`,a:`7 cm`,tip:`P=2(L+l) → 36=2(11+l) → l=7cm`},
+  {type:'Aires',t:20,q:`Aire d'un triangle : base = 8 cm, hauteur = 5 cm`,a:`20 cm²`,tip:`A=(b×h)÷2 = (8×5)÷2 = 40÷2 = 20cm²`},
+  {type:'Aires',t:20,q:`Aire d'un disque : rayon = 3 cm
+(π ≈ 3,14)`,a:`≈ 28,26 cm²`,tip:`A=π×r² = 3,14×9 ≈ 28,26cm²`},
+  {type:'Volumes',t:20,q:`Volume d'un cube de côté 3 cm = ?`,a:`27 cm³`,tip:`V=côté³ = 3×3×3 = 27cm³`},
+  {type:'Volumes',t:20,q:`Volume d'un pavé droit :
+5 cm × 4 cm × 3 cm = ?`,a:`60 cm³`,tip:`V=L×l×h = 5×4×3 = 60cm³`},
+  {type:'Angles',t:18,q:`Somme des angles d'un triangle = ?`,a:`180°`,tip:`Toujours 180° dans un triangle`},
+  {type:'Angles',t:18,q:`Dans un triangle rectangle,
+la somme des deux angles aigus = ?`,a:`90°`,tip:`90°(droit)+angle1+angle2=180° → angle1+angle2=90°`},
+  {type:'Cercle',t:18,q:`Rayon = 5 cm — Diamètre = ?`,a:`Diamètre = 2×5 = 10 cm`,tip:`d=2×r — toujours !`},
+  {type:'Fractions / Décimaux',t:18,q:`Convertis en fraction : 0,75 = ?`,a:`3/4`,tip:`0,75=75/100=3/4 — simplification par 25`},
+  {type:'Statistiques',t:20,q:`Moyenne de : 8, 12, 10, 14 = ?`,a:`11`,tip:`(8+12+10+14)÷4 = 44÷4 = 11`},
+  {type:'Statistiques',t:20,q:`Quelle est la médiane de :
+3, 5, 7, 9, 11 ?`,a:`7 (valeur du milieu)`,tip:`Médiane = valeur du milieu quand les données sont ordonnées`},
+  {type:'Conversion',t:18,q:`Convertis : 2,5 h = ___ min`,a:`150 min`,tip:`2,5×60 = 150 min`},
+  {type:'Problème multistep',t:25,q:`Une piscine contient 450 000 L.
+Un filtre traite 6000 L/heure.
+Combien d'heures pour tout filtrer ?`,a:`75 heures`,tip:`450 000 ÷ 6000 = 75 h`},
+],
+};
+
+// ════ ANTI-RÉPÉTITION ════════════════════════════════════════════════════════
+// usedMap[bankKey] = Set of indices already shown in this page session
+const usedMap = {};
+function getUnused(key){
+  if(!usedMap[key]) usedMap[key] = new Set();
+  const bank = BANKS[key];
+  let pool = bank.map((_,i)=>i).filter(i=>!usedMap[key].has(i));
+  // reset quand la banque est épuisée
+  if(pool.length === 0){ usedMap[key] = new Set(); pool = bank.map((_,i)=>i); }
+  return pool;
+}
+function markUsed(key, indices){ indices.forEach(i=>usedMap[key].add(i)); }
+
+// ════ LOGIQUE ════════════════════════════════════════════════════════════════
+const CYCLE_NAMES = {c2d:'CP / CE1', c2f:'CE2 / CM1', c3:'CM1 / CM2'};
+const MAT_NAMES = {fr:'Français', ma:'Mathématiques'};
+let state = {cycle:'c2d', mat:'fr', qi:0, qs:[], correct:0, timer:null, timeLeft:0, maxTime:20};
+
+function show(id){
+  document.querySelectorAll('.screen').forEach(s=>s.classList.remove('on'));
+  document.getElementById(id).classList.add('on');
+}
+
+function selectCycle(c){
+  state.cycle = c;
+  document.getElementById('mat-title').textContent = '📚 Matière — Niveau : ' + CYCLE_NAMES[c];
+  document.getElementById('fr-sub').textContent =
+    c==='c2d'?'Sons · Accord · Conjugaison présent':
+    c==='c2f'?'GN · Conjugaison · Types de phrases':'COD/COI · Passé simple · Accord PP';
+  document.getElementById('ma-sub').textContent =
+    c==='c2d'?'Addition · Soustraction · Tables × 2 et × 5':
+    c==='c2f'?'Tables × · Division · Périmètre · Aires':'Fractions · Décimaux · Proportionnalité';
+  // Affiche le nombre de questions disponibles
+  const fKey = c+'_fr', mKey = c+'_ma';
+  const fLeft = getUnused(fKey).length, mLeft = getUnused(mKey).length;
+  document.getElementById('bank-info').textContent =
+    `📚 Français : ${fLeft}/${BANKS[fKey].length} questions disponibles  ·  🔢 Maths : ${mLeft}/${BANKS[mKey].length} questions disponibles`;
+  show('s-mat');
+}
+
+function shuffle(a){ for(let i=a.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));[a[i],a[j]]=[a[j],a[i]];} return a; }
+
+function startQuiz(mat){
+  state.mat = mat;
+  const key = state.cycle+'_'+mat;
+  const pool = shuffle(getUnused(key));
+  const bank = BANKS[key];
+  state.qs = pool.map(i=>({...bank[i], _idx:i}));
+  markUsed(key, pool);
+  state.qi = 0;
+  state.correct = 0;
+  show('s-quiz');
+  loadQuestion();
+}
+
+function loadQuestion(){
+  stopTimer();
+  if(state.qi >= state.qs.length){endQuiz();return;}
+  const q = state.qs[state.qi];
+  document.getElementById('qh-title').textContent = CYCLE_NAMES[state.cycle]+' · '+MAT_NAMES[state.mat];
+  document.getElementById('qh-prog').textContent = `Question ${state.qi+1} / ${state.qs.length}`;
+  document.getElementById('qh-score').textContent = state.correct+' ✓';
+  document.getElementById('q-type').textContent = q.type;
+  document.getElementById('q-text').textContent = q.q;
+  document.getElementById('a-text').textContent = q.a;
+  document.getElementById('a-tip').textContent = q.tip ? '💡 '+q.tip : '';
+  document.getElementById('ans-card').classList.remove('show');
+  state.maxTime = q.t;
+  state.timeLeft = q.t;
+  updateTimerDisplay();
+  const btn = document.getElementById('btn-start');
+  btn.textContent = '▶ Démarrer'; btn.style.background='#27ae60';
+  btn.disabled = false; btn.style.opacity='1';
+}
+
+function startTimer(){
+  if(state.timer){stopTimer();
+    document.getElementById('btn-start').textContent='▶ Reprendre';
+    document.getElementById('btn-start').style.background='#27ae60';
+    return;}
+  document.getElementById('btn-start').textContent='⏸ Pause';
+  document.getElementById('btn-start').style.background='#d97706';
+  state.timer = setInterval(()=>{
+    state.timeLeft--;
+    updateTimerDisplay();
+    if(state.timeLeft<=0){stopTimer();revealAnswer();}
+  },1000);
+}
+
+function stopTimer(){clearInterval(state.timer);state.timer=null;}
+
+function updateTimerDisplay(){
+  const pct=(state.timeLeft/state.maxTime)*100;
+  const bar=document.getElementById('tbar');
+  bar.style.width=pct+'%';
+  bar.className='tbar '+(pct>50?'green':pct>25?'orange':'red');
+  const tn=document.getElementById('tnum');
+  tn.textContent=state.timeLeft;
+  tn.classList.toggle('urgent',state.timeLeft<=5);
+}
+
+function revealAnswer(){
+  stopTimer();
+  document.getElementById('ans-card').classList.add('show');
+  const btn=document.getElementById('btn-start');
+  btn.textContent='▶ Démarré'; btn.disabled=true; btn.style.opacity='.4';
+}
+
+function nextQuestion(){
+  stopTimer();
+  document.getElementById('btn-start').disabled=false;
+  document.getElementById('btn-start').style.opacity='1';
+  state.correct++;
+  state.qi++;
+  loadQuestion();
+}
+
+function endQuiz(){
+  const total=state.qs.length, pct=Math.round((state.correct/total)*100);
+  document.getElementById('end-score').textContent = `${state.correct} / ${total} questions (${pct}%)`;
+  document.getElementById('end-msg').textContent =
+    pct>=80?'🌟 Excellent travail !':pct>=60?'👍 Bien joué !':'💪 Continue tes révisions !';
+  show('s-end');
+}
+</script>
+</body>
+</html>

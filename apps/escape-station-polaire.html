@@ -1,0 +1,808 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<title>Station Polaire Alpha — Escape Game CM2</title>
+<style>
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+:root{--ice:#00cfff;--ice2:#80e8ff;--warn:#ff9800;--danger:#f44336;--ok:#00e676;--bg:#03060f;--panel:#08111f;--border:#0a2a4a;--text:#cce8ff}
+body{background:var(--bg);color:var(--text);font-family:'Segoe UI',Arial,sans-serif;min-height:100vh;overflow-x:hidden}
+body::before{content:'';position:fixed;inset:0;background:radial-gradient(1px 1px at 15% 25%,rgba(0,207,255,.35) 0%,transparent 100%),radial-gradient(1px 1px at 40% 60%,rgba(0,207,255,.25) 0%,transparent 100%),radial-gradient(1px 1px at 70% 20%,rgba(128,232,255,.3) 0%,transparent 100%),radial-gradient(1px 1px at 85% 75%,rgba(0,207,255,.2) 0%,transparent 100%),linear-gradient(180deg,#03060f 0%,#050e1e 50%,#03060f 100%);pointer-events:none;z-index:0}
+body::after{content:'';position:fixed;inset:0;background:repeating-linear-gradient(0deg,transparent,transparent 3px,rgba(0,207,255,.02) 3px,rgba(0,207,255,.02) 4px);pointer-events:none;z-index:0}
+.wrap{position:relative;z-index:1;max-width:740px;margin:0 auto;padding:20px}
+.hdr{text-align:center;padding:28px 0 18px}
+.hdr-logo{font-size:2.8rem;margin-bottom:4px;filter:drop-shadow(0 0 20px var(--ice))}
+.hdr h1{font-size:1.7rem;font-weight:900;color:white;letter-spacing:.08em;text-shadow:0 0 20px var(--ice)}
+.hdr-sub{font-size:.88rem;color:var(--ice);opacity:.7;letter-spacing:.1em;text-transform:uppercase;margin-top:4px}
+.timer-bar{background:var(--panel);border:1px solid var(--border);border-radius:12px;padding:14px 24px;display:flex;align-items:center;justify-content:space-between;margin-bottom:18px;gap:12px}
+.timer-label{font-size:.82rem;color:var(--ice);opacity:.6;text-transform:uppercase;letter-spacing:.08em;flex-shrink:0}
+.timer-val{font-size:2rem;font-weight:900;color:var(--ice);font-variant-numeric:tabular-nums;text-shadow:0 0 12px var(--ice);letter-spacing:.05em}
+.timer-val.warn{color:var(--warn);text-shadow:0 0 12px var(--warn)}
+.timer-val.danger{color:var(--danger);text-shadow:0 0 14px var(--danger);animation:pulse .5s infinite alternate}
+@keyframes pulse{from{opacity:1}to{opacity:.6}}
+.penalty-flash{font-size:.9rem;font-weight:700;opacity:0;transition:opacity .2s;text-align:right;min-width:80px}
+.penalty-flash.show{opacity:1}
+.penalty-flash.err{color:var(--danger)}
+.penalty-flash.hint-cost{color:var(--warn)}
+.dots{display:flex;gap:10px;justify-content:center;margin-bottom:20px}
+.dot{width:36px;height:10px;border-radius:5px;background:var(--border);transition:.4s}
+.dot.done{background:var(--ok);box-shadow:0 0 10px var(--ok)}
+.dot.active{background:var(--ice);box-shadow:0 0 14px var(--ice);animation:dotpulse 1.2s ease-in-out infinite}
+@keyframes dotpulse{0%,100%{opacity:1}50%{opacity:.5}}
+.card{background:var(--panel);border:1px solid var(--border);border-radius:16px;padding:28px 30px;margin-bottom:16px;position:relative;overflow:hidden}
+.card::before{content:'';position:absolute;inset:0;background:linear-gradient(135deg,rgba(0,207,255,.04) 0%,transparent 60%);pointer-events:none}
+.room-icon{font-size:2.2rem;margin-bottom:8px}
+.room-title{font-size:1.05rem;font-weight:800;color:var(--ice);text-transform:uppercase;letter-spacing:.1em;margin-bottom:14px}
+.room-desc{font-size:.93rem;line-height:1.7;color:var(--text);opacity:.88;margin-bottom:4px}
+.puzzle-box{background:rgba(0,207,255,.06);border:1px solid rgba(0,207,255,.18);border-radius:10px;padding:18px;margin:16px 0}
+.puzzle-box p{font-size:.95rem;line-height:1.72}
+.formula{font-size:2.2rem;font-weight:900;color:white;text-align:center;margin:14px 0;letter-spacing:.08em;text-shadow:0 0 16px var(--ice)}
+.txt-extract{font-size:.98rem;font-style:italic;border-left:3px solid var(--ice);padding-left:14px;margin:12px 0;line-height:1.8;color:rgba(255,255,255,.85)}
+.input-row{display:flex;gap:10px;margin-top:14px}
+.ans-input{flex:1;background:#050e1e;border:2px solid var(--border);border-radius:8px;color:white;font-size:1.1rem;font-weight:700;padding:12px 16px;outline:none;transition:.2s;letter-spacing:.06em}
+.ans-input:focus{border-color:var(--ice);box-shadow:0 0 0 3px rgba(0,207,255,.15)}
+.ans-input.ok{border-color:var(--ok);box-shadow:0 0 0 3px rgba(0,230,118,.15)}
+.ans-input.bad{border-color:var(--danger);box-shadow:0 0 0 3px rgba(244,67,54,.15);animation:shake .35s ease}
+@keyframes shake{0%,100%{transform:translateX(0)}25%{transform:translateX(-8px)}75%{transform:translateX(8px)}}
+.btn-send{background:var(--ice);border:none;border-radius:8px;color:#03060f;cursor:pointer;font-size:1rem;font-weight:900;padding:12px 22px;transition:.2s;flex-shrink:0}
+.btn-send:hover:not(:disabled){background:var(--ice2);transform:translateY(-1px)}
+.btn-send:disabled{opacity:.4;cursor:default}
+.feedback{border-radius:8px;font-size:.93rem;font-weight:700;margin-top:10px;padding:10px 16px;text-align:center;display:none}
+.feedback.ok{background:rgba(0,230,118,.12);border:1px solid rgba(0,230,118,.3);color:var(--ok);display:block}
+.feedback.bad{background:rgba(244,67,54,.1);border:1px solid rgba(244,67,54,.3);color:var(--danger);display:block}
+.feedback.info{background:rgba(0,207,255,.08);border:1px solid rgba(0,207,255,.2);color:var(--ice);display:block}
+.hints{margin-top:10px}
+.btn-hint{background:transparent;border:1px solid var(--border);border-radius:6px;color:var(--warn);cursor:pointer;font-size:.82rem;padding:7px 14px;margin-right:8px;margin-top:6px;transition:.2s;opacity:.75}
+.btn-hint:hover:not(:disabled){opacity:1;border-color:var(--warn)}
+.btn-hint:disabled{opacity:.25;cursor:default;color:var(--text)}
+.hint-text{background:rgba(255,152,0,.08);border:1px solid rgba(255,152,0,.2);border-radius:6px;color:#ffcc80;font-size:.86rem;margin-top:8px;padding:10px 14px;display:none;line-height:1.65}
+.hint-text.vis{display:block}
+.btn-next{background:linear-gradient(135deg,#0066bb,#004c8c);border:none;border-radius:10px;color:white;cursor:pointer;display:none;font-size:1rem;font-weight:800;letter-spacing:.06em;margin-top:14px;padding:14px 30px;transition:.2s;width:100%;text-transform:uppercase}
+.btn-next:hover{transform:translateY(-2px);box-shadow:0 6px 20px rgba(0,207,255,.25)}
+.btn-next.vis{display:block!important}
+
+/* ── MULTI-STEP ── */
+.substep-bar{display:flex;align-items:center;gap:10px;background:rgba(0,207,255,.07);border:1px solid rgba(0,207,255,.15);border-radius:8px;padding:10px 16px;margin-bottom:14px;font-size:.9rem;font-weight:700;color:var(--ice)}
+.substep-label{opacity:.65}
+.substep-num{font-size:1.5rem;font-weight:900;color:white;line-height:1}
+.substep-total{opacity:.45}
+.substep-dots{display:flex;gap:6px;margin-left:auto}
+.sdot{width:26px;height:7px;border-radius:4px;background:var(--border);transition:.4s}
+.sdot.active{background:var(--ice);box-shadow:0 0 8px var(--ice)}
+.sdot.done{background:var(--ok)}
+.sq-hist-item{display:flex;gap:10px;align-items:flex-start;background:rgba(0,230,118,.07);border:1px solid rgba(0,230,118,.18);border-radius:8px;padding:9px 14px;margin-bottom:8px;font-size:.87rem}
+.sq-hist-q{opacity:.6;flex:1;line-height:1.4}
+.sq-hist-a{color:var(--ok);font-weight:800;white-space:nowrap;flex-shrink:0}
+
+/* ── ORTHOGRAPHE SALLE 2 ── */
+.ortho-text{font-size:1.05rem;line-height:2.3;background:rgba(0,0,0,.3);border-radius:10px;padding:16px 20px;margin:14px 0}
+.mot-check{font-weight:900;color:white;border-bottom:2px solid rgba(0,207,255,.5);padding:0 2px;margin:0 1px;transition:.3s;cursor:default}
+.mot-check.found-error{color:var(--danger);border-bottom-color:var(--danger);text-decoration:line-through}
+.mot-check.correct-word{color:var(--ok);border-bottom-color:var(--ok)}
+.counter-badge{display:inline-flex;align-items:center;gap:8px;background:rgba(255,152,0,.12);border:1px solid rgba(255,152,0,.3);border-radius:8px;color:#ffcc80;font-size:.95rem;font-weight:800;padding:10px 18px;margin-bottom:14px}
+.counter-num{font-size:1.8rem;font-weight:900;color:var(--warn);line-height:1}
+.found-list{display:flex;flex-wrap:wrap;gap:7px;margin-top:10px;min-height:28px}
+.found-chip{background:rgba(0,230,118,.12);border:1px solid rgba(0,230,118,.3);border-radius:20px;color:var(--ok);font-size:.85rem;font-weight:700;padding:4px 14px}
+
+/* ── TEAM & VICTORY ── */
+.team-card{background:var(--panel);border:1px solid var(--border);border-radius:16px;padding:32px;text-align:center}
+.team-card h2{font-size:1.4rem;font-weight:800;color:white;margin-bottom:8px}
+.team-card p{font-size:.93rem;opacity:.65;margin-bottom:12px;line-height:1.6}
+.team-input{background:#050e1e;border:2px solid var(--border);border-radius:8px;color:white;font-size:1.1rem;font-weight:700;padding:13px 18px;text-align:center;outline:none;transition:.2s;width:100%;max-width:320px}
+.team-input:focus{border-color:var(--ice);box-shadow:0 0 0 3px rgba(0,207,255,.15)}
+.btn-start{background:linear-gradient(135deg,var(--ice),#0099cc);border:none;border-radius:10px;color:#03060f;cursor:pointer;font-size:1rem;font-weight:900;letter-spacing:.06em;margin-top:16px;padding:14px 36px;transition:.2s;text-transform:uppercase}
+.btn-start:hover{transform:translateY(-2px);box-shadow:0 6px 20px rgba(0,207,255,.3)}
+.victory{text-align:center;padding:40px 20px}
+.victory h2{font-size:2rem;font-weight:900;color:var(--ice);text-shadow:0 0 30px var(--ice);margin-bottom:12px}
+.final-time{font-size:3.5rem;font-weight:900;color:white;margin:16px 0;text-shadow:0 0 20px var(--ok)}
+.btn-restart{background:rgba(0,207,255,.1);border:1px solid var(--ice);border-radius:10px;color:var(--ice);cursor:pointer;font-size:.95rem;font-weight:700;padding:12px 28px;transition:.2s}
+.btn-restart:hover{background:rgba(0,207,255,.2)}
+.confetti-piece{position:fixed;width:10px;height:10px;top:-10px;border-radius:50%;animation:fall linear forwards;z-index:999;pointer-events:none}
+@keyframes fall{to{transform:translateY(110vh) rotate(720deg);opacity:0}}
+.screen{display:none}
+.screen.active{display:block}
+</style>
+</head>
+<body>
+<div class="wrap">
+<div class="hdr">
+  <div class="hdr-logo">🧊</div>
+  <h1>STATION POLAIRE ALPHA</h1>
+  <div class="hdr-sub">Mission de sauvetage · Escape Game CM2</div>
+</div>
+
+<!-- ÉQUIPE -->
+<div class="screen active" id="s-team">
+  <div class="team-card">
+    <h2>⚠ ALERTE CRITIQUE</h2>
+    <p>La Station Polaire Alpha est en panne totale. Le système de chauffage a lâché. Il fait −52°C dehors. Vous avez <strong>30 minutes</strong> pour résoudre 5 défis et remettre les systèmes en marche… avant que tout le monde gèle.</p>
+    <p style="color:var(--danger);font-size:.85rem;font-weight:700">Mauvaise réponse → −30 s &nbsp;|&nbsp; Indice → −15 s</p>
+    <br>
+    <input class="team-input" id="team-name" placeholder="Nom de l'équipe" maxlength="30" onkeydown="if(event.key==='Enter')startGame()">
+    <br>
+    <button class="btn-start" onclick="startGame()">🚀 LANCER LA MISSION</button>
+  </div>
+</div>
+
+<!-- JEU -->
+<div class="screen" id="s-game">
+  <div class="timer-bar">
+    <span class="timer-label">⏱ Temps restant</span>
+    <div style="display:flex;flex-direction:column;align-items:flex-end;gap:4px">
+      <span class="timer-val" id="timer-display">30:00</span>
+      <span class="penalty-flash err" id="penalty-flash"></span>
+    </div>
+  </div>
+  <div class="dots">
+    <div class="dot active" id="dot-0"></div>
+    <div class="dot" id="dot-1"></div>
+    <div class="dot" id="dot-2"></div>
+    <div class="dot" id="dot-3"></div>
+    <div class="dot" id="dot-4"></div>
+  </div>
+
+  <!-- SALLE 1 — MATHS -->
+  <div class="card" id="stage-0">
+    <div class="room-icon">🔋</div>
+    <div class="room-title">Salle 1 — Réacteur de Calcul</div>
+    <div class="room-desc">Le réacteur principal est hors service. Le code de redémarrage est un résultat à calculer. Sans lui, la station reste gelée.</div>
+    <div class="puzzle-box">
+      <p>Calcule le code de redémarrage :</p>
+      <div class="formula">47 × 8 − 32 = ?</div>
+      <p style="font-size:.84rem;opacity:.55;text-align:center">Tape uniquement le nombre</p>
+    </div>
+    <div class="input-row">
+      <input class="ans-input" id="in-0" placeholder="Code de démarrage…" maxlength="6" onkeydown="if(event.key==='Enter')checkSimple(0)">
+      <button class="btn-send" onclick="checkSimple(0)">VALIDER</button>
+    </div>
+    <div class="feedback" id="fb-0"></div>
+    <div class="hints">
+      <button class="btn-hint" id="h0a" onclick="showHint(0,'a')">💡 Indice 1 (−15s)</button>
+      <button class="btn-hint" id="h0b" onclick="showHint(0,'b')" disabled>💡 Indice 2 (−15s)</button>
+      <div class="hint-text" id="ht0a">Décompose en deux étapes : d'abord la multiplication, puis soustrais 32 du résultat.</div>
+      <div class="hint-text" id="ht0b">Essaie de décomposer 47 : pense à (40 + 7). Multiplie chaque partie par 8 séparément puis additionne.</div>
+    </div>
+    <button class="btn-next" id="next-0" onclick="nextStage(1)">⚡ Réacteur redémarré — Salle suivante →</button>
+  </div>
+
+  <!-- SALLE 2 — FRANÇAIS / ORTHOGRAPHE -->
+  <div class="card" id="stage-1" style="display:none">
+    <div class="room-icon">📡</div>
+    <div class="room-title">Salle 2 — Module de Communication</div>
+    <div class="room-desc">Le module radio est bloqué par un filtre anti-erreurs. Un rapport mal écrit a été intercepté. Il contient <strong style="color:var(--warn)">4 fautes d'orthographe</strong> dans les mots en gras. Trouve-les et écris la forme correcte !</div>
+    <div class="puzzle-box">
+      <p style="margin-bottom:10px;font-size:.85rem;opacity:.65">Les mots à vérifier sont <strong style="color:white">en gras et soulignés</strong>. Repère une faute et tape la <strong style="color:white">forme corrigée</strong>.</p>
+      <div class="ortho-text">
+        Les <span class="mot-check" id="mc-scientifiques">scientifiques</span> de la station ont
+        <span class="mot-check" id="mc-travaillee">travaillée</span> toute la
+        <span class="mot-check" id="mc-nuit">nuit</span>. Les appareils de mesure
+        <span class="mot-check" id="mc-fonctionne">fonctionne</span> à pleine puissance. Les données
+        <span class="mot-check" id="mc-precis">précis</span> ont été sauvegardées avec
+        <span class="mot-check" id="mc-beaucoup">beaucoup</span> de soin. Finalement, ils ont réussi à redémarrer le
+        <span class="mot-check" id="mc-systeme">systéme</span> principal.
+      </div>
+    </div>
+    <div style="display:flex;align-items:center;gap:14px;flex-wrap:wrap;margin-bottom:4px">
+      <div class="counter-badge">
+        <div>Fautes restantes :</div>
+        <div class="counter-num" id="fautes-counter">4</div>
+        <div>/ 4</div>
+      </div>
+      <div style="flex:1">
+        <div style="font-size:.8rem;opacity:.5;margin-bottom:4px">Trouvées :</div>
+        <div class="found-list" id="found-list"></div>
+      </div>
+    </div>
+    <div class="input-row">
+      <input class="ans-input" id="in-1" placeholder="Écris la forme corrigée…" maxlength="30" onkeydown="if(event.key==='Enter')checkOrtho()">
+      <button class="btn-send" id="btn-ortho" onclick="checkOrtho()">VALIDER</button>
+    </div>
+    <div class="feedback" id="fb-1"></div>
+    <div class="hints">
+      <button class="btn-hint" id="h1a" onclick="showHint(1,'a')">💡 Indice 1 (−15s)</button>
+      <button class="btn-hint" id="h1b" onclick="showHint(1,'b')" disabled>💡 Indice 2 (−15s)</button>
+      <div class="hint-text" id="ht1a">Il y a 4 types d'erreurs différents : un accord de participe passé avec AVOIR, un accord sujet-verbe, un accord d'adjectif en genre/nombre, et une faute d'accent.</div>
+      <div class="hint-text" id="ht1b">Vérifie : 1) Le verbe s'accorde-t-il avec son sujet pluriel ? 2) L'adjectif s'accorde-t-il avec le nom féminin pluriel qu'il qualifie ? 3) L'accent grave est-il bien sur le premier E de sys-tè-me ?</div>
+    </div>
+    <button class="btn-next" id="next-1" onclick="nextStage(2)">📡 Signal rétabli — Salle suivante →</button>
+  </div>
+
+  <!-- SALLE 3 — HISTOIRE -->
+  <div class="card" id="stage-2" style="display:none">
+    <div class="room-icon">🗂</div>
+    <div class="room-title">Salle 3 — Archives Historiques</div>
+    <div class="room-desc">Le coffre des archives est verrouillé par un code temporel. Retrouve les <strong>3 dates clés</strong> de l'Histoire pour l'ouvrir.</div>
+
+    <div class="substep-bar">
+      <span class="substep-label">Date</span>
+      <span class="substep-num" id="sp-cur-2">1</span>
+      <span class="substep-total">/ 3</span>
+      <div class="substep-dots">
+        <div class="sdot active" id="sdot-2-0"></div>
+        <div class="sdot" id="sdot-2-1"></div>
+        <div class="sdot" id="sdot-2-2"></div>
+      </div>
+    </div>
+
+    <div id="sq-history-2"></div>
+
+    <div class="puzzle-box">
+      <p id="sq-text-2" style="font-size:1rem;font-weight:600;color:white"></p>
+      <p style="font-size:.84rem;opacity:.55;margin-top:10px">Tape l'année complète (4 chiffres)</p>
+    </div>
+    <div class="input-row">
+      <input class="ans-input" id="in-2" placeholder="Année…" maxlength="4" onkeydown="if(event.key==='Enter')checkMulti(2)">
+      <button class="btn-send" id="bsend-2" onclick="checkMulti(2)">VALIDER</button>
+    </div>
+    <div class="feedback" id="fb-2"></div>
+    <div class="hints">
+      <button class="btn-hint" id="h2a" onclick="showHint(2,'a')">💡 Indice 1 (−15s)</button>
+      <button class="btn-hint" id="h2b" onclick="showHint(2,'b')" disabled>💡 Indice 2 (−15s)</button>
+      <div class="hint-text" id="ht2a"></div>
+      <div class="hint-text" id="ht2b"></div>
+    </div>
+    <button class="btn-next" id="next-2" onclick="nextStage(3)">🗂 Archives déverrouillées — Salle suivante →</button>
+  </div>
+
+  <!-- SALLE 4 — GÉOGRAPHIE multi-étapes -->
+  <div class="card" id="stage-3" style="display:none">
+    <div class="room-icon">🛰</div>
+    <div class="room-title">Salle 4 — Radar Géographique</div>
+    <div class="room-desc">Le radar localise un signal mystère. Réponds à <strong>5 questions</strong> de géographie pour décoder les coordonnées exactes.</div>
+
+    <div class="substep-bar">
+      <span class="substep-label">Question</span>
+      <span class="substep-num" id="sp-cur-3">1</span>
+      <span class="substep-total">/ 5</span>
+      <div class="substep-dots">
+        <div class="sdot active" id="sdot-3-0"></div>
+        <div class="sdot" id="sdot-3-1"></div>
+        <div class="sdot" id="sdot-3-2"></div>
+        <div class="sdot" id="sdot-3-3"></div>
+        <div class="sdot" id="sdot-3-4"></div>
+      </div>
+    </div>
+
+    <div id="sq-history-3"></div>
+
+    <div class="puzzle-box">
+      <p id="sq-text-3" style="font-size:1rem;font-weight:600;color:white"></p>
+    </div>
+    <div class="input-row">
+      <input class="ans-input" id="in-3" placeholder="Ta réponse…" maxlength="40" onkeydown="if(event.key==='Enter')checkMulti(3)">
+      <button class="btn-send" id="bsend-3" onclick="checkMulti(3)">VALIDER</button>
+    </div>
+    <div class="feedback" id="fb-3"></div>
+    <div class="hints">
+      <button class="btn-hint" id="h3a" onclick="showHint(3,'a')">💡 Indice 1 (−15s)</button>
+      <button class="btn-hint" id="h3b" onclick="showHint(3,'b')" disabled>💡 Indice 2 (−15s)</button>
+      <div class="hint-text" id="ht3a"></div>
+      <div class="hint-text" id="ht3b"></div>
+    </div>
+    <button class="btn-next" id="next-3" onclick="nextStage(4)">🛰 Coordonnées localisées — Dernière salle →</button>
+  </div>
+
+  <!-- SALLE 5 — SCIENCES multi-étapes -->
+  <div class="card" id="stage-4" style="display:none">
+    <div class="room-icon">🔬</div>
+    <div class="room-title">Salle 5 — Laboratoire des Sciences</div>
+    <div class="room-desc">La dernière porte est verrouillée par un protocole scientifique en 3 questions. Réponds correctement pour déclencher l'alarme de victoire !</div>
+
+    <div class="substep-bar">
+      <span class="substep-label">Question</span>
+      <span class="substep-num" id="sp-cur-4">1</span>
+      <span class="substep-total">/ 3</span>
+      <div class="substep-dots">
+        <div class="sdot active" id="sdot-4-0"></div>
+        <div class="sdot" id="sdot-4-1"></div>
+        <div class="sdot" id="sdot-4-2"></div>
+      </div>
+    </div>
+
+    <div id="sq-history-4"></div>
+
+    <div class="puzzle-box">
+      <p id="sq-text-4" style="font-size:1rem;font-weight:600;color:white"></p>
+    </div>
+    <div class="input-row">
+      <input class="ans-input" id="in-4" placeholder="Ta réponse…" maxlength="30" onkeydown="if(event.key==='Enter')checkMulti(4)">
+      <button class="btn-send" id="bsend-4" onclick="checkMulti(4)">VALIDER</button>
+    </div>
+    <div class="feedback" id="fb-4"></div>
+    <div class="hints">
+      <button class="btn-hint" id="h4a" onclick="showHint(4,'a')">💡 Indice 1 (−15s)</button>
+      <button class="btn-hint" id="h4b" onclick="showHint(4,'b')" disabled>💡 Indice 2 (−15s)</button>
+      <div class="hint-text" id="ht4a"></div>
+      <div class="hint-text" id="ht4b"></div>
+    </div>
+    <button class="btn-next" id="next-4" onclick="victory()">🔓 STATION SAUVÉE — Voir les résultats →</button>
+  </div>
+
+</div><!-- /s-game -->
+
+<!-- VICTOIRE -->
+<div class="screen" id="s-victory">
+  <div class="card victory">
+    <div style="font-size:4rem;margin-bottom:8px">🏆</div>
+    <h2>MISSION ACCOMPLIE !</h2>
+    <p id="v-team" style="font-size:1.1rem;font-weight:700;color:var(--ice);margin-bottom:4px"></p>
+    <p style="font-size:.88rem;opacity:.55;margin-bottom:16px">a sauvé la Station Polaire Alpha !</p>
+    <p style="opacity:.6;line-height:1.8;max-width:480px;margin:0 auto 20px">Tous les systèmes sont de nouveau opérationnels. La station est chauffée et l'équipe est en sécurité. Bravo !</p>
+    <div style="font-size:.9rem;opacity:.55;margin-bottom:4px">Temps final</div>
+    <div class="final-time" id="v-time"></div>
+    <div id="v-penalties" style="font-size:.85rem;margin-bottom:20px;opacity:.8"></div>
+    <button class="btn-restart" onclick="restartGame()">↺ Rejouer</button>
+  </div>
+</div>
+
+<script>
+// ══════════════════════════════════════════════════════
+//  DONNÉES
+// ══════════════════════════════════════════════════════
+
+// Réponses salles simples
+const SIMPLE_ANS = {
+  0: ["344"],
+};
+
+// Salles multi-étapes
+const MULTI = {
+  2: [
+    {
+      q: "En quelle année le peuple de Paris prit-il d'assaut la Bastille, déclenchant la Révolution française ?",
+      ans: ["1789"],
+      h1: "C'est vers la fin du 18ème siècle. En France, on fête encore cet événement chaque année le 14 juillet.",
+      h2: "Le roi Louis XVI était sur le trône. L'année se termine par les chiffres 8 et 9."
+    },
+    {
+      q: "En quelle année Christophe Colomb a-t-il découvert l'Amérique en abordant les Caraïbes ?",
+      ans: ["1492"],
+      h1: "C'est à la fin du 15ème siècle. Colomb cherchait en réalité une route maritime vers l'Asie en partant d'Espagne.",
+      h2: "L'année commence par 14. C'est également l'année de la fin de la Reconquista en Espagne."
+    },
+    {
+      q: "En quelle année le général de Gaulle a-t-il lancé son célèbre Appel du 18 juin depuis Londres ?",
+      ans: ["1940"],
+      h1: "C'est au début de la Seconde Guerre mondiale, peu après que la France eut signé l'armistice avec l'Allemagne nazie.",
+      h2: "L'année commence par 19 et se termine par 40. De Gaulle appelait les Français à continuer le combat malgré la défaite."
+    }
+  ],
+  3: [
+    {
+      q: "Quel est le plus long fleuve du monde ?",
+      ans: ["nil","le nil","nile"],
+      h1: "Ce fleuve coule sur plus de 6 600 km en Afrique. Les grandes civilisations antiques se sont développées sur ses rives.",
+      h2: "Il traverse l'Égypte et se jette dans la mer Méditerranée. Son nom est court : 3 lettres."
+    },
+    {
+      q: "Sur quel continent se trouve la plus haute montagne du monde, le mont Everest ?",
+      ans: ["asie","l asie","asia"],
+      h1: "Cette montagne culmine à 8 849 mètres. Elle est située à la frontière entre deux pays.",
+      h2: "Elle se trouve entre le Népal et la Chine. Le continent qui l'abrite est aussi le plus peuplé du monde."
+    },
+    {
+      q: "Quelle est la capitale des États-Unis ? (attention, ce n'est pas New York !)",
+      ans: ["washington","washington dc","washington d c"],
+      h1: "Cette ville est moins connue que New York ou Los Angeles, mais c'est bien là que siège le gouvernement américain, avec la Maison-Blanche et le Capitole.",
+      h2: "Son nom complet est Washington D.C. — les initiales D.C. signifient 'District of Columbia'. Elle se trouve sur la côte est des États-Unis."
+    },
+    {
+      q: "Quel est le plus grand pays du monde en superficie ?",
+      ans: ["russie","la russie","russia"],
+      h1: "Ce pays s'étend sur deux continents : l'Europe et l'Asie. Sa superficie est presque deux fois celle du Canada.",
+      h2: "Sa capitale est Moscou. Il possède plus de 11 fuseaux horaires, ce qui veut dire qu'il fait nuit à un bout du pays quand c'est le matin à l'autre."
+    },
+    {
+      q: "Sur quel continent coule le fleuve Amazone, le plus grand fleuve du monde en volume d'eau ?",
+      ans: ["amerique du sud","l amerique du sud","amerique","south america"],
+      h1: "Ce fleuve traverse une immense forêt tropicale, souvent appelée le 'poumon de la Terre'. Il se jette dans l'océan Atlantique.",
+      h2: "Le pays qui abrite la majorité de ce fleuve est le Brésil. Il est dans l'hémisphère sud, à l'ouest de l'Afrique."
+    }
+  ],
+  4: [
+    {
+      q: "Lors de la photosynthèse, les plantes rejettent un gaz vital dans l'atmosphère. Quel est ce gaz ? (nom ou formule)",
+      ans: ["o2","o2","oxygene","oxygène","dioxygene","dioxygène","o 2"],
+      h1: "Sans ce gaz, les êtres vivants ne survivraient que quelques minutes. Il est produit par les plantes grâce à la lumière du soleil.",
+      h2: "Il représente environ 21 % de l'air que nous respirons. Sa formule chimique contient la lettre O et le chiffre 2."
+    },
+    {
+      q: "À quelle température (en degrés Celsius) l'eau se met-elle à bouillir ?",
+      ans: ["100","100 degres","100 degrés","100 c","100c","cent"],
+      h1: "C'est un nombre très facile à retenir. Pense à une casserole sur une flamme : quand les grosses bulles apparaissent.",
+      h2: "Ce chiffre est supérieur à la température du corps humain (37°C) et bien inférieur à 1000°C. C'est un multiple de 100."
+    },
+    {
+      q: "Quelle planète du système solaire est surnommée la 'planète rouge' ?",
+      ans: ["mars"],
+      h1: "Sa couleur rouge vient de l'oxyde de fer — c'est de la rouille — présent à sa surface.",
+      h2: "C'est la 4ème planète en partant du Soleil. Des robots (rovers) ont été envoyés pour l'explorer."
+    }
+  ]
+};
+
+// Salle 2 — mots incorrects
+const ERRORS_S2 = {
+  "travaillee":  {id:"mc-travaillee", corr:"travaillé",    msg:'✅ Bravo ! « travaillée » → travaillé. Avec AVOIR, le participe passé ne s\'accorde pas avec le sujet.'},
+  "fonctionne":  {id:"mc-fonctionne", corr:"fonctionnent", msg:'✅ Bravo ! « fonctionne » → fonctionnent. Le sujet « les appareils » est au pluriel, le verbe aussi !'},
+  "precis":      {id:"mc-precis",     corr:"précises",     msg:'✅ Bravo ! « précis » → précises. L\'adjectif s\'accorde avec « données » : féminin pluriel.'},
+  "systeme":     {id:"mc-systeme",    corr:"système",      msg:'✅ Bravo ! « systéme » → système. L\'accent grave (è) se place sur le premier E.'},
+};
+const CORRECT_S2 = ["scientifiques","nuit","beaucoup"];
+
+// ══════════════════════════════════════════════════════
+//  ÉTAT
+// ══════════════════════════════════════════════════════
+let seconds   = 30 * 60;
+let timerInt  = null;
+let penalties = 0;
+let teamName  = "";
+let solved    = [false,false,false,false,false];
+let multiStep = {3:0, 4:0};
+let orthoFound = [];
+let fautesLeft = 4;
+
+// ══════════════════════════════════════════════════════
+//  UTILS
+// ══════════════════════════════════════════════════════
+function norm(s){
+  return s.trim().toLowerCase()
+    .normalize('NFD').replace(/[\u0300-\u036f]/g,'')
+    .replace(/[^a-z0-9 ]/g,'').replace(/\s+/g,' ').trim();
+}
+
+function flashPenalty(text, isHint){
+  const el = document.getElementById('penalty-flash');
+  el.textContent = text;
+  el.className = 'penalty-flash show ' + (isHint ? 'hint-cost' : 'err');
+  setTimeout(()=>el.classList.remove('show'), 1400);
+}
+
+function addPenalty(){
+  seconds = Math.max(0, seconds - 30);
+  penalties++;
+  updateTimerDisplay();
+  flashPenalty('−30 s ❌', false);
+}
+
+function addHintCost(){
+  seconds = Math.max(0, seconds - 15);
+  updateTimerDisplay();
+  flashPenalty('−15 s 💡', true);
+}
+
+function updateTimerDisplay(){
+  const m = Math.floor(seconds/60), s = seconds%60;
+  const el = document.getElementById('timer-display');
+  el.textContent = (m<10?'0':'')+m+':'+(s<10?'0':'')+s;
+  el.className = 'timer-val';
+  if(seconds <= 300) el.classList.add('danger');
+  else if(seconds <= 600) el.classList.add('warn');
+}
+
+function shakeInput(id){
+  const inp = document.getElementById(id);
+  inp.classList.remove('bad');
+  void inp.offsetWidth;
+  inp.classList.add('bad');
+  setTimeout(()=>inp.classList.remove('bad'), 400);
+}
+
+// ══════════════════════════════════════════════════════
+//  DÉMARRAGE
+// ══════════════════════════════════════════════════════
+function startGame(){
+  teamName = document.getElementById('team-name').value.trim() || 'Équipe Alpha';
+  document.getElementById('s-team').classList.remove('active');
+  document.getElementById('s-game').classList.add('active');
+  // Init multi-step stages
+  initMulti(2); initMulti(3); initMulti(4);
+  timerInt = setInterval(()=>{
+    seconds--;
+    updateTimerDisplay();
+    if(seconds <= 0){ clearInterval(timerInt); showTimeUp(); }
+  }, 1000);
+}
+
+// ══════════════════════════════════════════════════════
+//  HINTS (−5s)
+// ══════════════════════════════════════════════════════
+function showHint(stageIdx, ab){
+  addHintCost();
+  // Pour les salles multi-étapes, texte dynamique
+  if(MULTI[stageIdx] !== undefined){
+    const sq = MULTI[stageIdx][multiStep[stageIdx]];
+    document.getElementById('ht'+stageIdx+ab).textContent = (ab==='a') ? sq.h1 : sq.h2;
+  }
+  document.getElementById('ht'+stageIdx+ab).classList.add('vis');
+  document.getElementById('h'+stageIdx+ab).disabled = true;
+  if(ab==='a') document.getElementById('h'+stageIdx+'b').disabled = false;
+}
+
+// ══════════════════════════════════════════════════════
+//  SALLES SIMPLES (0=Maths, 2=Histoire)
+// ══════════════════════════════════════════════════════
+function checkSimple(i){
+  const inp = document.getElementById('in-'+i);
+  const val = norm(inp.value);
+  const ok  = SIMPLE_ANS[i].some(a => norm(a) === val);
+  const fb  = document.getElementById('fb-'+i);
+  if(ok){
+    inp.classList.add('ok');
+    fb.className = 'feedback ok';
+    fb.textContent = '✅ Correct ! Système déverrouillé.';
+    solved[i] = true;
+    inp.disabled = true;
+    const nb = document.getElementById('next-'+i);
+    nb.classList.add('vis'); nb.style.display='block';
+  } else {
+    shakeInput('in-'+i);
+    fb.className = 'feedback bad';
+    fb.textContent = '❌ Mauvaise réponse — pénalité de 30 secondes !';
+    addPenalty();
+  }
+}
+
+// ══════════════════════════════════════════════════════
+//  SALLE 2 — ORTHOGRAPHE
+// ══════════════════════════════════════════════════════
+function checkOrtho(){
+  const inp = document.getElementById('in-1');
+  const fb  = document.getElementById('fb-1');
+  const raw = inp.value.trim();
+  const val = norm(raw);
+  if(!val) return;
+
+  if(orthoFound.includes(val)){
+    fb.className='feedback info'; fb.textContent='⚠ Tu as déjà proposé cette correction !';
+    return;
+  }
+
+  // Cherche si la valeur correspond à une correction attendue
+  let matched = null;
+  for(const [wrongKey, data] of Object.entries(ERRORS_S2)){
+    if(norm(data.corr) === val && !orthoFound.includes(norm(data.corr))){
+      matched = {wrongKey, ...data};
+      break;
+    }
+  }
+
+  if(matched){
+    orthoFound.push(val);
+    fautesLeft--;
+    document.getElementById(matched.id).classList.add('found-error');
+    const chip = document.createElement('div');
+    chip.className='found-chip';
+    chip.textContent = matched.wrongKey + ' → ' + raw;
+    document.getElementById('found-list').appendChild(chip);
+    document.getElementById('fautes-counter').textContent = fautesLeft;
+    fb.className='feedback ok'; fb.textContent = matched.msg;
+    inp.value = ''; inp.classList.remove('bad');
+    if(fautesLeft === 0){
+      CORRECT_S2.forEach(w=>{
+        const el = document.querySelector('[id="mc-'+w+'"]');
+        if(el) el.classList.add('correct-word');
+      });
+      solved[1]=true;
+      fb.textContent = '🎉 Toutes les corrections sont bonnes ! Module déverrouillé !';
+      inp.disabled = true;
+      document.getElementById('btn-ortho').disabled = true;
+      const nb = document.getElementById('next-1');
+      nb.classList.add('vis'); nb.style.display='block';
+    }
+  } else if(Object.keys(ERRORS_S2).some(k => k === val)){
+    // L'élève a tapé le mot fautif au lieu de la correction
+    shakeInput('in-1');
+    fb.className='feedback bad';
+    fb.textContent = '❌ « '+raw+' » est le mot avec la faute ! Écris la forme corrigée. −30 secondes !';
+    addPenalty();
+  } else if(CORRECT_S2.some(w => norm(w) === val)){
+    shakeInput('in-1');
+    fb.className='feedback bad';
+    fb.textContent = '❌ « '+raw+' » est déjà correct dans le texte, pas besoin de le corriger. −30 secondes !';
+    addPenalty();
+  } else {
+    shakeInput('in-1');
+    fb.className='feedback bad';
+    fb.textContent = '❌ « '+raw+' » ne correspond à aucune correction attendue. −30 secondes !';
+    addPenalty();
+  }
+}
+
+// ══════════════════════════════════════════════════════
+//  SALLES MULTI-ÉTAPES (3=Géo, 4=Sciences)
+// ══════════════════════════════════════════════════════
+function initMulti(idx){
+  multiStep[idx] = 0;
+  renderMultiQ(idx);
+}
+
+function renderMultiQ(idx){
+  const step = multiStep[idx];
+  const sq   = MULTI[idx][step];
+  const n    = MULTI[idx].length;
+
+  document.getElementById('sp-cur-'+idx).textContent = step+1;
+  document.getElementById('sq-text-'+idx).textContent = sq.q;
+
+  // Progress dots
+  for(let i=0;i<n;i++){
+    const d = document.getElementById('sdot-'+idx+'-'+i);
+    d.className = 'sdot' + (i<step?' done':(i===step?' active':''));
+  }
+
+  // Reset hints
+  document.getElementById('ht'+idx+'a').textContent='';
+  document.getElementById('ht'+idx+'b').textContent='';
+  document.getElementById('ht'+idx+'a').classList.remove('vis');
+  document.getElementById('ht'+idx+'b').classList.remove('vis');
+  document.getElementById('h'+idx+'a').disabled = false;
+  document.getElementById('h'+idx+'b').disabled = true;
+
+  // Reset input & feedback
+  const inp = document.getElementById('in-'+idx);
+  inp.value=''; inp.className='ans-input'; inp.disabled=false;
+  const fb = document.getElementById('fb-'+idx);
+  fb.className='feedback'; fb.textContent='';
+  document.getElementById('bsend-'+idx).disabled=false;
+}
+
+function checkMulti(idx){
+  const step = multiStep[idx];
+  const sq   = MULTI[idx][step];
+  const inp  = document.getElementById('in-'+idx);
+  const fb   = document.getElementById('fb-'+idx);
+  const val  = norm(inp.value);
+
+  if(!val) return;
+
+  const ok = sq.ans.some(a => norm(a) === val);
+
+  if(ok){
+    // Ajouter à l'historique
+    const hist = document.getElementById('sq-history-'+idx);
+    const item = document.createElement('div');
+    item.className = 'sq-hist-item';
+    item.innerHTML = '<span class="sq-hist-q">'+sq.q+'</span><span class="sq-hist-a">✅ '+inp.value.trim()+'</span>';
+    hist.appendChild(item);
+
+    multiStep[idx]++;
+    const total = MULTI[idx].length;
+
+    if(multiStep[idx] >= total){
+      // Toutes les questions résolues !
+      solved[idx] = true;
+      inp.disabled = true;
+      document.getElementById('bsend-'+idx).disabled = true;
+      // Marquer dernier dot done
+      document.getElementById('sdot-'+idx+'-'+(total-1)).className='sdot done';
+      fb.className='feedback ok';
+      fb.textContent = '🎉 Toutes les questions résolues ! Salle déverrouillée.';
+      const nb = document.getElementById('next-'+idx);
+      nb.classList.add('vis'); nb.style.display='block';
+    } else {
+      fb.className='feedback ok';
+      fb.textContent = '✅ Bonne réponse ! Question suivante…';
+      setTimeout(()=>{ renderMultiQ(idx); }, 900);
+    }
+  } else {
+    shakeInput('in-'+idx);
+    fb.className='feedback bad';
+    fb.textContent = '❌ Mauvaise réponse — pénalité de 30 secondes !';
+    addPenalty();
+  }
+}
+
+// ══════════════════════════════════════════════════════
+//  NAVIGATION
+// ══════════════════════════════════════════════════════
+function nextStage(n){
+  document.getElementById('stage-'+(n-1)).style.display='none';
+  document.getElementById('dot-'+(n-1)).className='dot done';
+  document.getElementById('stage-'+n).style.display='block';
+  if(n<5) document.getElementById('dot-'+n).className='dot active';
+  window.scrollTo({top:0,behavior:'smooth'});
+}
+
+// ══════════════════════════════════════════════════════
+//  VICTOIRE & DÉFAITE
+// ══════════════════════════════════════════════════════
+function victory(){
+  clearInterval(timerInt);
+  document.getElementById('stage-4').style.display='none';
+  document.getElementById('dot-4').className='dot done';
+  document.getElementById('s-game').classList.remove('active');
+  document.getElementById('s-victory').classList.add('active');
+  const elapsed = 30*60 - seconds;
+  const m=Math.floor(elapsed/60), s=elapsed%60;
+  document.getElementById('v-team').textContent = teamName;
+  document.getElementById('v-time').textContent = (m<10?'0':'')+m+'min '+(s<10?'0':'')+s+'s';
+  const pEl = document.getElementById('v-penalties');
+  pEl.style.color = penalties>0?'var(--danger)':'var(--ok)';
+  pEl.textContent = penalties>0 ? '⚠ '+penalties+' pénalité(s) de −30s' : '🌟 Aucune pénalité — Performance parfaite !';
+  launchConfetti();
+}
+
+function showTimeUp(){
+  document.getElementById('s-game').classList.remove('active');
+  document.getElementById('s-victory').classList.add('active');
+  document.getElementById('v-team').textContent = teamName;
+  const vt=document.getElementById('v-time');
+  vt.textContent='⏰ TEMPS ÉCOULÉ'; vt.style.fontSize='2.2rem'; vt.style.color='var(--danger)';
+  const pEl=document.getElementById('v-penalties');
+  pEl.style.color='var(--text)';
+  pEl.textContent = penalties>0?penalties+' pénalité(s) de −30s':'';
+  launchConfetti();
+}
+
+function launchConfetti(){
+  const cols=['#00cfff','#80e8ff','#ffffff','#ffd740','#00e676'];
+  for(let i=0;i<80;i++){
+    const c=document.createElement('div');
+    c.className='confetti-piece';
+    c.style.cssText=`left:${Math.random()*100}vw;background:${cols[~~(Math.random()*cols.length)]};width:${6+Math.random()*8}px;height:${6+Math.random()*8}px;animation-duration:${2+Math.random()*2}s;animation-delay:${Math.random()*1.5}s`;
+    document.body.appendChild(c);
+    setTimeout(()=>c.remove(),5600);
+  }
+}
+
+// ══════════════════════════════════════════════════════
+//  RESTART
+// ══════════════════════════════════════════════════════
+function restartGame(){
+  clearInterval(timerInt);
+  seconds=30*60; penalties=0; teamName='';
+  orthoFound=[]; fautesLeft=4;
+  solved=[false,false,false,false,false];
+  multiStep={2:0,3:0,4:0};
+
+  document.getElementById('team-name').value='';
+  ['s-game','s-victory'].forEach(id=>document.getElementById(id).classList.remove('active'));
+  document.getElementById('s-team').classList.add('active');
+  for(let i=0;i<5;i++) document.getElementById('dot-'+i).className='dot'+(i===0?' active':'');
+
+  // Reset all stages
+  document.getElementById('stage-0').style.display='block';
+  for(let i=1;i<5;i++) document.getElementById('stage-'+i).style.display='none';
+
+  // Salle simple 0
+  [0].forEach(i=>{
+    const inp=document.getElementById('in-'+i);
+    inp.value=''; inp.className='ans-input'; inp.disabled=false;
+    document.getElementById('fb-'+i).className='feedback';
+    document.getElementById('fb-'+i).textContent='';
+    document.getElementById('next-'+i).className='btn-next';
+    document.getElementById('next-'+i).style.display='none';
+    ['a','b'].forEach(ab=>{
+      document.getElementById('h'+i+ab).disabled=(ab==='b');
+      document.getElementById('ht'+i+ab).classList.remove('vis');
+    });
+  });
+
+  // Salle 2 ortho
+  const inp1=document.getElementById('in-1');
+  inp1.value=''; inp1.className='ans-input'; inp1.disabled=false;
+  document.getElementById('btn-ortho').disabled=false;
+  document.getElementById('fb-1').className='feedback'; document.getElementById('fb-1').textContent='';
+  document.getElementById('next-1').className='btn-next'; document.getElementById('next-1').style.display='none';
+  document.getElementById('fautes-counter').textContent='4';
+  document.getElementById('found-list').innerHTML='';
+  ['a','b'].forEach(ab=>{
+    document.getElementById('h1'+ab).disabled=(ab==='b');
+    document.getElementById('ht1'+ab).classList.remove('vis');
+  });
+  document.querySelectorAll('.mot-check').forEach(el=>el.classList.remove('found-error','correct-word'));
+
+  // Salles multi 2, 3, 4
+  [2,3,4].forEach(idx=>{
+    document.getElementById('sq-history-'+idx).innerHTML='';
+    document.getElementById('next-'+idx).className='btn-next';
+    document.getElementById('next-'+idx).style.display='none';
+    initMulti(idx);
+  });
+
+  updateTimerDisplay();
+}
+</script>
+</body>
+</html>                                                                                                                  

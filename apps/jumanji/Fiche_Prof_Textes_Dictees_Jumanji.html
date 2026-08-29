@@ -1,0 +1,329 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<title>Fiche Professeur — Textes Dictées Jumanji CM2</title>
+<style>
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+body { font-family: Arial, sans-serif; font-size: 9pt; color: #111; background: white; }
+
+@media print {
+  body { font-size: 8.5pt; }
+  .page { page-break-after: always; padding: 10mm 10mm 8mm 10mm; }
+  .page:last-child { page-break-after: auto; }
+}
+@media screen {
+  body { background: #ddd; }
+  .page { background: white; max-width: 210mm; margin: 10px auto; padding: 10mm; box-shadow: 0 2px 8px rgba(0,0,0,.2); }
+}
+
+/* ---- TOP HEADER ---- */
+.doc-title { background: #1a1a2e; color: white; padding: 5px 10px; display: flex; justify-content: space-between; align-items: center; margin-bottom: 7px; border-radius: 4px; }
+.doc-title h1 { font-size: 10pt; font-weight: bold; }
+.doc-title .meta { font-size: 7.5pt; opacity: .8; text-align: right; }
+
+/* ---- LEGEND ---- */
+.legend { display: flex; gap: 10px; font-size: 7.5pt; margin-bottom: 7px; }
+.leg { display: flex; align-items: center; gap: 3px; }
+.leg-sq { width: 10px; height: 10px; border-radius: 2px; flex-shrink: 0; }
+
+/* ---- GRID 2 COL ---- */
+.grid { display: grid; grid-template-columns: 1fr 1fr; gap: 6px; }
+.grid-3 { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 6px; }
+.span2 { grid-column: span 2; }
+
+/* ---- CARD ---- */
+.card { border: 1px solid #ccc; border-radius: 4px; overflow: hidden; }
+.card-head { padding: 3px 7px; display: flex; justify-content: space-between; align-items: center; }
+.card-head .ref { font-weight: bold; font-size: 9pt; color: white; }
+.card-head .info { font-size: 7pt; color: rgba(255,255,255,.9); text-align: right; line-height: 1.3; }
+.card-body { padding: 5px 7px; }
+
+/* ---- TYPE COLORS ---- */
+.flash-h  { background: #7b1fa2; }
+.trous-h  { background: #1565c0; }
+.coeur-h  { background: #00695c; }
+.neg-h    { background: #bf360c; }
+
+/* ---- TEXT ---- */
+.txt { line-height: 1.55; font-size: 8.5pt; margin-bottom: 4px; }
+.txt em { font-style: italic; }
+.ph { counter-increment: phrase; }
+.num { font-size: 7pt; color: #999; margin-right: 3px; font-weight: bold; }
+
+/* ---- INSTRUCTIONS ---- */
+.instr { font-size: 7.5pt; color: #555; font-style: italic; border-left: 2px solid #ccc; padding-left: 5px; margin-bottom: 4px; line-height: 1.4; }
+.instr strong { color: #333; font-style: normal; }
+
+/* ---- ANSWERS ---- */
+.answers { background: #fffde7; border: 1px solid #f9a825; border-radius: 3px; padding: 3px 6px; margin-top: 4px; font-size: 7.5pt; line-height: 1.5; }
+.answers strong { color: #e65100; font-size: 7pt; display: block; margin-bottom: 1px; }
+.ans-item { display: inline-block; background: #fff3e0; border: 1px solid #ffcc02; border-radius: 2px; padding: 0px 4px; margin: 1px 2px; font-style: italic; color: #bf360c; font-weight: bold; }
+.ans-cod { border-color: #1565c0; background: #e3f2fd; color: #0d47a1; }
+.ans-coi { border-color: #2e7d32; background: #e8f5e9; color: #1b5e20; }
+
+/* ---- EMPHASIS ---- */
+.pts { background: #fce4ec; border: 1px solid #f48fb1; border-radius: 3px; padding: 2px 5px; font-size: 7.5pt; margin-top: 3px; color: #880e4f; }
+.pts strong { color: #c62828; }
+
+/* ---- SEPARATOR ---- */
+.sep { border: none; border-top: 1.5px dashed #aaa; margin: 6px 0; }
+
+/* ---- TYPE TAG ---- */
+.tag { font-size: 7pt; font-weight: bold; color: white; border-radius: 2px; padding: 0 4px; margin-right: 4px; display: inline-block; vertical-align: middle; }
+.t-f { background: #7b1fa2; }
+.t-t { background: #1565c0; }
+.t-c { background: #00695c; }
+.t-n { background: #bf360c; }
+
+/* ---- READ METHOD ---- */
+.method { font-size: 7pt; font-weight: bold; background: #f5f5f5; border-radius: 2px; padding: 1px 5px; color: #333; }
+</style>
+</head>
+<body>
+
+<!-- ==================== PAGE 1 ==================== -->
+<div class="page">
+
+<div class="doc-title">
+  <h1>📋 FICHE PROFESSEUR — Textes des dictées · Jumanji CM2 · Période 5</h1>
+  <div class="meta">10 dictées · Sem. 1→4 · Textes + corrigés + consignes de lecture<br>Imprimer recto-verso → 2 pages</div>
+</div>
+
+<div class="legend">
+  <div class="leg"><div class="leg-sq" style="background:#7b1fa2"></div> FLASH (lire 2× par phrase)</div>
+  <div class="leg"><div class="leg-sq" style="background:#1565c0"></div> À TROUS (lire texte entier 1× puis phrase par phrase)</div>
+  <div class="leg"><div class="leg-sq" style="background:#00695c"></div> PAR CŒUR (restitution individuelle, pas de lecture)</div>
+  <div class="leg"><div class="leg-sq" style="background:#bf360c"></div> NÉGOCIÉE (lire phrase par phrase, pause entre chaque)</div>
+  <div class="leg"><div class="leg-sq" style="background:#fff3e0; border:1px solid #f9a825"></div> Réponses corrigées (à trous)</div>
+</div>
+
+<div class="grid">
+
+  <!-- J1 FLASH -->
+  <div class="card">
+    <div class="card-head flash-h">
+      <span class="ref">J·1 &nbsp;<span class="tag t-f">FLASH</span></span>
+      <span class="info">Sem.1 · Mardi 5 mai · 10 min<br>Lien : GR·1 Types de phrases</span>
+    </div>
+    <div class="card-body">
+      <div class="instr"><strong>Lecture :</strong> Lire chaque phrase 2 fois, lentement, en articulant. Marquer une pause après chaque signe de ponctuation. Dicter les guillemets « » à l'oral.</div>
+      <div class="txt">
+        <span class="num">1.</span>Judy trouva une vieille boîte abandonnée sous un arbre du parc.<br>
+        <span class="num">2.</span>À l'intérieur se trouvait un jeu de société.<br>
+        <span class="num">3.</span>La règle était gravée en lettres dorées : « Une fois commencé, le jeu doit être terminé. »<br>
+        <span class="num">4.</span>N'était-ce pas une mise en garde ?
+      </div>
+      <div class="pts"><strong>Points attention :</strong> boîte (accent circ.) · gravée (fém.) · guillemets + deux-points · N'était-ce (trait d'union) · point d'interrogation final</div>
+    </div>
+  </div>
+
+  <!-- J2 À TROUS -->
+  <div class="card">
+    <div class="card-head trous-h">
+      <span class="ref">J·2 &nbsp;<span class="tag t-t">À TROUS</span></span>
+      <span class="info">Sem.1 · Jeudi 7 mai · 12 min<br>Lien : GR·1 Types de phrases / GN</span>
+    </div>
+    <div class="card-body">
+      <div class="instr"><strong>Lecture :</strong> Lire le texte complet 1 fois (les élèves écoutent sans écrire). Puis relire phrase par phrase, marquer une pause aux blancs. Dire « blanc » à chaque lacune.</div>
+      <div class="txt">
+        Judy et Peter découvrirent <u>une mystérieuse</u> boîte dans <u>le grand</u> parc de leur quartier. À l'intérieur, <u>un vieux</u> jeu de plateau attendait <u>les deux</u> enfants. Sur <u>le sombre</u> couvercle, <u>des</u> lettres <u>dorées</u> formaient un titre inconnu : JUMANJI. <u>Une étrange</u> règle avertissait les joueurs que <u>le</u> jeu ne devait jamais être abandonné.
+      </div>
+      <div class="answers">
+        <strong>✓ MOTS MANQUANTS (dans l'ordre) :</strong>
+        <span class="ans-item">une mystérieuse</span>
+        <span class="ans-item">le grand</span>
+        <span class="ans-item">un vieux</span>
+        <span class="ans-item">les deux</span>
+        <span class="ans-item">le sombre</span>
+        <span class="ans-item">des … dorées</span>
+        <span class="ans-item">Une étrange</span>
+        <span class="ans-item">le</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- J3 FLASH -->
+  <div class="card">
+    <div class="card-head flash-h">
+      <span class="ref">J·3 &nbsp;<span class="tag t-f">FLASH</span></span>
+      <span class="info">Sem.2 · Lundi 11 mai · 10 min<br>Lien : GR·2 Constituants du GN</span>
+    </div>
+    <div class="card-body">
+      <div class="instr"><strong>Lecture :</strong> Lire chaque phrase 2 fois. Insister sur les GN riches (adjectifs). Dicter la virgule après « hésitation » et après « escalier ».</div>
+      <div class="txt">
+        <span class="num">1.</span>Peter lança les dés avec hésitation.<br>
+        <span class="num">2.</span>Le lion quitta l'escalier et bondit dans le salon.<br>
+        <span class="num">3.</span>Judy attrapa les pièces du jeu et continua à jouer malgré sa peur.<br>
+        <span class="num">4.</span>Les enfants regardèrent l'animal avec des yeux écarquillés.
+      </div>
+      <div class="pts"><strong>Points attention :</strong> lança (passé simple, -ça) · bondit (-it) · attrapa · écarquillés (accord masc. plur.) · COD à repérer après correction : les dés / l'escalier / les pièces / l'animal</div>
+    </div>
+  </div>
+
+  <!-- J4 À TROUS -->
+  <div class="card">
+    <div class="card-head trous-h">
+      <span class="ref">J·4 &nbsp;<span class="tag t-t">À TROUS</span></span>
+      <span class="info">Sem.2 · Mardi 12 mai · 15 min<br>Lien : GR·2 GN ★ lien direct</span>
+    </div>
+    <div class="card-body">
+      <div class="instr"><strong>Lecture :</strong> Texte entier 1× d'abord. Puis phrase par phrase, pause marquée aux blancs (dire « blanc »). Rappeler que les blancs sont tous des GN complets.</div>
+      <div class="txt">
+        Dans <u>le salon dévasté</u>, <u>un lion affamé</u> cherchait sa proie. <u>Le grand félin</u> avait bondi d'une case mystérieuse du jeu. Peter observait <u>l'animal sauvage</u> sans bouger. Judy comprit qu'elle devait avancer <u>sa petite pièce</u> sur <u>le plateau coloré</u> pour que le danger disparaisse enfin.
+      </div>
+      <div class="answers">
+        <strong>✓ GN MANQUANTS (dans l'ordre) :</strong>
+        <span class="ans-item">le salon dévasté</span>
+        <span class="ans-item">un lion affamé</span>
+        <span class="ans-item">Le grand félin</span>
+        <span class="ans-item">l'animal sauvage</span>
+        <span class="ans-item">sa petite pièce</span>
+        <span class="ans-item">le plateau coloré</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- J5 NÉGOCIÉE -->
+  <div class="card span2">
+    <div class="card-head neg-h">
+      <span class="ref">J·5 &nbsp;<span class="tag t-n">NÉGOCIÉE</span></span>
+      <span class="info">Sem.2 · Vendredi 15 mai · 15 min · Lien : Révision générale sem.2 · Binômes prédéfinis</span>
+    </div>
+    <div class="card-body">
+      <div class="instr"><strong>Déroulement :</strong> (1) Lire le texte entier 1 fois. (2) Relire phrase par phrase, pause entre chaque — les élèves écrivent seuls. (3) Temps de négociation en binôme (3 min). (4) Correction collective au tableau.</div>
+      <div class="txt">
+        <span class="num">1.</span>Les deux enfants jouaient depuis une heure quand le plafond du salon s'ouvrit brusquement.<br>
+        <span class="num">2.</span>Des singes agités envahirent la pièce et renversèrent tous les meubles.<br>
+        <span class="num">3.</span>Peter, épouvanté, n'osait plus avancer sa pièce.<br>
+        <span class="num">4.</span>Judy, plus courageuse, prit les dés entre ses mains tremblantes et les lança de toutes ses forces.
+      </div>
+      <div class="pts"><strong>Points attention / à discuter en négociation :</strong> s'ouvrit (passé simple, réfléchi) · brusquement (-ment) · envahirent / renversèrent (-èrent) · épouvanté (accord masc.) · n'osait (imparfait + négation) · courageuse (fém.) · tremblantes (accord fém. plur.) · lança (passé simple)</div>
+    </div>
+  </div>
+
+</div><!-- end grid -->
+</div><!-- end page 1 -->
+
+<!-- ==================== PAGE 2 ==================== -->
+<div class="page">
+
+<div class="doc-title">
+  <h1>📋 FICHE PROFESSEUR — Textes des dictées · Jumanji CM2 · Suite (J·6 à J·10)</h1>
+  <div class="meta">Page 2/2 · Sem. 3→4</div>
+</div>
+
+<div class="grid">
+
+  <!-- J6 PAR CŒUR -->
+  <div class="card">
+    <div class="card-head coeur-h">
+      <span class="ref">J·6 &nbsp;<span class="tag t-c">PAR CŒUR</span></span>
+      <span class="info">Sem.3 · Lundi 18 mai · 10–12 min<br>Texte donné jeudi/vendredi préc.</span>
+    </div>
+    <div class="card-body">
+      <div class="instr"><strong>Déroulement :</strong> Pas de lecture par l'enseignant — les élèves restituent de mémoire. Circuler pour vérifier. Puis afficher le texte au tableau pour correction individuelle.</div>
+      <div class="txt">
+        <span class="num">1.</span>Enfin, Judy cria le mot qu'elle attendait depuis si longtemps : « Jumanji ! »<br>
+        <span class="num">2.</span>En un instant, tout disparut. Le lion, le rhinocéros et les singes s'évaporèrent comme par magie.<br>
+        <span class="num">3.</span>La maison retrouva son calme habituel.<br>
+        <span class="num">4.</span>Les deux enfants se regardèrent en silence, épuisés mais soulagés.
+      </div>
+      <div class="pts"><strong>Points attention :</strong> attendait (imparfait) · guillemets + point exclamation à l'intérieur · disparut (-ut passé simple) · s'évaporèrent (-èrent) · calme habituel (adj. épithète) · épuisés / soulagés (accord masc. plur. avec « enfants »)</div>
+    </div>
+  </div>
+
+  <!-- J7 À TROUS -->
+  <div class="card">
+    <div class="card-head trous-h">
+      <span class="ref">J·7 &nbsp;<span class="tag t-t">À TROUS</span></span>
+      <span class="info">Sem.3 · Mardi 19 mai · 12 min<br>Lien : GR·3 COD/COI ★ lien direct</span>
+    </div>
+    <div class="card-body">
+      <div class="instr"><strong>Lecture :</strong> Texte entier 1× d'abord. Puis phrase par phrase, pause aux blancs (dire « blanc »). Préciser avant la dictée : "Vous allez compléter des compléments du verbe — COD ou COI."</div>
+      <div class="txt">
+        Judy prit <u>les dés</u> et les lança de toutes ses forces. Peter obéissait <u>aux règles</u> sans jamais les questionner. Les enfants attendaient <u>la fin de la partie</u> avec impatience. Judy adressa <u>un sourire courageux</u> à son frère pour lui redonner de l'espoir.
+      </div>
+      <div class="answers">
+        <strong>✓ COMPLÉMENTS MANQUANTS :</strong>
+        <span class="ans-item ans-cod">les dés (COD)</span>
+        <span class="ans-item ans-coi">aux règles (COI)</span>
+        <span class="ans-item ans-cod">la fin de la partie (COD)</span>
+        <span class="ans-item ans-cod">un sourire courageux (COD)</span>
+        <br><span style="font-size:7pt; color:#555;">Légende : <span class="ans-item ans-cod">bleu = COD</span> <span class="ans-item ans-coi">vert = COI</span></span>
+      </div>
+    </div>
+  </div>
+
+  <!-- J8 PAR CŒUR -->
+  <div class="card">
+    <div class="card-head coeur-h">
+      <span class="ref">J·8 &nbsp;<span class="tag t-c">PAR CŒUR</span></span>
+      <span class="info">Sem.4 · Lundi 25 mai · 10–12 min<br>Texte donné jeudi/vendredi préc.</span>
+    </div>
+    <div class="card-body">
+      <div class="instr"><strong>Déroulement :</strong> Restitution individuelle de mémoire — pas de lecture. Afficher le texte au tableau pour correction. Insister sur la ponctuation du dialogue lors de la mise en commun.</div>
+      <div class="txt">
+        <span class="num">1.</span>Après la partie, Judy et Peter remirent le jeu dans sa boîte.<br>
+        <span class="num">2.</span>Par la fenêtre, ils aperçurent deux garçons qui ramassaient la boîte abandonnée dans le parc.<br>
+        <span class="num">3.</span>— Connaissez-vous la règle ? cria Judy depuis la fenêtre.<br>
+        <span class="num">4.</span>Mais il était trop tard. Une nouvelle partie venait de commencer.
+      </div>
+      <div class="pts"><strong>Points attention :</strong> remirent (passé simple irrég.) · aperçurent (-çurent) · abandonnée (accord fém. avec « boîte ») · tiret long — (dialogue) · Connaissez-vous (trait d'union inversion) · point d'interrogation + verbe introducteur non mis en majuscule</div>
+    </div>
+  </div>
+
+  <!-- J9 FLASH -->
+  <div class="card">
+    <div class="card-head flash-h">
+      <span class="ref">J·9 &nbsp;<span class="tag t-f">FLASH</span></span>
+      <span class="info">Sem.4 · Mardi 26 mai · 10 min<br>Lien : GR·4 CC + attribut ★</span>
+    </div>
+    <div class="card-body">
+      <div class="instr"><strong>Lecture :</strong> Lire chaque phrase 2 fois. Bien marquer la pause + virgule après chaque CC en tête de phrase. Insister sur les adverbes en -ment.</div>
+      <div class="txt">
+        <span class="num">1.</span>Dans la chambre obscure, le lit se mit à trembler violemment.<br>
+        <span class="num">2.</span>Soudain, un rhinocéros traversa les murs de la maison.<br>
+        <span class="num">3.</span>Les enfants coururent rapidement vers le salon pour continuer la partie.<br>
+        <span class="num">4.</span>Ce soir-là, Judy et Peter jouèrent jusqu'à la nuit pour terminer le jeu.
+      </div>
+      <div class="pts"><strong>CC à repérer :</strong> Dans la chambre obscure (lieu) · Soudain (temps) · violemment (manière) · rapidement (manière) · vers le salon (lieu) · Ce soir-là (temps) · jusqu'à la nuit (temps) · <strong>Points attention :</strong> se mit (passé simple irrég.) · coururent · traversa · jouèrent</div>
+    </div>
+  </div>
+
+  <!-- J10 NÉGOCIÉE -->
+  <div class="card span2">
+    <div class="card-head neg-h">
+      <span class="ref">J·10 &nbsp;<span class="tag t-n">NÉGOCIÉE</span></span>
+      <span class="info">Sem.4 · Vendredi 29 mai · 15 min · Lien : Accord participe passé avec avoir · Binômes stables</span>
+    </div>
+    <div class="card-body">
+      <div class="instr"><strong>Déroulement :</strong> (1) Texte entier 1×. (2) Phrase par phrase — élèves écrivent seuls. (3) Négociation binôme (3 min) — insister sur les participes passés en désaccord. (4) Correction collective en analysant les accords au tableau : "Quel est le COD ? Est-il avant le verbe ? → Accord."</div>
+      <div class="txt">
+        <span class="num">1.</span>Le jeu terminé, Judy posa la boîte sur l'étagère.<br>
+        <span class="num">2.</span>Elle avait vécu des aventures extraordinaires qu'elle n'avait pas imaginées.<br>
+        <span class="num">3.</span>Peter, épuisé mais fier, regarda sa sœur.<br>
+        <span class="num">4.</span>Les épreuves qu'ils avaient affrontées ensemble avaient disparu comme elles étaient apparues : sans la moindre explication.
+      </div>
+      <div class="answers">
+        <strong>✓ ACCORDS PARTICIPES PASSÉS (point de négociation principal) :</strong>
+        <span class="ans-item">terminé (adj. attribut → masc. sing.)</span>
+        <span class="ans-item">imaginées ← COD « qu' » = aventures (fém. plur.) antéposé</span>
+        <span class="ans-item">épuisé / fier (attribut → masc. sing.)</span>
+        <span class="ans-item">affrontées ← COD « qu' » = épreuves (fém. plur.) antéposé</span>
+        <span class="ans-item">disparu / apparues ← avec être → accord avec sujet « elles » = épreuves (fém. plur.)</span>
+      </div>
+      <div class="pts" style="margin-top:4px;"><strong>Points attention :</strong> étagère (accent grave) · extraordinaires (fém. plur.) · sœur (tréma) · moindre (pas d'accord, invariable ici)</div>
+    </div>
+  </div>
+
+</div><!-- end grid -->
+
+<hr class="sep">
+<div style="font-size:7.5pt; color:#555; text-align:center;">
+  📋 Fiche Professeur — Dictées Jumanji CM2 P5 · 2025-2026 · Conforme BO Cycle 3 · À imprimer recto-verso (2 pages A4)
+</div>
+
+</div><!-- end page 2 -->
+</body>
+</html>

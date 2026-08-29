@@ -1,0 +1,800 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>🎲 Jeu de l'Oie</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=DM+Sans:wght@400;600;700&display=swap" rel="stylesheet">
+<style>
+/* ── ROOT ── */
+:root{--cell:80px;--gap:3px;--bg:#0C1220;--card:#14213A;--sb:162px}
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+html,body{height:100%;overflow:hidden}
+body{
+  font-family:'DM Sans','Segoe UI',sans-serif;
+  background:var(--bg);color:#F0EEFF;display:flex;flex-direction:column;
+  -webkit-font-smoothing:antialiased;
+}
+
+/* ── HEADER (light) ── */
+#hdr{
+  height:52px;flex-shrink:0;display:flex;align-items:center;gap:12px;
+  padding:0 20px;background:#FEFAF2;border-top:4px solid #AD5804;border-bottom:1px solid #E0D0B8;
+}
+#hdr a{color:#AD5804;text-decoration:none;font-size:.82rem;font-weight:700;font-family:'DM Sans','Segoe UI',sans-serif;white-space:nowrap;}
+#hdr a:hover{opacity:.72;}
+#hdr span{
+  font-family:'Bebas Neue','Segoe UI',sans-serif;font-size:1.5rem;letter-spacing:.06em;
+  flex:1;text-align:center;background:none;-webkit-background-clip:unset;-webkit-text-fill-color:#1A1208;color:#1A1208;
+}
+
+/* ── SETUP SCREEN ── */
+#setup{flex:1;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:16px;padding:16px;overflow-y:auto}
+#setup h1{
+  font-family:'Bebas Neue',sans-serif;
+  font-size:clamp(2.4rem,6vw,3.4rem);letter-spacing:.04em;
+  background:linear-gradient(135deg,#F5C842,#F59E0B);
+  -webkit-background-clip:text;-webkit-text-fill-color:transparent;
+  text-align:center;line-height:1;
+}
+.card{
+  background:var(--card);border-radius:20px;padding:24px 28px;
+  max-width:480px;width:100%;
+  box-shadow:0 12px 50px rgba(0,0,0,.5);border:1px solid rgba(255,255,255,.07);
+}
+.lbl{font-size:.72rem;color:rgba(255,255,255,.35);text-transform:uppercase;letter-spacing:.12em;margin-bottom:8px;display:block;font-weight:700;}
+.mode-row{display:flex;gap:10px;margin-bottom:8px}
+.mcard{
+  flex:1;border-radius:14px;border:2px solid rgba(255,255,255,.08);
+  padding:14px 10px;cursor:pointer;transition:all .22s;text-align:center;background:#0C1220;
+}
+.mcard:hover{border-color:rgba(255,255,255,.22);transform:scale(1.03);}
+.mcard.on.cp{border-color:#F59E0B;background:linear-gradient(135deg,rgba(120,80,10,.55),rgba(251,191,36,.12));}
+.mcard.on.easy{border-color:#22C55E;background:linear-gradient(135deg,rgba(20,83,45,.55),rgba(34,197,94,.12));}
+.mcard.on.hard{border-color:#EF4444;background:linear-gradient(135deg,rgba(127,29,29,.55),rgba(239,68,68,.12));}
+.mcard .mi{font-size:2.2rem;display:block;margin-bottom:5px}
+.mcard .mt{font-family:'Bebas Neue',sans-serif;font-size:1.1rem;letter-spacing:.06em;display:block;}
+.mcard .ms{font-size:.7rem;color:rgba(255,255,255,.38);margin-top:3px;display:block;line-height:1.35;font-family:'DM Sans',sans-serif;}
+.cnt-row{display:flex;gap:6px;margin-bottom:18px}
+.cb{
+  flex:1;padding:9px;border-radius:10px;border:2px solid rgba(255,255,255,.08);
+  background:#0C1220;color:rgba(255,255,255,.3);font-size:1.1rem;cursor:pointer;transition:all .2s;font-weight:700;
+}
+.cb.on{border-color:#3B82F6;background:rgba(37,99,235,.25);color:#fff;}
+.pr{display:flex;align-items:center;gap:8px;margin-bottom:8px}
+.pdot{width:12px;height:12px;border-radius:50%;flex-shrink:0}
+.pr input{
+  flex:1;padding:8px 12px;border-radius:9px;border:2px solid rgba(255,255,255,.08);
+  background:rgba(255,255,255,.04);color:#F0EEFF;font-size:.9rem;outline:none;
+  font-family:'DM Sans',sans-serif;transition:border-color .2s;
+}
+.pr input:focus{border-color:rgba(59,130,246,.7);}
+#go-btn{
+  width:100%;margin-top:16px;padding:14px;border-radius:14px;border:none;
+  background:linear-gradient(135deg,#2563EB,#7C3AED);color:#fff;
+  font-family:'Bebas Neue',sans-serif;font-size:22px;letter-spacing:.1em;
+  cursor:pointer;transition:transform .1s,opacity .2s;
+}
+#go-btn:hover{opacity:.9;transform:scale(1.02);}
+
+/* ── GAME LAYOUT ── */
+#game{flex:1;display:none;flex-direction:row;overflow:hidden;padding:7px;gap:7px}
+#bwrap{flex:1;display:flex;align-items:center;justify-content:center;overflow:hidden;position:relative}
+#board{display:grid;grid-template-columns:repeat(10,var(--cell));grid-template-rows:repeat(4,var(--cell));gap:var(--gap);background:#06090f;padding:5px;border-radius:12px;border:2px solid rgba(255,255,255,.07);box-shadow:0 0 60px rgba(0,0,0,.8)}
+.cell{width:var(--cell);height:var(--cell);border-radius:7px;display:flex;flex-direction:column;align-items:center;justify-content:center;position:relative;overflow:hidden;border:1.5px solid rgba(255,255,255,.1);cursor:default;transition:transform .15s;box-shadow:inset 0 1px 0 rgba(255,255,255,.12),inset 0 -2px 0 rgba(0,0,0,.3)}
+.cell:hover{transform:scale(1.1);z-index:10}
+.cnum{position:absolute;top:2px;right:3px;font-size:calc(var(--cell)*.09);font-weight:800;color:rgba(255,255,255,.5);line-height:1}
+.cicon{font-size:calc(var(--cell)*.38);line-height:1}
+.clbl{font-size:calc(var(--cell)*.1);font-weight:800;color:rgba(255,255,255,.9);margin-top:2px;text-align:center;letter-spacing:.02em;line-height:1;max-width:calc(var(--cell)*.9);overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.ctoks{position:absolute;bottom:2px;left:50%;transform:translateX(-50%);display:flex;gap:1px;flex-wrap:wrap;justify-content:center;max-width:calc(var(--cell)*.9)}
+.tok{width:calc(var(--cell)*.17);height:calc(var(--cell)*.17);border-radius:50%;border:1.5px solid #fff;display:flex;align-items:center;justify-content:center;font-size:calc(var(--cell)*.07);font-weight:900;color:#fff;text-shadow:0 1px 2px rgba(0,0,0,.9);flex-shrink:0}
+.cm{background:linear-gradient(135deg,#1d4ed8,#3b82f6)}
+.cf{background:linear-gradient(135deg,#9f1239,#e11d48)}
+.cd{background:linear-gradient(135deg,#5b21b6,#8b5cf6)}
+.ce{background:linear-gradient(135deg,#0e7490,#22d3ee)}
+.cc{background:linear-gradient(135deg,#14532d,#22c55e)}
+.cml{background:linear-gradient(135deg,#9a3412,#f97316)}
+.cs{background:linear-gradient(135deg,#78350f,#fbbf24)}
+.cw{background:linear-gradient(135deg,#78350f,#fbbf24);animation:glow 1.5s infinite}
+.hi{box-shadow:0 0 0 3px #fff,0 0 18px rgba(255,255,255,.6)!important}
+@keyframes glow{0%,100%{box-shadow:0 0 10px #fbbf24}50%{box-shadow:0 0 35px #fbbf24,0 0 65px #f59e0b}}
+
+/* ── SIDEBAR ── */
+#mbadge{position:absolute;top:9px;left:9px;z-index:50;padding:3px 10px;border-radius:999px;font-size:.72rem;font-weight:800;letter-spacing:.08em}
+#mbadge.cp{background:#d97706;color:#fff}
+#mbadge.easy{background:#16a34a;color:#fff}
+#mbadge.hard{background:#dc2626;color:#fff}
+#sb{width:var(--sb);flex-shrink:0;display:flex;flex-direction:column;gap:7px;overflow-y:auto}
+.sc{background:var(--card);border-radius:12px;padding:12px;border:1px solid rgba(255,255,255,.07);}
+.slbl{font-size:.67rem;color:rgba(255,255,255,.3);text-transform:uppercase;letter-spacing:.1em;margin-bottom:4px;font-weight:700;}
+#cur{font-size:.95rem;font-weight:800;margin-bottom:3px;color:#F5C842;}
+#dbox{font-size:3rem;text-align:center;padding:3px 0;min-height:54px;display:flex;align-items:center;justify-content:center}
+#dbox.spin{animation:dr .5s ease-out}
+@keyframes dr{0%{transform:rotate(0)scale(1)}20%{transform:rotate(-25deg)scale(1.3)}50%{transform:rotate(18deg)scale(.9)}80%{transform:rotate(-8deg)scale(1.05)}100%{transform:rotate(0)scale(1)}}
+#rbtn{
+  width:100%;padding:10px;border-radius:10px;border:none;
+  background:linear-gradient(135deg,#2563EB,#7C3AED);color:#fff;
+  font-family:'Bebas Neue',sans-serif;font-size:17px;letter-spacing:.08em;
+  cursor:pointer;transition:all .2s;
+}
+#rbtn:hover:not(:disabled){transform:scale(1.04);opacity:.9}
+#rbtn:disabled{opacity:.3;cursor:not-allowed}
+.ri{display:flex;align-items:center;gap:6px;padding:4px 0;border-bottom:1px solid rgba(255,255,255,.06);font-size:.77rem}
+.ri:last-child{border-bottom:none}
+.rdot{width:8px;height:8px;border-radius:50%;flex-shrink:0}
+.rpos{color:rgba(255,255,255,.3);font-size:.68rem;margin-left:auto}
+#leg{background:var(--card);border-radius:12px;padding:11px;border:1px solid rgba(255,255,255,.07);font-size:.67rem}
+.li{display:flex;align-items:center;gap:6px;padding:2px 0}
+.ld{width:9px;height:9px;border-radius:2px;flex-shrink:0}
+
+/* ── OVERLAYS ── */
+.ov{display:none;position:fixed;inset:0;background:rgba(0,0,0,.85);backdrop-filter:blur(8px);z-index:900;align-items:center;justify-content:center;padding:16px}
+.ov.show{display:flex!important}
+.pop{
+  background:#13213A;border-radius:22px;padding:38px 44px;max-width:660px;width:100%;
+  box-shadow:0 24px 90px rgba(0,0,0,.85);text-align:center;
+  animation:pin .28s cubic-bezier(.34,1.56,.64,1);
+  border:1.5px solid rgba(255,255,255,.09);
+}
+@keyframes pin{from{transform:scale(.45);opacity:0}to{transform:scale(1);opacity:1}}
+.badge{
+  display:inline-block;padding:5px 18px;border-radius:999px;
+  font-family:'Bebas Neue',sans-serif;font-size:14px;letter-spacing:.14em;
+  margin-bottom:18px;color:#fff;text-transform:uppercase;
+}
+#pq{
+  font-family:'DM Sans',sans-serif;font-size:1.75rem;font-weight:700;line-height:1.4;
+  color:#F0EEFF;margin-bottom:22px;min-height:64px;display:flex;align-items:center;justify-content:center;
+}
+#pa{
+  background:rgba(16,185,129,.1);border:2px solid rgba(16,185,129,.3);border-radius:12px;
+  padding:14px 20px;font-size:1.15rem;font-weight:700;color:#6EE7B7;
+  margin-bottom:18px;display:none;animation:pin .2s ease;font-family:'DM Sans',sans-serif;
+}
+.pb{
+  padding:11px 28px;border-radius:12px;border:none;
+  font-family:'Bebas Neue',sans-serif;font-size:18px;letter-spacing:.06em;
+  cursor:pointer;margin:4px;transition:all .18s;
+}
+.pb:hover{transform:scale(1.05);}
+.pr2{background:#2563EB;color:#fff}
+.pc{background:#16A34A;color:#fff;display:none}
+.pok{background:linear-gradient(135deg,#16A34A,#22C55E);color:#fff;font-size:19px;padding:13px 36px;display:none}
+.pko{background:linear-gradient(135deg,#DC2626,#EF4444);color:#fff;font-size:19px;padding:13px 36px;display:none}
+#ep .pop{border-top:5px solid #F5C842;}
+#em{font-family:'Bebas Neue',sans-serif;font-size:2rem;letter-spacing:.04em;margin-bottom:22px;line-height:1.2;color:#F5C842;}
+.bok{
+  padding:11px 48px;border-radius:12px;border:none;
+  background:linear-gradient(135deg,#2563EB,#7C3AED);color:#fff;
+  font-family:'Bebas Neue',sans-serif;font-size:18px;letter-spacing:.08em;cursor:pointer;transition:.2s;
+}
+.bok:hover{opacity:.9;}
+#wp .pop{border-top:5px solid #fbbf24;padding:44px 40px;}
+.bres{
+  color:#fff;padding:12px 46px;border-radius:12px;border:none;
+  font-family:'Bebas Neue',sans-serif;font-size:18px;letter-spacing:.08em;cursor:pointer;margin:4px;transition:.2s;
+}
+</style>
+</head>
+<body>
+<div id="hdr"><a href="Portail_Canicule.html">← Portail</a><span>🎲 JEU DE L'OIE</span></div>
+
+<div id="setup">
+  <h1>🎲 Jeu de l'Oie</h1>
+  <div class="card">
+    <span class="lbl">Choisissez le niveau</span>
+    <div class="mode-row" style="flex-wrap:wrap;">
+      <div class="mcard cp" data-mode="cp">
+        <span class="mi">🌟</span>
+        <span class="mt">Mode CP</span>
+        <span class="ms">CP/CE1 : additions, sons, syllabes, chiffres</span>
+      </div>
+      <div class="mcard easy on" data-mode="easy">
+        <span class="mi">🟢</span>
+        <span class="mt">Mode CE</span>
+        <span class="ms">CE1/CE2 : tables, conjugaison, énigmes</span>
+      </div>
+      <div class="mcard hard" data-mode="hard">
+        <span class="mi">🔴</span>
+        <span class="mt">Mode CM</span>
+        <span class="ms">CM1/CM2 : fractions, passé simple, proportionnalité…</span>
+      </div>
+    </div>
+  </div>
+  <div class="card">
+    <span class="lbl">Nombre de joueurs</span>
+    <div class="cnt-row">
+      <button class="cb" data-n="1">1</button>
+      <button class="cb" data-n="2">2</button>
+      <button class="cb on" data-n="3">3</button>
+      <button class="cb" data-n="4">4</button>
+      <button class="cb" data-n="5">5</button>
+    </div>
+    <span class="lbl">Prénoms</span>
+    <div id="pic"></div>
+    <button id="go-btn">🚀 Commencer !</button>
+  </div>
+</div>
+
+<div id="game">
+  <div id="bwrap">
+    <span id="mbadge">FACILE</span>
+    <div id="board"></div>
+  </div>
+  <div id="sb">
+    <div class="sc"><div class="slbl">Tour de</div><div id="cur">—</div><div id="dbox">🎲</div><button id="rbtn">🎲 Lancer le dé</button></div>
+    <div class="sc"><div class="slbl">Classement</div><div id="rnk"></div></div>
+    <div id="leg">
+      <div class="slbl" style="margin-bottom:5px">Légende</div>
+      <div class="li"><div class="ld" style="background:linear-gradient(135deg,#1d4ed8,#3b82f6)"></div>Maths</div>
+      <div class="li"><div class="ld" style="background:linear-gradient(135deg,#9f1239,#e11d48)"></div>Français</div>
+      <div class="li"><div class="ld" style="background:linear-gradient(135deg,#5b21b6,#8b5cf6)"></div>Défi</div>
+      <div class="li"><div class="ld" style="background:linear-gradient(135deg,#0e7490,#22d3ee)"></div>Énigme</div>
+      <div class="li"><div class="ld" style="background:linear-gradient(135deg,#14532d,#22c55e)"></div>Chance</div>
+      <div class="li"><div class="ld" style="background:linear-gradient(135deg,#9a3412,#f97316)"></div>Malchance</div>
+    </div>
+  </div>
+</div>
+
+<div class="ov" id="qp">
+  <div class="pop" style="border-top:6px solid #3b82f6">
+    <div class="badge" id="qbadge">MATHS</div>
+    <div id="pq">?</div>
+    <div id="pa"></div>
+    <button class="pb pr2" id="rvl">👁 Voir la réponse</button>
+    <div id="verdict" style="display:none;margin-top:4px">
+      <button class="pb pok" id="bjuste">✅ J'ai eu juste !</button>
+      <button class="pb pko" id="bfaux">❌ J'ai eu faux</button>
+    </div>
+  </div>
+</div>
+<div class="ov" id="ep"><div class="pop"><div id="em">—</div><button class="bok" id="eok">OK !</button></div></div>
+<div class="ov" id="wp">
+  <div class="pop">
+    <div style="font-size:3.5rem;margin-bottom:8px">🏆</div>
+    <div style="font-size:2.1rem;font-weight:800;margin-bottom:8px">Félicitations !</div>
+    <div id="wnam" style="font-size:1.75rem;font-weight:800;margin-bottom:6px"></div>
+    <div style="color:#f59e0b;margin-bottom:24px;font-size:.9rem">remporte la partie ! 🏆</div>
+    <button class="bres" id="rst" style="background:linear-gradient(135deg,#f59e0b,#ef4444)">🔄 Rejouer (même mode)</button>
+    <button class="bres" id="chm" style="background:linear-gradient(135deg,#2563eb,#7c3aed)">🔀 Changer de mode</button>
+  </div>
+</div>
+
+<script>
+const TDEF={
+  m:{i:'🔢',l:'Maths',c:'cm'},f:{i:'📚',l:'Français',c:'cf'},
+  d:{i:'🎯',l:'Défi',c:'cd'},e:{i:'🧩',l:'Énigme',c:'ce'},
+  c:{i:'🍀',l:'Chance',c:'cc'},ml:{i:'💀',l:'Malchance',c:'cml'},
+  s:{i:'🚀',l:'Départ',c:'cs'},w:{i:'🏆',l:'Arrivée',c:'cw'},
+};
+
+const POOLS={
+cp:{
+  m:[
+    {q:"2 + 3 = ?",a:"5"},
+    {q:"1 + 4 = ?",a:"5"},
+    {q:"5 + 2 = ?",a:"7"},
+    {q:"3 + 3 = ?",a:"6"},
+    {q:"4 + 4 = ?",a:"8"},
+    {q:"6 + 3 = ?",a:"9"},
+    {q:"7 + 2 = ?",a:"9"},
+    {q:"5 + 5 = ?",a:"10"},
+    {q:"8 - 3 = ?",a:"5"},
+    {q:"7 - 4 = ?",a:"3"},
+    {q:"10 - 6 = ?",a:"4"},
+    {q:"9 - 5 = ?",a:"4"},
+    {q:"6 - 2 = ?",a:"4"},
+    {q:"Quel chiffre vient après 7 ?",a:"8"},
+    {q:"Quel chiffre vient avant 5 ?",a:"4"},
+    {q:"Compte de 2 en 2 jusqu'à 10 : 2, 4, …",a:"6, 8, 10"},
+    {q:"Combien font 3 + 2 + 1 ?",a:"6"},
+    {q:"Double de 4 = ?",a:"8"},
+    {q:"Double de 5 = ?",a:"10"},
+    {q:"Tu as 6 bonbons. Tu en manges 2. Combien il en reste ?",a:"4"},
+    {q:"Tu as 3 pommes. On t'en donne 4. Tu en as combien ?",a:"7"},
+    {q:"Lequel est le plus grand : 7 ou 5 ?",a:"7"},
+    {q:"Lequel est le plus petit : 3 ou 8 ?",a:"3"},
+    {q:"Combien de doigts sur une main ?",a:"5"},
+    {q:"Combien de jours dans une semaine ?",a:"7"},
+  ],
+  f:[
+    {q:"Quel est le premier son dans 'ballon' ?",a:"[b]"},
+    {q:"Quel est le premier son dans 'soleil' ?",a:"[s]"},
+    {q:"Trouve un mot qui rime avec 'chat'.",a:"rat, plat, pas, bras…"},
+    {q:"Trouve un mot qui rime avec 'gâteau'.",a:"bateau, chapeau, eau…"},
+    {q:"Combien de syllabes dans 'maison' ?",a:"2 : mai-son"},
+    {q:"Combien de syllabes dans 'papillon' ?",a:"3 : pa-pi-llon"},
+    {q:"Combien de syllabes dans 'chat' ?",a:"1"},
+    {q:"Combien de syllabes dans 'chocolat' ?",a:"3 : cho-co-lat"},
+    {q:"Cite 3 couleurs.",a:"rouge, bleu, vert, jaune, orange…"},
+    {q:"Quel jour vient après lundi ?",a:"mardi"},
+    {q:"Quel jour vient après vendredi ?",a:"samedi"},
+    {q:"Cite les 4 saisons.",a:"printemps, été, automne, hiver"},
+    {q:"Quel animal dit 'meuh' ?",a:"la vache"},
+    {q:"Quel animal dit 'cocorico' ?",a:"le coq"},
+    {q:"Trouve un mot qui commence par la lettre M.",a:"maison, maman, mer, musique…"},
+    {q:"Trouve un mot qui commence par la lettre P.",a:"pomme, papa, pluie, poisson…"},
+    {q:"C'est quoi le pluriel de 'un chat' ?",a:"des chats"},
+    {q:"C'est quoi le pluriel de 'une maison' ?",a:"des maisons"},
+    {q:"Le petit de la vache s'appelle ?",a:"le veau"},
+    {q:"Le petit du chien s'appelle ?",a:"le chiot"},
+    {q:"Donne 2 mots de la famille de 'eau'.",a:"eau, eaux, eau de pluie… / arroser, arrosoir"},
+    {q:"Quel son entends-tu dans 'étoile' au début ?",a:"[é]"},
+    {q:"Épèle ton prénom lettre par lettre.",a:"(réponse libre)"},
+    {q:"Cite 3 fruits.",a:"pomme, banane, orange, fraise…"},
+  ],
+  d:[
+    {q:"Compte à voix haute de 1 à 20 !",a:"1, 2, 3… 20 ✓"},
+    {q:"Récite les jours de la semaine dans l'ordre.",a:"lundi, mardi, mercredi, jeudi, vendredi, samedi, dimanche"},
+    {q:"Récite les mois de janvier à juin.",a:"janvier, février, mars, avril, mai, juin"},
+    {q:"Cite 5 animaux.",a:"(réponse libre : chien, chat, vache, cheval, lapin…)"},
+    {q:"Cite 5 couleurs.",a:"(réponse libre : rouge, bleu, vert, jaune, orange…)"},
+    {q:"Mime un animal sans parler — tes camarades devinent !",a:"(réponse libre)"},
+    {q:"Compte à rebours de 10 à 0.",a:"10, 9, 8, 7, 6, 5, 4, 3, 2, 1, 0 ✓"},
+    {q:"Cite 4 mots qui commencent par la lettre B.",a:"ballon, bateau, bébé, banane, bouche…"},
+    {q:"Dis 3 mots qui riment avec 'maison'.",a:"raison, saison, gazon, liaison…"},
+    {q:"Chante ou récite l'alphabet !",a:"A B C D E F G H I J K L M N O P Q R S T U V W X Y Z ✓"},
+    {q:"Cite 3 métiers.",a:"maîtresse, docteur, pompier, boulanger…"},
+    {q:"Donne le prénom de 5 de tes camarades.",a:"(réponse libre)"},
+  ],
+  e:[
+    {q:"Je suis rouge, ronde et on me croque. Qui suis-je ?",a:"Une pomme !"},
+    {q:"J'ai 4 pattes et je dis 'meow'. Qui suis-je ?",a:"Un chat !"},
+    {q:"Je tombe du ciel quand il fait froid. Je suis blanche. Qui suis-je ?",a:"La neige !"},
+    {q:"Je brille dans le ciel la nuit. Qui suis-je ?",a:"La lune (ou une étoile) !"},
+    {q:"On me met sur la tête quand il fait froid. Qui suis-je ?",a:"Un bonnet !"},
+    {q:"Je suis vert, j'ai des feuilles, je pousse dans la forêt. Qui suis-je ?",a:"Un arbre !"},
+    {q:"Je vole dans le ciel et je fais des images. Qui suis-je ?",a:"Un nuage !"},
+    {q:"Je suis ronde, jaune et je brille le jour. Qui suis-je ?",a:"Le soleil !"},
+    {q:"J'ai des roues, un guidon et on me pédale. Qui suis-je ?",a:"Un vélo !"},
+    {q:"On me souffle dessus le jour de ton anniversaire. Qui suis-je ?",a:"Une bougie !"},
+    {q:"Je suis une maison pour les poissons. Qui suis-je ?",a:"Un aquarium !"},
+    {q:"J'ai des ailes, je chante et je fais un nid. Qui suis-je ?",a:"Un oiseau !"},
+  ],
+},
+/* ══════════════════════════════════════════════════════
+   MODE FACILE
+══════════════════════════════════════════════════════ */
+easy:{
+  m:[
+    {q:"7 × 8 = ?",a:"56"},{q:"45 ÷ 9 = ?",a:"5"},
+    {q:"Double de 43 = ?",a:"86"},{q:"Moitié de 84 = ?",a:"42"},
+    {q:"¾ de 100 = ?",a:"75"},{q:"5,6 × 10 = ?",a:"56"},
+    {q:"37 × 10 = ?",a:"370"},{q:"Quart de 80 = ?",a:"20"},
+    {q:"6 × 25 = ?",a:"150"},{q:"8 × 9 = ?",a:"72"},
+    {q:"6 × 7 = ?",a:"42"},{q:"54 ÷ 6 = ?",a:"9"},
+    {q:"12 × 9 = ?",a:"108"},{q:"2,8 × 100 = ?",a:"280"},
+    {q:"15 × 4 = ?",a:"60"},{q:"Tiers de 36 = ?",a:"12"},
+    {q:"8 × 50 = ?",a:"400"},{q:"17 × 4 = ?",a:"68"},
+    {q:"Double de 67 = ?",a:"134"},{q:"560 ÷ 100 = ?",a:"5,6"},
+    {q:"4 × 19 = ?",a:"76"},{q:"Quart de 64 = ?",a:"16"},
+    {q:"9 × 9 = ?",a:"81"},{q:"48 ÷ 8 = ?",a:"6"},
+    {q:"16 × 5 = ?",a:"80"},{q:"3/4 de 60 = ?",a:"45"},
+  ],
+  f:[
+    {q:"Conjugue « être » au présent : Nous …",a:"Nous sommes"},
+    {q:"Quel temps est « il jouait » ?",a:"Imparfait"},
+    {q:"Conjugue « aller » au présent : Vous …",a:"Vous allez"},
+    {q:"Conjugue « faire » à l'imparfait : Je …",a:"Je faisais"},
+    {q:"Conjugue « prendre » au passé composé : J'…",a:"J'ai pris"},
+    {q:"L'auxiliaire de « partir » au passé composé est…",a:"être → Je suis parti·e"},
+    {q:"Conjugue « venir » au futur : Tu …",a:"Tu viendras"},
+    {q:"« son » ou « sont » ? Les élèves ___ contents.",a:"sont (verbe être)"},
+    {q:"Conjugue « pouvoir » au présent : Nous …",a:"Nous pouvons"},
+    {q:"Conjugue « avoir » à l'imparfait : Ils …",a:"Ils avaient"},
+    {q:"Conjugue « être » au futur : Je …",a:"Je serai"},
+    {q:"Conjugue « avoir » au présent : Nous …",a:"Nous avons"},
+    {q:"« a » ou « à » ? Il ___ mangé sa pomme.",a:"a (verbe avoir)"},
+    {q:"Conjugue « aller » au futur : Nous …",a:"Nous irons"},
+    {q:"Participe passé de « venir » ?",a:"venu"},
+    {q:"Conjugue « faire » au présent : Ils …",a:"Ils font"},
+    {q:"« ces » ou « ses » ? Il range ___ affaires.",a:"ses (déterminant possessif)"},
+    {q:"Conjugue « vouloir » au présent : Je …",a:"Je veux"},
+    {q:"Quel temps est « nous mangerons » ?",a:"Futur simple"},
+    {q:"Conjugue « être » à l'imparfait : Tu …",a:"Tu étais"},
+    {q:"« ou » ou « où » ? ___ tu vas ?",a:"Où (adverbe de lieu)"},
+    {q:"Conjugue « avoir » au futur : Vous …",a:"Vous aurez"},
+    {q:"L'auxiliaire de « tomber » au passé composé ?",a:"être → Je suis tombé·e"},
+    {q:"Conjugue « dire » au présent : Vous …",a:"Vous dites"},
+  ],
+  d:[
+    {q:"Cite 3 verbes irréguliers du 3ème groupe.",a:"aller, être, avoir, faire, prendre, venir, vouloir…"},
+    {q:"Récite la table de 7 (1×7 à 10×7).",a:"7·14·21·28·35·42·49·56·63·70"},
+    {q:"Donne 3 homophones de « ver ».",a:"vers · verre · vert"},
+    {q:"Conjugue « être » au présent pour toutes les personnes.",a:"je suis·tu es·il est·nous sommes·vous êtes·ils sont"},
+    {q:"Calcule : 15 × 9 = ? (astuce : 15×10 − 15)",a:"135"},
+    {q:"Cite 5 mots avec le son [ẽ] comme dans « main ».",a:"pain·lapin·lutin·sapin·bain·faim…"},
+    {q:"Donne le contraire de : grand, chaud, rapide.",a:"petit · froid · lent"},
+    {q:"Conjugue « avoir » au présent pour toutes les personnes.",a:"j'ai·tu as·il a·nous avons·vous avez·ils ont"},
+    {q:"Cite 3 mots de la famille de « terre ».",a:"terrasse·terrain·enterrer·atterrir…"},
+    {q:"Donne un synonyme de chacun : content, triste, rapide.",a:"joyeux · malheureux · vite"},
+    {q:"Récite la table de 8 (1×8 à 10×8).",a:"8·16·24·32·40·48·56·64·72·80"},
+    {q:"Pluriel de : cheval, œil, vitrail ?",a:"chevaux · yeux · vitraux"},
+    {q:"Donne 3 mots contenant le son « oi ».",a:"voiture · boîte · doigt · loi…"},
+    {q:"Cite les modes verbaux que vous connaissez.",a:"indicatif · subjonctif · impératif · conditionnel · infinitif"},
+    {q:"Féminin de : chanteur, directeur, acteur ?",a:"chanteuse · directrice · actrice"},
+    {q:"Cite 4 mots de la famille de « port ».",a:"porter · porteur · transport · reporter…"},
+    {q:"Calcule : 25 × 4 = ?",a:"100"},
+  ],
+  e:[
+    {q:"Je fais le tour du monde sans quitter ma place. Qui suis-je ?",a:"Un timbre !"},
+    {q:"Plus tu m'enlèves, plus je grandis. Qui suis-je ?",a:"Un trou !"},
+    {q:"Je descends sans jamais toucher le sol. Qui suis-je ?",a:"La pluie !"},
+    {q:"Je suis toujours devant toi mais on ne peut jamais me voir. Qui suis-je ?",a:"L'avenir !"},
+    {q:"On me coupe, on me soigne, mais on ne me mange jamais. Qui suis-je ?",a:"La pelouse !"},
+    {q:"J'ai une tête et une queue mais pas de corps. Qui suis-je ?",a:"Une pièce de monnaie !"},
+    {q:"Plus j'ai de gardiens, moins je suis gardé. Qui suis-je ?",a:"Un secret !"},
+    {q:"Je parle sans bouche, j'entends sans oreilles. Qui suis-je ?",a:"Un écho !"},
+    {q:"Je suis blanc quand je suis sale, noir quand je suis propre. Qui suis-je ?",a:"Un tableau noir !"},
+    {q:"On m'achète pour manger, mais on ne me mange jamais. Qui suis-je ?",a:"Une fourchette !"},
+    {q:"Je vole sans ailes, je coule sans eau. Qui suis-je ?",a:"Le temps !"},
+    {q:"Je suis plein quand on m'utilise, vide sinon. Qui suis-je ?",a:"Un gant !"},
+    {q:"On me retourne pour me faire avancer. Qui suis-je ?",a:"Un sablier !"},
+    {q:"Je remplis une pièce sans prendre de place. Qui suis-je ?",a:"La lumière !"},
+  ],
+},
+
+/* ══════════════════════════════════════════════════════
+   MODE DIFFICILE — 100 % programme travaillé (P1+P2+P3)
+══════════════════════════════════════════════════════ */
+hard:{
+  m:[
+    /* ── P1 : addition & soustraction décimales ── */
+    {q:"Pose et calcule : 12,4 + 5,73 = ?",a:"18,13"},
+    {q:"Pose et calcule : 8,06 + 3,9 = ?",a:"11,96"},
+    {q:"Pose et calcule : 25,3 + 14,85 = ?",a:"40,15"},
+    {q:"Pose et calcule : 7,5 − 3,28 = ?",a:"4,22"},
+    {q:"Pose et calcule : 20 − 6,47 = ?",a:"13,53"},
+    {q:"Pose et calcule : 15,6 − 9,75 = ?",a:"5,85"},
+    {q:"Pose et calcule : 100 − 37,4 = ?",a:"62,6"},
+    {q:"Pose et calcule : 4,08 + 11,7 + 2,5 = ?",a:"18,28"},
+    /* ── P2 : division euclidienne ── */
+    {q:"Divise 47 par 5 : quotient et reste ?",a:"Q = 9, reste = 2  (47 = 5×9 + 2)"},
+    {q:"Divise 83 par 7 : quotient et reste ?",a:"Q = 11, reste = 6  (83 = 7×11 + 6)"},
+    {q:"Divise 100 par 9 : quotient et reste ?",a:"Q = 11, reste = 1  (100 = 9×11 + 1)"},
+    {q:"Divise 67 par 4 : quotient et reste ?",a:"Q = 16, reste = 3  (67 = 4×16 + 3)"},
+    {q:"Divise 128 par 6 : quotient et reste ?",a:"Q = 21, reste = 2  (128 = 6×21 + 2)"},
+    /* ── P2 : fractions ── */
+    {q:"Compare : 2/3 et 3/4 — lequel est le plus grand ?",a:"3/4  (≈0,75 > 0,67)"},
+    {q:"Encadre 7/3 entre deux entiers.",a:"2 < 7/3 < 3"},
+    {q:"Calcule : 1/4 de 60 = ?",a:"15"},
+    {q:"Calcule : 3/4 de 40 = ?",a:"30"},
+    {q:"Calcule : 2/3 de 30 = ?",a:"20"},
+    {q:"Convertis 3/4 en nombre décimal.",a:"0,75"},
+    {q:"Convertis 1/5 en fraction décimale.",a:"2/10 = 0,2"},
+    {q:"Place ces fractions dans l'ordre croissant : 1/2, 1/4, 3/4.",a:"1/4 < 1/2 < 3/4"},
+    /* ── P2 : périmètre ── */
+    {q:"Périmètre d'un carré de côté 7 cm = ?",a:"28 cm  (4 × 7)"},
+    {q:"Périmètre d'un rectangle 9 cm × 5 cm = ?",a:"28 cm  (2 × (9+5))"},
+    {q:"Un rectangle a un périmètre de 30 cm et une largeur de 6 cm. Quelle est sa longueur ?",a:"9 cm  (30÷2 − 6)"},
+    /* ── P2 : calcul mental tables ── */
+    {q:"7 × 9 = ?",a:"63"},
+    {q:"8 × 7 = ?",a:"56"},
+    {q:"6 × 9 = ?",a:"54"},
+    {q:"9 × 4 = ?",a:"36"},
+    /* ── P3 : multiplication & division décimale ── */
+    {q:"2,5 × 4 = ?",a:"10"},
+    {q:"3,6 × 3 = ?",a:"10,8"},
+    {q:"1,25 × 8 = ?",a:"10"},
+    {q:"12,6 ÷ 2 = ?",a:"6,3"},
+    {q:"18,4 ÷ 4 = ?",a:"4,6"},
+    /* ── P3 : multiples & diviseurs ── */
+    {q:"Cite 4 multiples de 6.",a:"6, 12, 18, 24…"},
+    {q:"42 est-il divisible par 7 ?",a:"Oui  (42 ÷ 7 = 6)"},
+    {q:"Cite tous les diviseurs de 12.",a:"1, 2, 3, 4, 6, 12"},
+    {q:"36 est-il un multiple de 9 ?",a:"Oui  (9 × 4 = 36)"},
+    /* ── P3 : aire ── */
+    {q:"Aire d'un rectangle de 8 cm × 6 cm = ?",a:"48 cm²"},
+    {q:"Aire d'un carré de côté 9 cm = ?",a:"81 cm²"},
+    {q:"Quelle est la différence entre périmètre et aire ?",a:"Périmètre = contour (cm) · Aire = surface (cm²)"},
+    /* ── P3 : proportionnalité ── */
+    {q:"3 cahiers coûtent 6 €. Combien coûte 1 cahier ?",a:"2 €  (6 ÷ 3)"},
+    {q:"5 stylos coûtent 10 €. Combien pour 8 stylos ?",a:"16 €  (2 € l'unité × 8)"},
+    {q:"Un robinet remplit 4 L en 2 min. Combien en 5 min ?",a:"10 L"},
+    {q:"2 kg de pommes coûtent 5 €. Combien pour 6 kg ?",a:"15 €  (2,50 € le kg × 6)"},
+    /* ── P3 : pourcentages ── */
+    {q:"10 % de 80 = ?",a:"8"},
+    {q:"50 % de 120 = ?",a:"60"},
+    {q:"25 % de 200 = ?",a:"50"},
+    {q:"20 % de 60 = ?",a:"12"},
+  ],
+  f:[
+    /* ── P1 : types & formes de phrases ── */
+    {q:"Transforme en interrogative : « Tu viens demain. »",a:"Est-ce que tu viens demain ? / Viens-tu demain ?"},
+    {q:"Transforme en négative : « Il mange une pomme. »",a:"Il ne mange pas une pomme."},
+    {q:"Quel est le type de : « Quelle belle journée ! » ?",a:"Exclamative"},
+    {q:"Quel est le type de : « Ferme la porte ! » ?",a:"Injonctive"},
+    {q:"Cette phrase est-elle simple ou complexe ? « Le chien dort et le chat ronronne. »",a:"Complexe (deux propositions)"},
+    {q:"Transforme en affirmative : « Il ne mange pas. »",a:"Il mange."},
+    {q:"Quel est le type de : « Où vas-tu ? » ?",a:"Interrogative"},
+    {q:"Quelle est la forme de : « Ne cours pas ! » ?",a:"Injonctive + négative"},
+    /* ── P1 : conjugaison présent (verbes irréguliers évalués) ── */
+    {q:"Conjugue « voir » au présent : Nous …",a:"Nous voyons"},
+    {q:"Conjugue « pouvoir » au présent : Ils …",a:"Ils peuvent"},
+    {q:"Conjugue « vouloir » au présent : Vous …",a:"Vous voulez"},
+    {q:"Conjugue « prendre » au présent : Tu …",a:"Tu prends"},
+    {q:"Conjugue « dire » au présent : Nous …",a:"Nous disons"},
+    {q:"Conjugue « venir » au présent : Je …",a:"Je viens"},
+    {q:"Conjugue « finir » au présent : Vous … (2ème groupe)",a:"Vous finissez"},
+    {q:"Conjugue « choisir » au présent : Ils … (2ème groupe)",a:"Ils choisissent"},
+    /* ── P2 : GN, adjectif épithète ── */
+    {q:"Dans « un grand chien noir », quel est le nom ? le déterminant ? les adjectifs ?",a:"Nom : chien · Dét : un · Adj : grand, noir"},
+    {q:"Mets au pluriel le GN : « le vieux livre rouge ».",a:"les vieux livres rouges"},
+    {q:"Quel est l'adjectif épithète dans : « Elle porte une robe bleue. » ?",a:"bleue"},
+    {q:"Quel est le déterminant dans : « Ces petits enfants jouent. » ?",a:"Ces"},
+    {q:"Mets au pluriel : « un beau cheval blanc ».",a:"de beaux chevaux blancs"},
+    /* ── P2 : CC ── */
+    {q:"Dans « Il court vite dans la rue. » — cite les deux CC.",a:"vite (manière) · dans la rue (lieu)"},
+    {q:"Peut-on déplacer « hier » dans : « Hier, il est arrivé. » ?",a:"Oui → Il est arrivé hier. (CC de temps, déplaçable)"},
+    {q:"Quel type de CC est « avec soin » dans : « Elle écrit avec soin. » ?",a:"CC de manière"},
+    /* ── P2 : COD / COI ── */
+    {q:"Quel est le COD dans : « Elle lit un livre. » ?",a:"un livre"},
+    {q:"Quel est le COI dans : « Il pense à ses amis. » ?",a:"à ses amis"},
+    {q:"COD ou COI ? « Il joue au football. »",a:"COI (joue à quoi ?)"},
+    {q:"COD ou COI ? « Elle regarde le film. »",a:"COD (regarde quoi ?)"},
+    {q:"COD ou COI ? « Tu obéis à tes parents. »",a:"COI (obéis à qui ?)"},
+    /* ── P2 : passé composé ── */
+    {q:"Conjugue « être » au passé composé : Il … (auxiliaire + participe)",a:"Il a été"},
+    {q:"Conjugue « aller » au passé composé : Nous …",a:"Nous sommes allé·e·s"},
+    {q:"Conjugue « finir » au passé composé : Tu …",a:"Tu as fini"},
+    {q:"L'auxiliaire de « naître » au passé composé ?",a:"être → Elle est née"},
+    {q:"Conjugue « prendre » au passé composé : Vous …",a:"Vous avez pris"},
+    {q:"L'auxiliaire de « rester » au passé composé ?",a:"être → Il est resté"},
+    /* ── P2 : futur simple ── */
+    {q:"Conjugue « venir » au futur : Ils …",a:"Ils viendront"},
+    {q:"Conjugue « être » au futur : Vous …",a:"Vous serez"},
+    {q:"Conjugue « faire » au futur : Tu …",a:"Tu feras"},
+    {q:"Conjugue « pouvoir » au futur : Je …",a:"Je pourrai"},
+    /* ── P3 : attribut du sujet ── */
+    {q:"Dans « Ce livre est passionnant. » — quel est l'attribut du sujet ?",a:"passionnant (relié au sujet « ce livre » par être)"},
+    {q:"Quel verbe introduit l'attribut du sujet dans : « Elle semble fatiguée. » ?",a:"semble"},
+    {q:"Identifie l'attribut du sujet : « Il paraît surpris. »",a:"surpris"},
+    /* ── P3 : pronoms de reprise ── */
+    {q:"Remplace « les enfants » par un pronom : « Les enfants jouent. »",a:"Ils jouent."},
+    {q:"Quel est l'antécédent de « il » ? « Le chat dort. Il ronronne. »",a:"Le chat"},
+    {q:"Réécris sans répétition : « Paul mange. Paul court. Paul chante. »",a:"Paul mange, court et chante. / Il mange, court et chante."},
+    /* ── P3 : complément du nom ── */
+    {q:"Quel est le complément du nom dans : « le livre de la maîtresse » ?",a:"de la maîtresse"},
+    {q:"Transforme en CDN : « un chapeau en laine ».",a:"un chapeau de laine"},
+    /* ── P3 : passé simple ── */
+    {q:"Conjugue « aller » au passé simple : Il …",a:"Il alla"},
+    {q:"Conjugue « partir » au passé simple : Ils …",a:"Ils partirent"},
+    {q:"Conjugue « être » au passé simple : Elle …",a:"Elle fut"},
+    {q:"Conjugue « avoir » au passé simple : Ils …",a:"Ils eurent"},
+    {q:"Conjugue « prendre » au passé simple : Il …",a:"Il prit"},
+    {q:"Conjugue « venir » au passé simple : Ils …",a:"Ils vinrent"},
+    {q:"Conjugue « dire » au passé simple : Il …",a:"Il dit"},
+    /* ── P3 : plus-que-parfait ── */
+    {q:"Conjugue « venir » au plus-que-parfait : Il …",a:"Il était venu"},
+    {q:"Conjugue « faire » au plus-que-parfait : Nous …",a:"Nous avions fait"},
+    {q:"Quel temps est « ils avaient mangé » ?",a:"Plus-que-parfait"},
+    {q:"Conjugue « partir » au plus-que-parfait : Elle …",a:"Elle était partie"},
+    {q:"À quoi sert le plus-que-parfait ?",a:"Exprimer une action AVANT une autre action passée (antériorité)"},
+  ],
+  d:[
+    {q:"Cite les 4 types de phrases et donne un exemple de chacun.",a:"Déclarative · Interrogative · Injonctive · Exclamative"},
+    {q:"Pose et calcule : 23,7 + 8,45 = ?  Puis vérifie en estimant.",a:"32,15  (≈ 24 + 8 = 32 ✓)"},
+    {q:"Transforme au passé simple (3ème pers. pl.) : « Ils arrivent, ils voient, ils prennent. »",a:"Ils arrivèrent, ils virent, ils prirent."},
+    {q:"Conjugue « venir » au passé simple à toutes les personnes.",a:"je vins·tu vins·il vint·nous vînmes·vous vîntes·ils vinrent"},
+    {q:"Explique la différence entre COD et COI — 1 exemple chacun.",a:"COD sans préposition (Il mange une pomme.) · COI avec préposition (Il pense à sa mère.)"},
+    {q:"Donne 3 phrases avec attribut du sujet en utilisant 3 verbes différents.",a:"Il paraît fatigué. · Elle reste calme. · Tu sembles content."},
+    {q:"Divise 97 par 8 (division euclidienne) : quotient et reste ?",a:"Q = 12, reste = 1  (97 = 8×12 + 1)"},
+    {q:"Calcul : 3/4 de 80. Et 25 % de 80. Les résultats sont-ils identiques ?",a:"3/4 × 80 = 60 · 25 % × 80 = 20 → Non, différents !"},
+    {q:"Proportionnalité : si 4 stylos coûtent 6 €, combien pour 10 stylos ?",a:"15 €  (1,50 € l'unité × 10)"},
+    {q:"Cite tous les CC et donne 1 exemple de chacun.",a:"Lieu (à l'école) · Temps (le matin) · Manière (rapidement) · But (pour réussir) · Cause (à cause du vent)"},
+    {q:"Aire ET périmètre d'un rectangle 12 cm × 4 cm.",a:"P = 32 cm · A = 48 cm²"},
+    {q:"Remplace le GN par un pronom : « La maîtresse explique la leçon. »",a:"Elle l'explique."},
+    {q:"Conjugue « prendre » au passé simple : Il … / Ils …",a:"Il prit · Ils prirent"},
+    {q:"Calcule : 15 % de 60 (méthode : 10 % + 5 %).",a:"9  (10%→6 + 5%→3)"},
+    {q:"Explique la différence entre phrase simple et phrase complexe — un exemple de chaque.",a:"Simple = 1 verbe conjugué · Complexe = 2+ verbes. Ex : Il mange. / Il mange et il boit."},
+    {q:"Transforme en plus-que-parfait : « Ils partaient. »",a:"Ils étaient partis."},
+    {q:"Cite les 8 verbes irréguliers du 3ème groupe évalués cette année.",a:"être, avoir, faire, aller, dire, venir, pouvoir, voir, vouloir, prendre"},
+    {q:"Pose et calcule : 50 − 18,75 = ?",a:"31,25"},
+  ],
+  e:[
+    {q:"Je parle toutes les langues mais je n'ai jamais rien dit en premier. Qui suis-je ?",a:"Un dictionnaire !"},
+    {q:"Plus je sèche, plus je suis mouillée. Qui suis-je ?",a:"Une serviette !"},
+    {q:"J'ai des villes sans maisons, des forêts sans arbres, des mers sans eau. Qui suis-je ?",a:"Une carte géographique !"},
+    {q:"Je n'ai ni commencement, ni fin, ni milieu. Qui suis-je ?",a:"Un cercle !"},
+    {q:"Moins on en a, plus on en voit. Qui suis-je ?",a:"Les dents !"},
+    {q:"On me regarde droit dans les yeux pour me comprendre, mais je n'ai pas d'yeux. Qui suis-je ?",a:"Un miroir !"},
+    {q:"Je peux être cassé sans être touché. Qui suis-je ?",a:"Le silence !"},
+    {q:"Je grandis vers le bas. Qui suis-je ?",a:"Une stalactite !"},
+    {q:"Plus je cours, plus j'ai chaud. Qui suis-je ?",a:"Un moteur !"},
+    {q:"Je suis là avant que tu commences, encore là après que tu aies fini. Qui suis-je ?",a:"La page / le cahier !"},
+    {q:"On me demande mais on ne veut pas de moi. Qui suis-je ?",a:"Les conseils !"},
+    {q:"Je marche sur la tête toute la journée. Qui suis-je ?",a:"Un clou dans une chaussure !"},
+    {q:"Je suis plié sans être du papier, ouvert sans être une porte. Qui suis-je ?",a:"Un parapluie !"},
+    {q:"Je deviens plus grand chaque fois qu'on me prend. Qui suis-je ?",a:"Un trou !"},
+    {q:"Je n'ai pas de fenêtre mais tout le monde peut me voir de l'intérieur. Qui suis-je ?",a:"Un œuf !"},
+    {q:"On me lit mais je ne suis pas un livre. On me suit mais je ne bouge pas. Qui suis-je ?",a:"Une règle (ou une loi) !"},
+  ],
+},
+};
+
+// tirage sans répétition
+let MODE='easy';
+function drawQ(type){
+  const pool=POOLS[MODE][type];
+  const key='jdlCanicule_'+MODE+'_'+type;
+  let used=[];try{used=JSON.parse(localStorage.getItem(key)||'[]');}catch{}
+  let avail=pool.map((_,i)=>i).filter(i=>!used.includes(i));
+  if(avail.length===0){used=[];avail=pool.map((_,i)=>i);localStorage.removeItem(key);}
+  const idx=avail[Math.floor(Math.random()*avail.length)];
+  used.push(idx);
+  try{localStorage.setItem(key,JSON.stringify(used));}catch{}
+  return pool[idx];
+}
+
+const SQ=[null,
+  {t:'s'},
+  {t:'m'},{t:'f'},{t:'e'},
+  {t:'c',msg:'🍀 Super ! Avance de 2 cases !',mv:2},
+  {t:'m'},{t:'f'},{t:'d'},{t:'e'},{t:'m'},
+  {t:'f'},{t:'e'},
+  {t:'ml',msg:'💀 Dommage ! Recule de 3 cases.',mv:-3},
+  {t:'m'},{t:'f'},{t:'d'},
+  {t:'c',msg:'⭐ Lance le dé une 2ème fois !',extra:true},
+  {t:'m'},{t:'e'},{t:'f'},
+  {t:'m'},{t:'d'},{t:'f'},{t:'e'},
+  {t:'c',msg:'🎁 Avance de 3 cases !',mv:3},
+  {t:'m'},
+  {t:'ml',msg:'⛈️ Tu passes ton prochain tour.',skip:true},
+  {t:'f'},{t:'m'},{t:'d'},{t:'f'},{t:'e'},
+  {t:'m'},
+  {t:'c',msg:'🌟 Avance de 2 cases !',mv:2},
+  {t:'f'},{t:'d'},
+  {t:'ml',msg:'🌧️ Recule de 4 cases.',mv:-4},
+  {t:'m'},{t:'f'},
+  {t:'w'},
+];
+
+function gp(n){const ri=Math.ceil(n/10),pi=n-(ri-1)*10;return{row:5-ri,col:ri%2===1?pi:11-pi};}
+function resize(){
+  const R=document.documentElement,sbW=162;
+  const W=window.innerWidth-sbW-28,H=window.innerHeight-44-18;
+  const c=Math.max(50,Math.min(Math.floor((W-27)/10),Math.floor((H-9)/4)));
+  R.style.setProperty('--cell',c+'px');
+}
+window.addEventListener('resize',resize);
+let G={ps:[],cur:0,phase:'roll',extra:false};
+function buildBoard(){
+  const b=document.getElementById('board');b.innerHTML='';
+  for(let n=1;n<=40;n++){
+    const sq=SQ[n],def=TDEF[sq.t];
+    const{row,col}=gp(n);
+    const d=document.createElement('div');d.className='cell '+def.c;d.id='sq'+n;
+    d.style.gridRow=row;d.style.gridColumn=col;
+    d.innerHTML='<span class="cnum">'+n+'</span><span class="cicon">'+def.i+'</span><span class="clbl">'+def.l+'</span><div class="ctoks" id="tk'+n+'"></div>';
+    b.appendChild(d);
+  }
+}
+function refresh(){
+  document.querySelectorAll('.ctoks').forEach(t=>t.innerHTML='');
+  document.querySelectorAll('.hi').forEach(c=>c.classList.remove('hi'));
+  G.ps.forEach(p=>{const tw=document.getElementById('tk'+p.pos);if(tw){const d=document.createElement('div');d.className='tok';d.style.background=p.color;d.textContent=p.name[0].toUpperCase();tw.appendChild(d);}});
+  const cur=G.ps[G.cur];if(cur){const el=document.getElementById('sq'+cur.pos);if(el)el.classList.add('hi');}
+}
+function sidebar(){
+  const c=G.ps[G.cur];
+  const el=document.getElementById('cur');el.textContent=c.name+(G.extra?' ↩':'');el.style.color=c.color;
+  document.getElementById('rnk').innerHTML=[...G.ps].sort((a,b)=>b.pos-a.pos).map(p=>
+    '<div class="ri"><div class="rdot" style="background:'+p.color+'"></div><span style="flex:1;font-weight:'+(p===c?'800':'400')+'">'+p.name+(p.skip?' ⏭':'')+'</span><span class="rpos">Case '+p.pos+'</span></div>'
+  ).join('');
+}
+const DF=['⚀','⚁','⚂','⚃','⚄','⚅'];
+function doRoll(){
+  if(G.phase!=='roll')return;G.phase='moving';document.getElementById('rbtn').disabled=true;
+  const val=Math.floor(Math.random()*6)+1,db=document.getElementById('dbox');
+  db.classList.add('spin');let n=0;
+  const iv=setInterval(()=>{db.textContent=DF[Math.floor(Math.random()*6)];
+    if(++n>=9){clearInterval(iv);db.textContent=DF[val-1];db.classList.remove('spin');
+      const p=G.ps[G.cur];p.prevPos=p.pos;p.pos=Math.min(p.pos+val,40);refresh();sidebar();setTimeout(()=>process(p),420);}
+  },72);
+}
+function process(p){
+  if(p.pos===40){win(p);return;}
+  const t=SQ[p.pos].t;
+  if('mfde'.includes(t)){const qo=drawQ(t);showQ(t,qo.q,qo.a);return;}
+  if(t==='c'||t==='ml'){showEff(SQ[p.pos],p);return;}
+  next();
+}
+function next(){
+  if(G.extra){G.extra=false;G.phase='roll';document.getElementById('rbtn').disabled=false;sidebar();return;}
+  let nx=(G.cur+1)%G.ps.length,tries=0;
+  while(G.ps[nx].skip&&tries<G.ps.length){G.ps[nx].skip=false;nx=(nx+1)%G.ps.length;tries++;}
+  G.cur=nx;G.phase='roll';document.getElementById('rbtn').disabled=false;sidebar();refresh();
+}
+const BC={m:'#1d4ed8',f:'#9f1239',d:'#5b21b6',e:'#0e7490'};
+const BL={m:'MATHS',f:'FRANÇAIS',d:'DÉFI',e:'ÉNIGME'};
+function showQ(type,q,a){
+  const b=document.getElementById('qbadge');b.textContent=BL[type];b.style.background=BC[type];
+  document.getElementById('pq').textContent=q;
+  const pa=document.getElementById('pa');pa.textContent='Réponse : '+a;pa.style.display='none';
+  const vd=document.getElementById('verdict');vd.style.display='none';
+  const bj=document.getElementById('bjuste'),bf=document.getElementById('bfaux');
+  bj.style.display='none';bf.style.display='none';
+  document.getElementById('rvl').style.display='inline-block';
+  document.getElementById('qp').classList.add('show');
+
+  document.getElementById('rvl').onclick=()=>{
+    pa.style.display='block';
+    document.getElementById('rvl').style.display='none';
+    vd.style.display='block';bj.style.display='inline-block';bf.style.display='inline-block';
+  };
+
+  // juste → tour suivant normal
+  bj.onclick=()=>{
+    document.getElementById('qp').classList.remove('show');
+    next();
+  };
+
+  // faux → retour à la case avant le lancer, rejoue son tour
+  bf.onclick=()=>{
+    document.getElementById('qp').classList.remove('show');
+    const p=G.ps[G.cur];
+    p.pos=p.prevPos||Math.max(1,p.pos-1);
+    refresh();sidebar();
+    document.getElementById('em').innerHTML='😬 Dommage ! Tu retournes à ta case de départ et tu relanceras le dé à ton prochain tour.';
+    document.getElementById('ep').classList.add('show');
+    document.getElementById('eok').onclick=()=>{
+      document.getElementById('ep').classList.remove('show');
+      next();
+    };
+  };
+}
+function showEff(sq,p){
+  document.getElementById('em').innerHTML=sq.msg;document.getElementById('ep').classList.add('show');
+  document.getElementById('eok').onclick=()=>{
+    document.getElementById('ep').classList.remove('show');
+    if(sq.mv){p.pos=Math.max(1,Math.min(40,p.pos+sq.mv));refresh();if(p.pos===40){win(p);return;}}
+    if(sq.skip)p.skip=true;if(sq.extra)G.extra=true;next();
+  };
+}
+function win(p){
+  G.phase='done';refresh();
+  const el=document.getElementById('wnam');el.textContent=p.name;el.style.color=p.color;
+  document.getElementById('wp').classList.add('show');
+}
+const PC=['#ef4444','#3b82f6','#22c55e','#f59e0b','#06b6d4'];
+const PD=['Alice','Bob','Charlie','Dylan','Emma'];
+let nP=3;
+function buildInputs(n){
+  const c=document.getElementById('pic');c.innerHTML='';
+  for(let i=0;i<n;i++){
+    const d=document.createElement('div');d.className='pr';
+    d.innerHTML='<div class="pdot" style="background:'+PC[i]+'"></div><input type="text" id="pn'+i+'" placeholder="Joueur '+(i+1)+'" value="'+PD[i]+'">';
+    c.appendChild(d);
+  }
+}
+document.querySelectorAll('.mcard').forEach(b=>b.addEventListener('click',function(){
+  document.querySelectorAll('.mcard').forEach(x=>x.classList.remove('on'));this.classList.add('on');MODE=this.dataset.mode;
+}));
+document.querySelectorAll('.cb').forEach(b=>b.addEventListener('click',function(){
+  document.querySelectorAll('.cb').forEach(x=>x.classList.remove('on'));this.classList.add('on');nP=parseInt(this.dataset.n);buildInputs(nP);
+}));
+function startGame(){
+  G.ps=Array.from({length:nP},(_,i)=>{
+    const inp=document.getElementById('pn'+i);
+    return{name:(inp&&inp.value.trim())||'Joueur '+(i+1),pos:1,color:PC[i],skip:false};
+  });
+  G.cur=0;G.phase='roll';G.extra=false;
+  document.getElementById('setup').style.display='none';
+  document.getElementById('game').style.display='flex';
+  const mb=document.getElementById('mbadge');mb.textContent=MODE==='cp'?'CP':MODE==='hard'?'DIFFICILE':'CE';mb.className=MODE==='cp'?'cp':MODE==='hard'?'hard':'easy';
+  resize();buildBoard();sidebar();refresh();
+  document.getElementById('dbox').textContent='🎲';document.getElementById('rbtn').disabled=false;
+}
+document.getElementById('go-btn').addEventListener('click',startGame);
+document.getElementById('rbtn').addEventListener('click',doRoll);
+document.getElementById('rst').addEventListener('click',()=>{document.getElementById('wp').classList.remove('show');startGame();});
+document.getElementById('chm').addEventListener('click',()=>{
+  document.getElementById('wp').classList.remove('show');
+  document.getElementById('game').style.display='none';document.getElementById('setup').style.display='flex';
+  document.getElementById('dbox').textContent='🎲';
+});
+buildInputs(nP);
+</script>
+</body>
+</html>

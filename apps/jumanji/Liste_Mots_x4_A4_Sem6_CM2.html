@@ -1,0 +1,273 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<title>Liste de mots × 4 — Semaine 6 — CM2</title>
+<style>
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+body { font-family: Arial, sans-serif; background: white; }
+
+@media print {
+  body { margin: 0; }
+  .a4 { width: 210mm; height: 297mm; padding: 5mm; display: grid; grid-template-columns: 1fr 1fr; grid-template-rows: 1fr 1fr; gap: 0; page-break-after: always; }
+}
+@media screen {
+  body { background: #ccc; display: flex; justify-content: center; padding: 20px; }
+  .a4 { background: white; width: 210mm; min-height: 297mm; padding: 5mm; display: grid; grid-template-columns: 1fr 1fr; grid-template-rows: 1fr 1fr; gap: 0; box-shadow: 0 2px 12px rgba(0,0,0,.3); }
+}
+
+.card {
+  border: 1.5px dashed #bbb;
+  padding: 8px 10px;
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.card-header {
+  background: #1a1a2e;
+  color: white;
+  border-radius: 3px;
+  padding: 4px 8px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+.card-header h2 { font-size: 8.5pt; font-weight: bold; }
+.card-header .week { font-size: 7pt; opacity: .8; }
+
+/* Règle ou/où */
+.regle { display: flex; gap: 5px; }
+.r-item {
+  flex: 1;
+  border-radius: 3px;
+  padding: 3px 6px;
+  font-size: 7pt;
+  line-height: 1.35;
+}
+.r-ou { background: #fff9c4; border: 1px solid #f9a825; }
+.r-ou .rm { font-size: 12pt; font-weight: bold; color: #e65100; display: block; text-align: center; line-height: 1.1; margin-bottom: 1px; }
+.r-ou-acc { background: #e3f2fd; border: 1px solid #90caf9; }
+.r-ou-acc .rm { font-size: 12pt; font-weight: bold; color: #0d47a1; display: block; text-align: center; line-height: 1.1; margin-bottom: 1px; }
+.r-item p { color: #333; }
+.r-item em { font-size: 7pt; color: #555; }
+
+/* Catégories */
+.cat-title { font-size: 6.5pt; font-weight: bold; color: #777; text-transform: uppercase; letter-spacing: .05em; margin-bottom: 2px; }
+
+.mots-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 2px; }
+.mot-cell { border: 1px solid #e0e0e0; border-radius: 2px; text-align: center; padding: 2px 4px; font-size: 8pt; font-weight: bold; color: #1a1a2e; background: #fafafa; }
+
+.tags { display: flex; flex-wrap: wrap; gap: 2px; }
+.tag-v { background: #e8f5e9; border: 1px solid #a5d6a7; border-radius: 2px; padding: 1px 5px; font-size: 7.5pt; color: #1b5e20; font-style: italic; }
+.tag-a { background: #f3e5f5; border: 1px solid #ce93d8; border-radius: 2px; padding: 1px 5px; font-size: 7.5pt; color: #4a148c; }
+.tag-i { background: #fff3e0; border: 1px solid #ffcc80; border-radius: 2px; padding: 1px 5px; font-size: 7.5pt; color: #e65100; }
+.tag-ou { background: #fff9c4; border: 1.5px solid #f9a825; border-radius: 2px; padding: 1px 6px; font-size: 8pt; color: #e65100; font-weight: bold; }
+.tag-ou-acc { background: #e3f2fd; border: 1.5px solid #0d47a1; border-radius: 2px; padding: 1px 6px; font-size: 8pt; color: #0d47a1; font-weight: bold; }
+</style>
+</head>
+<body>
+<div class="a4">
+
+  <!-- CARTE (×4 identiques) -->
+  <!-- On la déclare en template JS pour éviter la répétition -->
+
+  <div class="card">
+    <div class="card-header">
+      <h2>✏ Mots à apprendre — Dictée bilan Jumanji</h2>
+      <span class="week">Semaine du 8 juin · CM2</span>
+    </div>
+    <div class="regle">
+      <div class="r-item r-ou-acc"><span class="rm">où</span><p>Accent = <strong>lieu</strong><br><em>= là où</em></p></div>
+      <div class="r-item r-ou"><span class="rm">ou</span><p>Sans accent = <strong>choix</strong><br><em>= ou bien</em></p></div>
+    </div>
+    <div class="cat-title">Noms</div>
+    <div class="mots-grid">
+      <div class="mot-cell">le grenier</div>
+      <div class="mot-cell">la boîte</div>
+      <div class="mot-cell">une règle</div>
+      <div class="mot-cell">les dés</div>
+      <div class="mot-cell">un lion</div>
+      <div class="mot-cell">un singe</div>
+      <div class="mot-cell">les meubles</div>
+      <div class="mot-cell">le calme</div>
+    </div>
+    <div class="cat-title" style="margin-top:4px;">Verbes (passé simple)</div>
+    <div class="tags">
+      <span class="tag-v">découvrirent</span>
+      <span class="tag-v">lança</span>
+      <span class="tag-v">apparut</span>
+      <span class="tag-v">s'installèrent</span>
+      <span class="tag-v">avança</span>
+      <span class="tag-v">saisit</span>
+      <span class="tag-v">disparut</span>
+    </div>
+    <div class="cat-title" style="margin-top:4px;">Adjectifs</div>
+    <div class="tags">
+      <span class="tag-a">poussiéreux</span>
+      <span class="tag-a">mystérieux(se)</span>
+      <span class="tag-a">rugissant</span>
+      <span class="tag-a">turbulents</span>
+      <span class="tag-a">courageuse</span>
+    </div>
+    <div class="cat-title" style="margin-top:4px;">Homophones — point clé !</div>
+    <div class="tags">
+      <span class="tag-ou-acc">où</span>
+      <span class="tag-ou">ou</span>
+      <span class="tag-i">aussitôt</span>
+      <span class="tag-i">jamais</span>
+      <span class="tag-i">enfin</span>
+      <span class="tag-i">ni … ni</span>
+    </div>
+  </div>
+
+  <div class="card">
+    <div class="card-header">
+      <h2>✏ Mots à apprendre — Dictée bilan Jumanji</h2>
+      <span class="week">Semaine du 8 juin · CM2</span>
+    </div>
+    <div class="regle">
+      <div class="r-item r-ou-acc"><span class="rm">où</span><p>Accent = <strong>lieu</strong><br><em>= là où</em></p></div>
+      <div class="r-item r-ou"><span class="rm">ou</span><p>Sans accent = <strong>choix</strong><br><em>= ou bien</em></p></div>
+    </div>
+    <div class="cat-title">Noms</div>
+    <div class="mots-grid">
+      <div class="mot-cell">le grenier</div>
+      <div class="mot-cell">la boîte</div>
+      <div class="mot-cell">une règle</div>
+      <div class="mot-cell">les dés</div>
+      <div class="mot-cell">un lion</div>
+      <div class="mot-cell">un singe</div>
+      <div class="mot-cell">les meubles</div>
+      <div class="mot-cell">le calme</div>
+    </div>
+    <div class="cat-title" style="margin-top:4px;">Verbes (passé simple)</div>
+    <div class="tags">
+      <span class="tag-v">découvrirent</span>
+      <span class="tag-v">lança</span>
+      <span class="tag-v">apparut</span>
+      <span class="tag-v">s'installèrent</span>
+      <span class="tag-v">avança</span>
+      <span class="tag-v">saisit</span>
+      <span class="tag-v">disparut</span>
+    </div>
+    <div class="cat-title" style="margin-top:4px;">Adjectifs</div>
+    <div class="tags">
+      <span class="tag-a">poussiéreux</span>
+      <span class="tag-a">mystérieux(se)</span>
+      <span class="tag-a">rugissant</span>
+      <span class="tag-a">turbulents</span>
+      <span class="tag-a">courageuse</span>
+    </div>
+    <div class="cat-title" style="margin-top:4px;">Homophones — point clé !</div>
+    <div class="tags">
+      <span class="tag-ou-acc">où</span>
+      <span class="tag-ou">ou</span>
+      <span class="tag-i">aussitôt</span>
+      <span class="tag-i">jamais</span>
+      <span class="tag-i">enfin</span>
+      <span class="tag-i">ni … ni</span>
+    </div>
+  </div>
+
+  <div class="card">
+    <div class="card-header">
+      <h2>✏ Mots à apprendre — Dictée bilan Jumanji</h2>
+      <span class="week">Semaine du 8 juin · CM2</span>
+    </div>
+    <div class="regle">
+      <div class="r-item r-ou-acc"><span class="rm">où</span><p>Accent = <strong>lieu</strong><br><em>= là où</em></p></div>
+      <div class="r-item r-ou"><span class="rm">ou</span><p>Sans accent = <strong>choix</strong><br><em>= ou bien</em></p></div>
+    </div>
+    <div class="cat-title">Noms</div>
+    <div class="mots-grid">
+      <div class="mot-cell">le grenier</div>
+      <div class="mot-cell">la boîte</div>
+      <div class="mot-cell">une règle</div>
+      <div class="mot-cell">les dés</div>
+      <div class="mot-cell">un lion</div>
+      <div class="mot-cell">un singe</div>
+      <div class="mot-cell">les meubles</div>
+      <div class="mot-cell">le calme</div>
+    </div>
+    <div class="cat-title" style="margin-top:4px;">Verbes (passé simple)</div>
+    <div class="tags">
+      <span class="tag-v">découvrirent</span>
+      <span class="tag-v">lança</span>
+      <span class="tag-v">apparut</span>
+      <span class="tag-v">s'installèrent</span>
+      <span class="tag-v">avança</span>
+      <span class="tag-v">saisit</span>
+      <span class="tag-v">disparut</span>
+    </div>
+    <div class="cat-title" style="margin-top:4px;">Adjectifs</div>
+    <div class="tags">
+      <span class="tag-a">poussiéreux</span>
+      <span class="tag-a">mystérieux(se)</span>
+      <span class="tag-a">rugissant</span>
+      <span class="tag-a">turbulents</span>
+      <span class="tag-a">courageuse</span>
+    </div>
+    <div class="cat-title" style="margin-top:4px;">Homophones — point clé !</div>
+    <div class="tags">
+      <span class="tag-ou-acc">où</span>
+      <span class="tag-ou">ou</span>
+      <span class="tag-i">aussitôt</span>
+      <span class="tag-i">jamais</span>
+      <span class="tag-i">enfin</span>
+      <span class="tag-i">ni … ni</span>
+    </div>
+  </div>
+
+  <div class="card">
+    <div class="card-header">
+      <h2>✏ Mots à apprendre — Dictée bilan Jumanji</h2>
+      <span class="week">Semaine du 8 juin · CM2</span>
+    </div>
+    <div class="regle">
+      <div class="r-item r-ou-acc"><span class="rm">où</span><p>Accent = <strong>lieu</strong><br><em>= là où</em></p></div>
+      <div class="r-item r-ou"><span class="rm">ou</span><p>Sans accent = <strong>choix</strong><br><em>= ou bien</em></p></div>
+    </div>
+    <div class="cat-title">Noms</div>
+    <div class="mots-grid">
+      <div class="mot-cell">le grenier</div>
+      <div class="mot-cell">la boîte</div>
+      <div class="mot-cell">une règle</div>
+      <div class="mot-cell">les dés</div>
+      <div class="mot-cell">un lion</div>
+      <div class="mot-cell">un singe</div>
+      <div class="mot-cell">les meubles</div>
+      <div class="mot-cell">le calme</div>
+    </div>
+    <div class="cat-title" style="margin-top:4px;">Verbes (passé simple)</div>
+    <div class="tags">
+      <span class="tag-v">découvrirent</span>
+      <span class="tag-v">lança</span>
+      <span class="tag-v">apparut</span>
+      <span class="tag-v">s'installèrent</span>
+      <span class="tag-v">avança</span>
+      <span class="tag-v">saisit</span>
+      <span class="tag-v">disparut</span>
+    </div>
+    <div class="cat-title" style="margin-top:4px;">Adjectifs</div>
+    <div class="tags">
+      <span class="tag-a">poussiéreux</span>
+      <span class="tag-a">mystérieux(se)</span>
+      <span class="tag-a">rugissant</span>
+      <span class="tag-a">turbulents</span>
+      <span class="tag-a">courageuse</span>
+    </div>
+    <div class="cat-title" style="margin-top:4px;">Homophones — point clé !</div>
+    <div class="tags">
+      <span class="tag-ou-acc">où</span>
+      <span class="tag-ou">ou</span>
+      <span class="tag-i">aussitôt</span>
+      <span class="tag-i">jamais</span>
+      <span class="tag-i">enfin</span>
+      <span class="tag-i">ni … ni</span>
+    </div>
+  </div>
+
+</div>
+</body>
+</html>

@@ -1,0 +1,337 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>🎨 Pictionary en Classe</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=DM+Sans:wght@400;600;700&display=swap" rel="stylesheet">
+<style>
+/* ── RESET ── */
+*{box-sizing:border-box;margin:0;padding:0;}
+
+/* ── BASE ── */
+body{
+  font-family:'DM Sans','Segoe UI',sans-serif;
+  background:#0E0E1A;color:#F0EEFF;
+  min-height:100vh;display:flex;flex-direction:column;
+  -webkit-font-smoothing:antialiased;
+}
+body::before{
+  content:'';position:fixed;top:-140px;left:50%;transform:translateX(-50%);
+  width:800px;height:600px;
+  background:radial-gradient(ellipse,rgba(200,35,15,.07) 0%,transparent 65%);
+  pointer-events:none;z-index:0;
+}
+
+/* ── HEADER (light) ── */
+header{
+  background:#FEFAF2;border-top:4px solid #C8230F;border-bottom:1px solid #E0D0B8;
+  padding:10px 24px;display:flex;align-items:center;gap:16px;flex-wrap:wrap;
+  position:relative;z-index:10;
+}
+header h1{font-family:'Bebas Neue',sans-serif;font-size:1.6rem;letter-spacing:.06em;color:#C8230F;flex:1;}
+.scores{display:flex;gap:10px;flex-wrap:wrap;}
+.score-card{
+  background:rgba(200,35,15,.08);border:1.5px solid rgba(200,35,15,.22);
+  border-radius:10px;padding:5px 14px;text-align:center;cursor:pointer;transition:.2s;min-width:92px;
+}
+.score-card:hover{background:rgba(200,35,15,.15);}
+.score-card .team-name{font-size:8.5pt;color:#7B6A52;margin-bottom:2px;}
+.score-card .score-num{font-size:18pt;font-weight:900;color:#C8230F;}
+
+/* ── MAIN ── */
+main{
+  flex:1;display:flex;flex-direction:column;align-items:center;justify-content:center;
+  padding:24px 20px;gap:18px;position:relative;z-index:1;
+}
+
+/* ── LEVEL BUTTONS ── */
+.level-btns{
+  display:flex;gap:6px;flex-wrap:wrap;justify-content:center;
+  background:rgba(255,255,255,.04);border:1px solid rgba(255,255,255,.07);
+  border-radius:14px;padding:5px;
+}
+.lvl-btn{
+  padding:10px 24px;border:none;border-radius:10px;
+  font-family:'Bebas Neue',sans-serif;font-size:17px;letter-spacing:.08em;
+  cursor:pointer;transition:all .2s;
+  background:transparent;color:rgba(255,255,255,.28);
+}
+#lvl-cp.active{background:rgba(52,152,219,.2);color:#7EC8F5;}
+#lvl-ce.active{background:rgba(46,204,113,.2);color:#6EE7B0;}
+#lvl-cm.active{background:rgba(155,89,182,.2);color:#C084FC;}
+
+.bank-counter{font-size:11px;color:rgba(255,255,255,.2);letter-spacing:.02em;}
+
+/* ── WORD CARD ── */
+.card-zone{width:100%;max-width:680px;text-align:center;}
+.mot-card{
+  background:#12122A;border:2px solid rgba(255,255,255,.06);
+  border-radius:26px;padding:56px 44px;min-height:230px;
+  display:flex;flex-direction:column;align-items:center;justify-content:center;gap:12px;
+  cursor:pointer;
+  transition:all .28s cubic-bezier(.34,1.56,.64,1);
+  box-shadow:0 24px 80px rgba(0,0,0,.45),inset 0 1px 0 rgba(255,255,255,.04);
+}
+.mot-card:hover{
+  border-color:rgba(255,255,255,.14);transform:translateY(-4px);
+  box-shadow:0 32px 100px rgba(0,0,0,.55),inset 0 1px 0 rgba(255,255,255,.08);
+}
+.mot-hidden{
+  font-size:14px;color:rgba(255,255,255,.16);
+  letter-spacing:.14em;font-weight:600;text-transform:uppercase;
+}
+.mot-word{
+  font-family:'Bebas Neue',sans-serif;
+  font-size:clamp(56px,10vw,104px);
+  color:#F5C842;letter-spacing:.04em;line-height:.92;
+  text-shadow:0 0 60px rgba(245,200,66,.3);
+  animation:wordReveal .35s cubic-bezier(.34,1.56,.64,1);
+}
+@keyframes wordReveal{from{transform:scale(.68);opacity:0;}to{transform:scale(1);opacity:1;}}
+.mot-level{font-size:11px;color:rgba(255,255,255,.2);margin-top:6px;letter-spacing:.1em;text-transform:uppercase;}
+.click-hint{font-size:11px;color:rgba(255,255,255,.16);margin-top:6px;letter-spacing:.02em;}
+
+/* ── TIMER ── */
+.timer-zone{width:100%;max-width:680px;}
+.timer-bar-bg{background:rgba(255,255,255,.05);border-radius:100px;height:7px;overflow:hidden;border:none;}
+.timer-bar{height:100%;background:linear-gradient(90deg,#22C55E 0%,#F59E0B 60%,#EF4444 100%);border-radius:100px;transition:width .4s linear;}
+.timer-num{
+  text-align:center;font-family:'Bebas Neue',sans-serif;
+  font-size:clamp(96px,16vw,152px);line-height:.9;
+  color:#F0EEFF;letter-spacing:.04em;margin-top:4px;
+}
+.timer-num.urgent{color:#EF4444;animation:pulse .4s infinite alternate;}
+@keyframes pulse{from{transform:scale(1);}to{transform:scale(1.07);}}
+
+/* ── BUTTONS ── */
+.controls{display:flex;gap:10px;flex-wrap:wrap;justify-content:center;max-width:680px;}
+.btn{
+  padding:13px 28px;border:none;border-radius:13px;
+  font-family:'Bebas Neue',sans-serif;font-size:20px;letter-spacing:.08em;
+  cursor:pointer;transition:filter .15s,transform .12s;
+}
+.btn:hover{filter:brightness(1.12);}
+.btn:active{transform:scale(.94);}
+.btn-start{background:#22C55E;color:#fff;}
+.btn-next{background:#3B82F6;color:#fff;}
+.btn-point{background:#F59E0B;color:#fff;font-size:23px;}
+.btn-fail{background:#EF4444;color:#fff;}
+.btn-reset{
+  background:rgba(255,255,255,.07);color:rgba(255,255,255,.55);
+  border:1px solid rgba(255,255,255,.1);
+  font-family:'DM Sans',sans-serif;font-size:13px;letter-spacing:.02em;
+}
+
+/* ── OVERLAYS ── */
+.overlay{
+  display:none;position:fixed;inset:0;
+  background:rgba(0,0,0,.78);backdrop-filter:blur(8px);
+  z-index:50;align-items:center;justify-content:center;
+}
+.overlay.show{display:flex;}
+.modal{
+  background:#14142A;border:1.5px solid rgba(255,255,255,.1);
+  border-radius:22px;padding:38px 44px;max-width:480px;width:90%;
+  text-align:center;box-shadow:0 28px 90px rgba(0,0,0,.75);
+  animation:modalIn .28s cubic-bezier(.34,1.56,.64,1);
+}
+@keyframes modalIn{from{transform:scale(.78);opacity:0;}to{transform:scale(1);opacity:1;}}
+.modal h2{
+  font-family:'Bebas Neue',sans-serif;font-size:30px;letter-spacing:.06em;
+  color:#F5C842;margin-bottom:18px;
+}
+.modal input{
+  background:rgba(255,255,255,.06);color:#fff;
+  border:1.5px solid rgba(255,255,255,.1);border-radius:10px;
+  padding:11px 14px;font-size:14px;font-family:'DM Sans',sans-serif;
+  width:100%;margin-bottom:10px;outline:none;transition:border-color .2s;
+}
+.modal input:focus{border-color:rgba(255,255,255,.3);}
+.modal .btn{margin:4px;font-size:17px;padding:10px 22px;}
+
+/* ── FOOTER ── */
+footer{
+  padding:12px;text-align:center;font-size:11px;color:rgba(255,255,255,.13);
+  border-top:1px solid rgba(255,255,255,.05);font-family:'DM Sans',sans-serif;letter-spacing:.04em;
+}
+</style>
+</head>
+<body>
+<header>
+  <h1>🎨 Pictionary en Classe</h1>
+  <div class="scores" id="scores"></div>
+  <button class="btn btn-reset" onclick="editTeams()">✏️ Équipes</button>
+</header>
+<main>
+  <div class="level-btns">
+    <button class="lvl-btn active" id="lvl-cp" onclick="setLevel('cp')">🔵 CP / CE1</button>
+    <button class="lvl-btn" id="lvl-ce" onclick="setLevel('ce')">🟢 CE2 / CM1</button>
+    <button class="lvl-btn" id="lvl-cm" onclick="setLevel('cm')">🟣 CM1 / CM2</button>
+  </div>
+  <div class="bank-counter" id="bankCounter"></div>
+  <div class="card-zone">
+    <div class="mot-card" id="motCard" onclick="revealWord()">
+      <div class="mot-hidden" id="motHidden">🎲 Cliquer pour tirer un mot</div>
+      <div class="mot-word" id="motWord" style="display:none;"></div>
+      <div class="mot-level" id="motLevel"></div>
+    </div>
+    <div class="click-hint" id="clickHint">👆 Le dessinateur clique pour voir le mot (cachez l'écran aux autres !)</div>
+  </div>
+  <div class="timer-zone">
+    <div class="timer-bar-bg"><div class="timer-bar" id="timerBar" style="width:100%;"></div></div>
+    <div class="timer-num" id="timerNum">45</div>
+  </div>
+  <div class="controls">
+    <button class="btn btn-start" id="btnStart" onclick="startTimer()">▶ Démarrer (45s)</button>
+    <button class="btn btn-next" onclick="nextWord()">⏭ Nouveau mot</button>
+    <button class="btn btn-point" onclick="addPoint()">✅ Deviné ! +1 pt</button>
+    <button class="btn btn-fail" onclick="skipWord()">❌ Passer</button>
+  </div>
+</main>
+<div class="overlay" id="teamOverlay">
+  <div class="modal">
+    <h2>✏️ Noms des équipes</h2>
+    <div id="teamInputs"></div>
+    <button class="btn btn-start" onclick="saveTeams()">💾 Valider</button>
+  </div>
+</div>
+<div class="overlay" id="pointOverlay">
+  <div class="modal">
+    <h2>✅ +1 point pour quelle équipe ?</h2>
+    <div id="pointBtns"></div>
+    <button class="btn btn-reset" onclick="closePoint()">Annuler</button>
+  </div>
+</div>
+<footer>🎨 Pictionary | Dessinez en 45 secondes — Pas de lettres, pas de mots, pas de gestes !</footer>
+<script>
+const WORDS = {
+  cp:['chat','chien','maison','arbre','soleil','vélo','pomme','voiture','ballon','bateau','oiseau','fleur','table','livre','école','crayon','lune','étoile','poisson','lapin','vache','cochon','lion','chapeau','nuage','montagne','mer','train','avion','pizza','glace','gâteau','bébé','pluie','neige','feu','herbe','cheval','canard','grenouille','tortue','papillon','baleine','girafe','éléphant','hibou','coccinelle','arc-en-ciel','fusée','robot','clown','forêt','rivière','plage','château','île','bonbon','cerise','banane','raisin','citrouille','sapin','bougie','clé','pont','lunettes','parapluie','guitare','balançoire','toboggan','drapeau','couronne'],
+  ce:['astronaute','château','dinosaure','volcan','phare','montgolfière','pingouin','bougie','parapluie','escalier','fantôme','licorne','pirate','plongeur','désert','jungle','igloo','chevalier','fusée','crocodile','perroquet','cactus','arc-en-ciel','sous-marin','pharaon','squelette','vampire','tempête','cascade','île','phoque','dentiste','pompier','bibliothèque','stade','cirque','laboratoire','boussole','carte','télescope','harmonica','trombone','trompette','dragon','sorcière','superhéros','pieuvre','requin','dauphin','orque','pyramide','labyrinthe','catapulte','lanterne','parchemin','kangourou','koala','flamant','méduse','homard','seiche','aquarium','volcanologue','archéologue','cartographe','déguisement','funambule','trapéziste','jongleur'],
+  cm:['hélicoptère','laboratoire','thermomètre','locomotive','chauve-souris','microscope','avalanche','saxophone','chronomètre','calculatrice','parachute','ambulance','trampoline','marionnette','boomerang','aquarium','kaléidoscope','périscope','catapulte','pendule','stéthoscope','caricature','équilibriste','électricité','magnétisme','évaporation','photosynthèse','archéologue','astronome','chirurgien','porte-avions','aéroglisseur','monorail','téléphérique','stalagmite','stalactite','geyser','glacier','mangrove','calligraphie','enluminure','mosaïque','vitrail','fresque','métronome','partition','solfège','baguette','podium','origami','karaté','bonsaï','kimono','samouraï','télescopage','décollage','atterrissage','satellisation','paléontologue','océanographe','météorologiste','vulcanologue','caméléon','dromadaire','ornithorynque','piranha','anaconda','impressionnisme','calligraphe','enlumineur','orfèvre']
+};
+const LEVEL_NAMES = {cp:'CP / CE1', ce:'CE2 / CM1', cm:'CM1 / CM2'};
+let level = 'cp';
+let teams = ['Équipe 1','Équipe 2','Équipe 3','Équipe 4'];
+let scores = [0,0,0,0];
+let timer = null, timeLeft = 45, revealed = false;
+// Anti-répétition : un Set par niveau, réinitialisé quand épuisé
+const usedWords = {cp: new Set(), ce: new Set(), cm: new Set()};
+
+function updateCounter(){
+  const total = WORDS[level].length;
+  const remaining = WORDS[level].filter(w=>!usedWords[level].has(w)).length;
+  document.getElementById('bankCounter').textContent =
+    `📦 Mots restants niveau ${LEVEL_NAMES[level]} : ${remaining} / ${total}`;
+}
+
+function setLevel(l){
+  level = l;
+  ['cp','ce','cm'].forEach(x=>{
+    document.getElementById('lvl-'+x).classList.toggle('active', x===l);
+  });
+  nextWord();
+}
+
+function getRandWord(){
+  let pool = WORDS[level].filter(w=>!usedWords[level].has(w));
+  if(pool.length===0){ usedWords[level] = new Set(); pool = WORDS[level]; }
+  const w = pool[Math.floor(Math.random()*pool.length)];
+  usedWords[level].add(w);
+  updateCounter();
+  return w;
+}
+
+function revealWord(){
+  if(revealed) return;
+  revealed = true;
+  document.getElementById('motHidden').style.display='none';
+  document.getElementById('motWord').style.display='block';
+  document.getElementById('clickHint').style.display='none';
+}
+
+function nextWord(){
+  stopTimer();
+  const w = getRandWord();
+  revealed = false;
+  document.getElementById('motWord').textContent = w.toUpperCase();
+  document.getElementById('motLevel').textContent = '📊 Niveau : '+LEVEL_NAMES[level];
+  document.getElementById('motHidden').style.display='block';
+  document.getElementById('motWord').style.display='none';
+  document.getElementById('clickHint').style.display='block';
+  document.getElementById('btnStart').textContent='▶ Démarrer (45s)';
+  document.getElementById('btnStart').style.background='#2ecc71';
+  timeLeft=45; updateTimerDisplay();
+}
+
+function startTimer(){
+  if(timer){stopTimer();return;}
+  if(!revealed) revealWord();
+  document.getElementById('btnStart').textContent='⏸ Pause';
+  document.getElementById('btnStart').style.background='#e67e22';
+  timer = setInterval(()=>{
+    timeLeft--;
+    updateTimerDisplay();
+    if(timeLeft<=0){
+      stopTimer();
+      document.getElementById('timerNum').textContent='⏰';
+      document.getElementById('timerBar').style.width='0%';
+      document.getElementById('btnStart').textContent='▶ Démarrer (45s)';
+      document.getElementById('btnStart').style.background='#2ecc71';
+    }
+  },1000);
+}
+
+function stopTimer(){clearInterval(timer);timer=null;}
+
+function updateTimerDisplay(){
+  const pct=(timeLeft/45)*100;
+  document.getElementById('timerBar').style.width=pct+'%';
+  const el=document.getElementById('timerNum');
+  el.textContent=timeLeft;
+  el.classList.toggle('urgent',timeLeft<=10);
+}
+
+function addPoint(){
+  document.getElementById('pointOverlay').classList.add('show');
+  const d=document.getElementById('pointBtns');
+  const colors=['#e74c3c','#3498db','#2ecc71','#f39c12'];
+  d.innerHTML=teams.map((t,i)=>`<button class="btn btn-point" style="margin:6px;background:${colors[i]};" onclick="givePoint(${i})">${t}</button>`).join('');
+}
+
+function givePoint(i){
+  scores[i]++;
+  renderScores();
+  closePoint();
+  nextWord();
+}
+
+function closePoint(){document.getElementById('pointOverlay').classList.remove('show');}
+function skipWord(){nextWord();}
+
+function renderScores(){
+  const colors=['#e74c3c','#3498db','#2ecc71','#f39c12'];
+  document.getElementById('scores').innerHTML=teams.map((t,i)=>
+    `<div class="score-card" style="border:2px solid ${colors[i]};" onclick="addPoint()">
+      <div class="team-name">${t}</div>
+      <div class="score-num">${scores[i]}</div>
+    </div>`).join('');
+}
+
+function editTeams(){
+  document.getElementById('teamOverlay').classList.add('show');
+  document.getElementById('teamInputs').innerHTML=teams.map((t,i)=>
+    `<input id="ti${i}" value="${t}" placeholder="Équipe ${i+1}">`).join('');
+}
+function saveTeams(){
+  teams=teams.map((_,i)=>document.getElementById('ti'+i).value||'Équipe '+(i+1));
+  renderScores();
+  document.getElementById('teamOverlay').classList.remove('show');
+}
+
+renderScores();
+nextWord();
+</script>
+</body>
+</html>

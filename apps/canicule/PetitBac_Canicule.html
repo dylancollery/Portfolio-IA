@@ -1,0 +1,472 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Petit Bac</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=DM+Sans:wght@400;600;700&display=swap" rel="stylesheet">
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+html,body{height:100%;overflow:hidden}
+body{
+  font-family:'DM Sans','Segoe UI',sans-serif;
+  background:#0E0E1A;color:#F0EEFF;display:flex;flex-direction:column;
+  -webkit-font-smoothing:antialiased;
+}
+
+/* ── HEADER (light) ── */
+#hdr{
+  height:52px;flex-shrink:0;display:flex;align-items:center;gap:12px;padding:0 20px;
+  background:#FEFAF2;border-top:4px solid #6B21A8;border-bottom:1px solid #E0D0B8;
+}
+#hdr a{
+  color:#6B21A8;text-decoration:none;font-size:.82rem;font-weight:700;
+  font-family:'DM Sans','Segoe UI',sans-serif;display:flex;align-items:center;gap:5px;white-space:nowrap;
+}
+#hdr a:hover{opacity:.72;}
+#hdr h1{
+  font-family:'Bebas Neue','Segoe UI',sans-serif;font-size:1.5rem;letter-spacing:.06em;
+  flex:1;text-align:center;color:#1A1208;background:none;-webkit-background-clip:unset;-webkit-text-fill-color:#1A1208;
+}
+
+/* ── TABS ── */
+#tab-nav{
+  display:flex;flex-shrink:0;background:#0A0A1A;padding:8px 12px;gap:6px;
+  border-bottom:1px solid rgba(255,255,255,.06);
+}
+.tnav{
+  flex:1;padding:10px 4px;border:none;background:transparent;
+  color:rgba(255,255,255,.28);
+  font-family:'Bebas Neue','Segoe UI',sans-serif;font-size:16px;letter-spacing:.1em;
+  cursor:pointer;border-radius:10px;transition:all .2s;
+}
+.tnav:hover{color:rgba(255,255,255,.6);}
+.tnav.on{color:#F0EEFF;background:rgba(255,255,255,.08);border:1px solid rgba(255,255,255,.1);}
+
+/* ── SECTIONS ── */
+.sec{display:none;flex:1;overflow-y:auto;flex-direction:column;align-items:center;padding:20px;gap:16px}
+.sec.on{display:flex}
+
+/* ── POINTS ── */
+.teams-grid{display:grid;grid-template-columns:1fr 1fr;gap:14px;width:100%;max-width:580px}
+.tc{
+  background:#14142A;border-radius:18px;padding:18px 14px;border:2px solid;
+  display:flex;flex-direction:column;align-items:center;gap:10px;
+  box-shadow:0 4px 24px rgba(0,0,0,.3);
+}
+.tdot{width:12px;height:12px;border-radius:50%;flex-shrink:0}
+.tname{
+  font-size:.9rem;font-weight:700;cursor:text;padding:2px 8px;border-radius:6px;
+  border:1px solid transparent;background:transparent;color:inherit;text-align:center;
+  outline:none;min-width:60px;max-width:120px;font-family:'DM Sans',sans-serif;
+}
+.tname:hover{border-color:rgba(255,255,255,.2);}
+.tname:focus{border-color:rgba(255,255,255,.4);background:rgba(255,255,255,.04);}
+.tscore{font-family:'Bebas Neue',sans-serif;font-size:5.5rem;line-height:1;}
+.sbtns{display:flex;gap:12px;}
+.sb{
+  width:44px;height:44px;border-radius:50%;border:none;font-size:1.4rem;font-weight:900;
+  cursor:pointer;transition:.15s;display:flex;align-items:center;justify-content:center;
+}
+.sb:active{transform:scale(.88);}
+.sbp{background:#22C55E;color:#fff}
+.sbm{background:#EF4444;color:#fff}
+.btn-sec{
+  background:rgba(255,255,255,.06);color:rgba(255,255,255,.5);
+  border:1px solid rgba(255,255,255,.09);border-radius:10px;
+  padding:10px 24px;font-size:.84rem;font-weight:700;cursor:pointer;transition:.2s;
+  font-family:'DM Sans',sans-serif;
+}
+.btn-sec:hover{background:rgba(255,255,255,.1);color:#fff}
+
+/* ── ROUE ── */
+#roue-wrap{display:flex;flex-direction:column;align-items:center;gap:12px;width:100%;max-width:440px}
+#wcanvas{display:block}
+#chosen-ltr{
+  font-family:'Bebas Neue',sans-serif;font-size:6rem;color:#F5C842;
+  text-shadow:0 4px 32px rgba(245,200,66,.45);
+  min-height:88px;display:flex;align-items:center;justify-content:center;line-height:1;
+}
+.roue-btns{display:flex;gap:10px;}
+.btn-spin{
+  background:linear-gradient(135deg,#F59E0B,#EF4444);color:#fff;border:none;
+  border-radius:14px;padding:13px 36px;
+  font-family:'Bebas Neue',sans-serif;font-size:20px;letter-spacing:.08em;
+  cursor:pointer;transition:.2s;
+}
+.btn-spin:hover:not(:disabled){filter:brightness(1.12);transform:scale(1.03)}
+.btn-spin:disabled{opacity:.35;cursor:not-allowed}
+.btn-rspin{
+  background:rgba(255,255,255,.06);color:rgba(255,255,255,.45);
+  border:1px solid rgba(255,255,255,.09);border-radius:14px;padding:13px 20px;
+  font-family:'Bebas Neue',sans-serif;font-size:18px;letter-spacing:.08em;
+  cursor:pointer;transition:.2s;
+}
+.btn-rspin:hover{background:rgba(255,255,255,.1);color:#fff}
+#lgrid{display:flex;flex-wrap:wrap;gap:5px;justify-content:center;max-width:420px}
+.ll{
+  width:36px;height:36px;border-radius:8px;display:flex;align-items:center;justify-content:center;
+  font-family:'Bebas Neue',sans-serif;font-size:16px;font-weight:900;transition:.4s;border:2px solid;
+}
+.ll.avail{background:#14142A;border-color:rgba(255,255,255,.12);color:#F0EEFF}
+.ll.used{background:#0E0E1A;border-color:rgba(255,255,255,.04);color:rgba(255,255,255,.15);text-decoration:line-through}
+#roue-msg{font-size:.82rem;color:rgba(255,255,255,.28);text-align:center;min-height:20px;font-family:'DM Sans',sans-serif;}
+
+/* ── CHRONO ── */
+#chrono-wrap{display:flex;flex-direction:column;align-items:center;gap:22px;width:100%;max-width:340px;padding-top:10px}
+.ring-box{position:relative;display:flex;align-items:center;justify-content:center}
+#ring-svg{display:block}
+#ttext{position:absolute;text-align:center;pointer-events:none;user-select:none}
+#tnum{font-family:'Bebas Neue',sans-serif;font-size:4.2rem;font-weight:900;line-height:1;letter-spacing:.04em}
+#tstat{font-size:.82rem;color:rgba(255,255,255,.38);margin-top:8px;font-family:'DM Sans',sans-serif}
+.chrono-btns{display:flex;gap:10px;flex-wrap:wrap;justify-content:center}
+.btn-go{
+  background:linear-gradient(135deg,#22C55E,#16A34A);color:#fff;border:none;
+  border-radius:14px;padding:14px 40px;
+  font-family:'Bebas Neue',sans-serif;font-size:22px;letter-spacing:.08em;
+  cursor:pointer;transition:.2s;min-width:160px;
+}
+.btn-go:hover{filter:brightness(1.1)}
+.btn-go.paused{background:linear-gradient(135deg,#F59E0B,#D97706)}
+.btn-creset{
+  background:rgba(255,255,255,.06);color:rgba(255,255,255,.5);
+  border:1px solid rgba(255,255,255,.09);border-radius:14px;padding:14px 20px;
+  font-family:'Bebas Neue',sans-serif;font-size:20px;letter-spacing:.08em;cursor:pointer;transition:.2s;
+}
+.btn-creset:hover{background:rgba(255,255,255,.1);color:#fff}
+</style>
+</head>
+<body>
+
+<div id="hdr">
+  <a href="Portail_Canicule.html">&#8592; Portail</a>
+  <h1>&#x1F170;&#xFE0F; Petit Bac</h1>
+  <span style="width:70px"></span>
+</div>
+
+<div id="tab-nav">
+  <button class="tnav on"  onclick="showTab('pts',this)">&#x1F3C6; Points</button>
+  <button class="tnav"     onclick="showTab('roue',this)">&#x1F3A1; Roue</button>
+  <button class="tnav"     onclick="showTab('chrono',this)">&#x23F1;&#xFE0F; Chrono</button>
+</div>
+
+<!-- POINTS -->
+<section class="sec on" id="sec-pts">
+  <div class="teams-grid" id="teams-grid"></div>
+  <button class="btn-sec" onclick="resetScores()">&#x21BA; Remettre les scores &#x00E0; z&#x00E9;ro</button>
+</section>
+
+<!-- ROUE -->
+<section class="sec" id="sec-roue">
+  <div id="roue-wrap">
+    <canvas id="wcanvas" width="380" height="400"></canvas>
+    <div id="chosen-ltr">?</div>
+    <div id="roue-msg">20 lettres &#x2014; aucune r&#x00E9;p&#x00E9;tition avant &#x00E9;puisement !</div>
+    <div class="roue-btns">
+      <button class="btn-spin" id="spin-btn" onclick="spin()">&#x1F3B2; Tourner !</button>
+      <button class="btn-rspin" onclick="resetWheel()">&#x267B;&#xFE0F; Reset</button>
+    </div>
+    <div id="lgrid"></div>
+  </div>
+</section>
+
+<!-- CHRONO -->
+<section class="sec" id="sec-chrono">
+  <div id="chrono-wrap">
+    <div class="ring-box">
+      <svg id="ring-svg" width="220" height="220" viewBox="0 0 220 220">
+        <circle cx="110" cy="110" r="90" fill="none" stroke="#1a1a2e" stroke-width="20"/>
+        <circle id="tring" cx="110" cy="110" r="90" fill="none"
+                stroke="#22c55e" stroke-width="20"
+                stroke-dasharray="565" stroke-dashoffset="0"
+                stroke-linecap="round"
+                transform="rotate(-90 110 110)"/>
+      </svg>
+      <div id="ttext">
+        <div id="tnum">60</div>
+        <div id="tstat">Pr&#x00EA;t !</div>
+      </div>
+    </div>
+    <div class="chrono-btns">
+      <button class="btn-go" id="btn-go" onclick="toggleTimer()">&#x25B6; D&#x00E9;marrer</button>
+      <button class="btn-creset" onclick="resetTimer()">&#x21BA; Reset</button>
+    </div>
+  </div>
+</section>
+
+<script>
+/* ========== TABS ========== */
+function showTab(id, btn) {
+  document.querySelectorAll('.sec').forEach(function(s){ s.classList.remove('on'); });
+  document.querySelectorAll('.tnav').forEach(function(b){ b.classList.remove('on'); });
+  document.getElementById('sec-' + id).classList.add('on');
+  btn.classList.add('on');
+  if (id === 'roue') { drawWheel(wheelAngle); }
+}
+
+/* ========== POINTS ========== */
+var COLORS = ['#ef4444','#3b82f6','#22c55e','#f59e0b'];
+var scores = [0,0,0,0];
+
+function buildTeams() {
+  var g = document.getElementById('teams-grid');
+  var html = '';
+  for (var i = 0; i < 4; i++) {
+    var name = 'Equipe ' + (i + 1);
+    html += '<div class="tc" style="border-color:' + COLORS[i] + '33">' +
+      '<div style="display:flex;align-items:center;gap:8px">' +
+        '<div class="tdot" style="background:' + COLORS[i] + '"></div>' +
+        '<div class="tname" contenteditable="true" id="tn' + i + '" style="color:' + COLORS[i] + '">' + name + '</div>' +
+      '</div>' +
+      '<div class="tscore" id="sc' + i + '" style="color:' + COLORS[i] + '">0</div>' +
+      '<div class="sbtns">' +
+        '<button class="sb sbm" onclick="addScore(' + i + ',-1)">&#x2212;</button>' +
+        '<button class="sb sbp" onclick="addScore(' + i + ',1)">+</button>' +
+      '</div>' +
+    '</div>';
+  }
+  g.innerHTML = html;
+}
+
+function addScore(i, delta) {
+  scores[i] = Math.max(0, scores[i] + delta);
+  document.getElementById('sc' + i).textContent = scores[i];
+}
+
+function resetScores() {
+  for (var i = 0; i < 4; i++) {
+    scores[i] = 0;
+    document.getElementById('sc' + i).textContent = 0;
+  }
+}
+
+buildTeams();
+
+/* ========== ROUE ========== */
+var LETTRES = 'ABCDEFGHIJKLMNOPRSTV';
+var N = LETTRES.length;
+var SLICE_RAD = 2 * Math.PI / N;
+var PAL = ['#e74c3c','#e67e22','#f1c40f','#2ecc71','#1abc9c',
+           '#3498db','#9b59b6','#e91e63','#ff5722','#00bcd4',
+           '#8bc34a','#ff9800','#607d8b','#e74c3c','#3498db',
+           '#2ecc71','#9b59b6','#f39c12','#16a085','#c0392b'];
+var USED_FILL = '#111827';
+var canvas = document.getElementById('wcanvas');
+var ctx = canvas.getContext('2d');
+var CX = 190, CY = 212, R = 165;
+
+var wheelAngle = 0;
+var isAnim = false;
+var animFrom = 0, animTo = 0, animT0 = 0;
+var pendingIdx = -1;
+var usedSet = new Set();
+
+function drawWheel(angle) {
+  ctx.clearRect(0, 0, canvas.width, canvas.height);
+
+  for (var i = 0; i < N; i++) {
+    var sa = angle + i * SLICE_RAD - Math.PI / 2;
+    var ea = sa + SLICE_RAD;
+    var used = usedSet.has(i);
+
+    ctx.beginPath();
+    ctx.moveTo(CX, CY);
+    ctx.arc(CX, CY, R, sa, ea);
+    ctx.closePath();
+    ctx.fillStyle = used ? USED_FILL : PAL[i];
+    ctx.fill();
+    ctx.strokeStyle = '#0a0a18';
+    ctx.lineWidth = 2.5;
+    ctx.stroke();
+
+    var mid = sa + SLICE_RAD / 2;
+    var tr = R * 0.71;
+    var tx = CX + tr * Math.cos(mid);
+    var ty = CY + tr * Math.sin(mid);
+
+    ctx.save();
+    ctx.translate(tx, ty);
+    ctx.fillStyle = used ? '#2d3555' : '#fff';
+    ctx.font = 'bold 14px Segoe UI, Arial';
+    ctx.textAlign = 'center';
+    ctx.textBaseline = 'middle';
+    ctx.fillText(LETTRES[i], 0, 0);
+    ctx.restore();
+  }
+
+  /* outer ring */
+  ctx.beginPath();
+  ctx.arc(CX, CY, R + 4, 0, Math.PI * 2);
+  ctx.strokeStyle = '#2a3a5a';
+  ctx.lineWidth = 4;
+  ctx.stroke();
+
+  /* center disc */
+  ctx.beginPath();
+  ctx.arc(CX, CY, 26, 0, Math.PI * 2);
+  ctx.fillStyle = '#0f0f23';
+  ctx.fill();
+  ctx.strokeStyle = '#2a3a5a';
+  ctx.lineWidth = 2;
+  ctx.stroke();
+
+  /* fixed pointer: triangle at top, pointing down */
+  var px = CX, py = CY - R - 6;
+  ctx.beginPath();
+  ctx.moveTo(px, py + 20);
+  ctx.lineTo(px - 13, py);
+  ctx.lineTo(px + 13, py);
+  ctx.closePath();
+  ctx.fillStyle = '#f59e0b';
+  ctx.fill();
+  ctx.strokeStyle = '#0a0a18';
+  ctx.lineWidth = 2;
+  ctx.stroke();
+}
+
+function buildLGrid() {
+  var g = document.getElementById('lgrid');
+  var html = '';
+  for (var i = 0; i < N; i++) {
+    html += '<div class="ll ' + (usedSet.has(i) ? 'used' : 'avail') + '">' + LETTRES[i] + '</div>';
+  }
+  g.innerHTML = html;
+  var rem = N - usedSet.size;
+  document.getElementById('roue-msg').textContent = rem > 0
+    ? rem + ' lettre' + (rem > 1 ? 's' : '') + ' restante' + (rem > 1 ? 's' : '') + ' sur ' + N
+    : 'Toutes les lettres tirées ! Cliquez Reset.';
+}
+
+function easeOut(t) { return 1 - Math.pow(1 - t, 3); }
+
+function animStep(ts) {
+  if (!isAnim) return;
+  var t = Math.min((ts - animT0) / 3400, 1);
+  wheelAngle = animFrom + (animTo - animFrom) * easeOut(t);
+  drawWheel(wheelAngle);
+  if (t < 1) {
+    requestAnimationFrame(animStep);
+  } else {
+    wheelAngle = animTo;
+    isAnim = false;
+    usedSet.add(pendingIdx);
+    document.getElementById('chosen-ltr').textContent = LETTRES[pendingIdx];
+    buildLGrid();
+    document.getElementById('spin-btn').disabled = false;
+  }
+}
+
+function spin() {
+  if (isAnim) return;
+  var pool = [];
+  for (var i = 0; i < N; i++) { if (!usedSet.has(i)) pool.push(i); }
+  if (pool.length === 0) { resetWheel(); return; }
+
+  var chosenIdx = pool[Math.floor(Math.random() * pool.length)];
+  pendingIdx = chosenIdx;
+
+  var target = -(chosenIdx + 0.5) * SLICE_RAD;
+  var minSpin = wheelAngle + 5 * 2 * Math.PI;
+  while (target < minSpin) target += 2 * Math.PI;
+
+  animFrom = wheelAngle;
+  animTo   = target;
+  animT0   = performance.now();
+  isAnim   = true;
+
+  document.getElementById('spin-btn').disabled = true;
+  document.getElementById('chosen-ltr').textContent = '...';
+  requestAnimationFrame(animStep);
+}
+
+function resetWheel() {
+  if (isAnim) return;
+  usedSet.clear();
+  document.getElementById('chosen-ltr').textContent = '?';
+  buildLGrid();
+  drawWheel(wheelAngle);
+}
+
+drawWheel(wheelAngle);
+buildLGrid();
+
+/* ========== CHRONO ========== */
+var TOTAL  = 60;
+var CIRC   = 2 * Math.PI * 90;
+var timeLeft = TOTAL;
+var running  = false;
+var timerRef = null;
+
+document.getElementById('tring').style.strokeDasharray = CIRC;
+
+function updateRing() {
+  var p      = timeLeft / TOTAL;
+  var offset = CIRC * (1 - p);
+  var ring   = document.getElementById('tring');
+  ring.style.strokeDashoffset = offset;
+  var col = p > 0.5 ? '#22c55e' : p > 0.25 ? '#f39c12' : '#ef4444';
+  ring.style.stroke = col;
+  document.getElementById('tnum').textContent = timeLeft;
+  document.getElementById('ring-svg').style.filter = 'drop-shadow(0 0 18px ' + col + '55)';
+}
+
+function beep(n) {
+  try {
+    var ac = new (window.AudioContext || window.webkitAudioContext)();
+    for (var k = 0; k < n; k++) {
+      var osc  = ac.createOscillator();
+      var gain = ac.createGain();
+      osc.connect(gain);
+      gain.connect(ac.destination);
+      osc.frequency.value = 880;
+      osc.type = 'sine';
+      var t = ac.currentTime + k * 0.35;
+      gain.gain.setValueAtTime(0.5, t);
+      gain.gain.exponentialRampToValueAtTime(0.001, t + 0.28);
+      osc.start(t);
+      osc.stop(t + 0.28);
+    }
+  } catch(e) {}
+}
+
+function toggleTimer() {
+  if (timeLeft === 0) { resetTimer(); return; }
+  if (running) {
+    clearInterval(timerRef); timerRef = null; running = false;
+    document.getElementById('btn-go').textContent = '\u25B6 Reprendre';
+    document.getElementById('btn-go').classList.add('paused');
+    document.getElementById('tstat').textContent = 'En pause';
+  } else {
+    running = true;
+    document.getElementById('btn-go').textContent = '\u23F8 Pause';
+    document.getElementById('btn-go').classList.remove('paused');
+    document.getElementById('tstat').textContent = 'En cours\u2026';
+    timerRef = setInterval(function() {
+      timeLeft--;
+      updateRing();
+      if (timeLeft <= 0) {
+        clearInterval(timerRef); timerRef = null; running = false;
+        document.getElementById('tnum').textContent = '\u23F0';
+        document.getElementById('tstat').textContent = 'Temps \u00E9coul\u00E9 !';
+        document.getElementById('btn-go').textContent = '\u25B6 D\u00E9marrer';
+        document.getElementById('btn-go').classList.remove('paused');
+        beep(3);
+      }
+    }, 1000);
+  }
+}
+
+function resetTimer() {
+  clearInterval(timerRef); timerRef = null; running = false;
+  timeLeft = TOTAL;
+  updateRing();
+  document.getElementById('btn-go').textContent = '\u25B6 D\u00E9marrer';
+  document.getElementById('btn-go').classList.remove('paused');
+  document.getElementById('tstat').textContent = 'Pr\u00EAt !';
+}
+
+updateRing();
+</script>
+</body>
+</html>

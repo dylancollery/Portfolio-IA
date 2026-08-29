@@ -1,0 +1,534 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Jeux Canicule — CM2</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=DM+Sans:ital,opsz,wght@0,9..40,400;0,9..40,500;0,9..40,700;1,9..40,400&family=Space+Mono:wght@700&display=swap" rel="stylesheet">
+<style>
+/* ── RESET ── */
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0;}
+
+/* ── TOKENS ── */
+:root{
+  --bg:       #FEFAF2;
+  --sand:     #F0E8D5;
+  --border:   #E0D0B8;
+  --orange:   #D04D0A;
+  --yellow:   #F0BC2E;
+  --navy:     #1B3F7C;
+  --text:     #1A1208;
+  --muted:    #7B6A52;
+  --white:    #FFFFFF;
+  --c-pict:   #C8230F;
+  --c-bac:    #6B21A8;
+  --c-loie:   #AD5804;
+  --c-quiz:   #1642A8;
+}
+
+@media(prefers-reduced-motion:reduce){
+  *,*::before,*::after{animation-duration:.01ms!important;transition-duration:.01ms!important;}
+}
+
+/* ── BASE ── */
+body{
+  font-family:'DM Sans',system-ui,sans-serif;
+  background:var(--bg);
+  color:var(--text);
+  min-height:100vh;
+  -webkit-font-smoothing:antialiased;
+}
+
+/* ═══════════════════════════════
+   HERO
+═══════════════════════════════ */
+.hero{
+  position:relative;
+  overflow:hidden;
+  background:var(--bg);
+  padding:56px 60px 60px;
+  display:grid;
+  grid-template-columns:1fr auto;
+  align-items:center;
+  gap:40px;
+  border-bottom:2px solid var(--border);
+}
+
+/* Warm glow behind the sun */
+.hero::after{
+  content:'';
+  position:absolute;
+  right:-60px; top:-60px;
+  width:520px; height:520px;
+  background:radial-gradient(circle,rgba(240,188,46,.14) 0%,transparent 65%);
+  pointer-events:none;
+  z-index:0;
+}
+
+.hero-text{
+  position:relative;
+  z-index:1;
+  max-width:580px;
+}
+
+.eyebrow{
+  font-family:'Space Mono',monospace;
+  font-size:11px;
+  letter-spacing:.2em;
+  text-transform:uppercase;
+  color:var(--orange);
+  font-weight:700;
+  margin-bottom:16px;
+  display:flex;
+  align-items:center;
+  gap:10px;
+}
+.eyebrow::after{
+  content:'';
+  display:block;
+  width:28px; height:2px;
+  background:var(--orange);
+  border-radius:1px;
+  flex-shrink:0;
+}
+
+.hero-title{
+  font-family:'Bebas Neue',sans-serif;
+  font-size:clamp(62px,9vw,110px);
+  line-height:.9;
+  letter-spacing:.025em;
+  color:var(--navy);
+}
+.hero-title .accent{
+  color:var(--orange);
+  display:block;
+}
+
+.hero-tagline{
+  font-size:clamp(15px,1.8vw,20px);
+  font-style:italic;
+  color:var(--muted);
+  margin-top:20px;
+  font-weight:400;
+  line-height:1.5;
+}
+
+.hero-pills{
+  display:flex;
+  gap:10px;
+  flex-wrap:wrap;
+  margin-top:26px;
+}
+.pill{
+  background:var(--sand);
+  border:1.5px solid var(--border);
+  border-radius:100px;
+  padding:7px 16px;
+  font-size:12px;
+  font-weight:600;
+  color:var(--muted);
+  letter-spacing:.01em;
+  user-select:none;
+}
+
+/* ── SOLEIL ANIMÉ ── */
+.hero-sun{
+  position:relative;
+  z-index:1;
+  flex-shrink:0;
+}
+.sun-svg{
+  width:clamp(150px,19vw,230px);
+  height:clamp(150px,19vw,230px);
+  display:block;
+  overflow:visible;
+}
+.sun-halo{
+  animation:sunPulse 7s ease-in-out infinite;
+  transform-origin:100px 100px;
+}
+.sun-rays{
+  animation:sunSpin 55s linear infinite;
+  transform-origin:100px 100px;
+}
+@keyframes sunSpin{
+  from{transform:rotate(0deg);}
+  to  {transform:rotate(360deg);}
+}
+@keyframes sunPulse{
+  0%,100%{opacity:.25;}
+  50%    {opacity:.48;}
+}
+
+/* ═══════════════════════════════
+   SECTION LABEL
+═══════════════════════════════ */
+.section-label{
+  text-align:center;
+  padding:52px 32px 20px;
+}
+.section-label h2{
+  font-family:'Bebas Neue',sans-serif;
+  font-size:14px;
+  letter-spacing:.32em;
+  text-transform:uppercase;
+  color:var(--muted);
+  font-weight:400;
+}
+.divider{
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  gap:12px;
+  margin-top:10px;
+}
+.div-line{width:44px;height:1.5px;background:var(--border);}
+.div-dot {width:6px;height:6px;border-radius:50%;background:var(--orange);}
+
+/* ═══════════════════════════════
+   GAME GRID
+═══════════════════════════════ */
+.grid{
+  display:grid;
+  grid-template-columns:repeat(auto-fit,minmax(290px,1fr));
+  gap:22px;
+  padding:28px 48px 64px;
+  max-width:1100px;
+  margin:0 auto;
+}
+
+/* ═══════════════════════════════
+   CARD
+═══════════════════════════════ */
+.card{
+  background:var(--white);
+  border-radius:16px;
+  border:1.5px solid var(--border);
+  overflow:hidden;
+  display:flex;
+  flex-direction:column;
+  text-decoration:none;
+  color:inherit;
+  transition:transform .22s cubic-bezier(.34,1.56,.64,1), box-shadow .22s ease;
+  box-shadow:0 1px 4px rgba(26,18,8,.05),0 3px 14px rgba(26,18,8,.04);
+}
+.card:hover{
+  transform:translateY(-6px);
+  box-shadow:0 8px 32px rgba(26,18,8,.11),0 2px 6px rgba(26,18,8,.06);
+}
+.card:focus-visible{
+  outline:3px solid var(--navy);
+  outline-offset:3px;
+}
+
+/* top accent bar */
+.card-bar{height:4px;flex-shrink:0;}
+.c-pict .card-bar{background:var(--c-pict);}
+.c-bac  .card-bar{background:var(--c-bac);}
+.c-loie .card-bar{background:var(--c-loie);}
+.c-quiz .card-bar{background:var(--c-quiz);}
+
+/* card header row */
+.card-head{
+  padding:22px 24px 0;
+  display:flex;
+  align-items:flex-start;
+  gap:16px;
+}
+.card-icon{
+  width:52px;height:52px;
+  border-radius:13px;
+  display:flex;align-items:center;justify-content:center;
+  font-size:26px;
+  flex-shrink:0;
+}
+.c-pict .card-icon{background:#FEEDE9;}
+.c-bac  .card-icon{background:#F3EAFF;}
+.c-loie .card-icon{background:#FEF3E2;}
+.c-quiz .card-icon{background:#E8EEFF;}
+
+.card-names{flex:1;padding-top:3px;}
+.card-title{
+  font-family:'Bebas Neue',sans-serif;
+  font-size:31px;
+  letter-spacing:.03em;
+  line-height:1;
+}
+.c-pict .card-title{color:var(--c-pict);}
+.c-bac  .card-title{color:var(--c-bac);}
+.c-loie .card-title{color:var(--c-loie);}
+.c-quiz .card-title{color:var(--c-quiz);}
+
+.card-sub{
+  font-family:'Space Mono',monospace;
+  font-size:9px;
+  letter-spacing:.14em;
+  text-transform:uppercase;
+  color:var(--muted);
+  margin-top:5px;
+  font-weight:700;
+}
+
+/* card body */
+.card-body{
+  padding:14px 24px 0;
+  flex:1;
+  display:flex;
+  flex-direction:column;
+  gap:14px;
+}
+.card-desc{
+  font-size:13.5px;
+  line-height:1.65;
+  color:var(--muted);
+}
+.tags{display:flex;gap:6px;flex-wrap:wrap;}
+.tag{
+  padding:4px 10px;
+  border-radius:100px;
+  font-size:10px;
+  font-weight:700;
+  background:var(--sand);
+  color:var(--muted);
+  border:1px solid var(--border);
+  letter-spacing:.02em;
+}
+
+/* CTA */
+.card-cta{
+  display:block;
+  margin:18px 20px 20px;
+  padding:13px 20px;
+  border-radius:10px;
+  text-align:center;
+  font-family:'Bebas Neue',sans-serif;
+  font-size:18px;
+  letter-spacing:.1em;
+  color:var(--white);
+  text-decoration:none;
+  transition:filter .15s;
+}
+.card:hover .card-cta{filter:brightness(1.1);}
+.c-pict .card-cta{background:var(--c-pict);}
+.c-bac  .card-cta{background:var(--c-bac);}
+.c-loie .card-cta{background:var(--c-loie);}
+.c-quiz .card-cta{background:var(--c-quiz);}
+
+/* ═══════════════════════════════
+   FOOTER
+═══════════════════════════════ */
+footer{
+  background:var(--sand);
+  border-top:1.5px solid var(--border);
+  padding:18px 48px;
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  flex-wrap:wrap;
+  gap:8px;
+}
+.ft-left {font-size:12px;color:var(--muted);font-weight:500;}
+.ft-right{
+  font-family:'Space Mono',monospace;
+  font-size:10px;
+  color:var(--border);
+  letter-spacing:.08em;
+  text-transform:uppercase;
+}
+
+/* ═══════════════════════════════
+   RESPONSIVE
+═══════════════════════════════ */
+@media(max-width:720px){
+  .hero{
+    grid-template-columns:1fr;
+    padding:36px 24px 40px;
+    text-align:center;
+    gap:28px;
+  }
+  .hero-sun{order:-1;margin:0 auto;}
+  .hero-pills{justify-content:center;}
+  .eyebrow{justify-content:center;}
+  .grid{padding:20px 16px 48px;gap:16px;}
+  footer{padding:16px 20px;justify-content:center;text-align:center;}
+}
+@media(max-width:420px){
+  .card-head{padding:16px 18px 0;}
+  .card-body{padding:12px 18px 0;}
+  .card-cta {margin:14px 14px 16px;}
+}
+</style>
+</head>
+<body>
+
+<!-- ═══ HERO ═══ -->
+<header class="hero">
+
+  <div class="hero-text">
+    <p class="eyebrow">CM2 &middot; Demi-journée jeux</p>
+
+    <h1 class="hero-title">
+      JEUX
+      <span class="accent">CANICULE</span>
+    </h1>
+
+    <p class="hero-tagline">La canicule&nbsp;? On en fait un jeu.</p>
+
+    <div class="hero-pills">
+      <span class="pill">🎮 4 jeux disponibles</span>
+      <span class="pill">👥 En équipes</span>
+      <span class="pill">📺 Prêt pour le projecteur</span>
+    </div>
+  </div>
+
+  <!-- Soleil SVG animé — signature de la page -->
+  <div class="hero-sun" aria-hidden="true">
+    <svg class="sun-svg" viewBox="0 0 200 200" xmlns="http://www.w3.org/2000/svg">
+      <defs>
+        <radialGradient id="halo" cx="50%" cy="50%" r="50%">
+          <stop offset="0%"   stop-color="#F0BC2E" stop-opacity=".4"/>
+          <stop offset="100%" stop-color="#F0BC2E" stop-opacity="0"/>
+        </radialGradient>
+        <radialGradient id="core" cx="38%" cy="30%" r="65%">
+          <stop offset="0%"   stop-color="#FFC840"/>
+          <stop offset="100%" stop-color="#D04D0A"/>
+        </radialGradient>
+      </defs>
+
+      <!-- halo pulsant -->
+      <circle class="sun-halo" cx="100" cy="100" r="97" fill="url(#halo)"/>
+
+      <!-- 8 rayons en rotation lente -->
+      <g class="sun-rays" fill="#F0BC2E">
+        <polygon points="100,10 105.5,54 94.5,54"/>
+        <polygon points="100,10 105.5,54 94.5,54" transform="rotate(45  100 100)"/>
+        <polygon points="100,10 105.5,54 94.5,54" transform="rotate(90  100 100)"/>
+        <polygon points="100,10 105.5,54 94.5,54" transform="rotate(135 100 100)"/>
+        <polygon points="100,10 105.5,54 94.5,54" transform="rotate(180 100 100)"/>
+        <polygon points="100,10 105.5,54 94.5,54" transform="rotate(225 100 100)"/>
+        <polygon points="100,10 105.5,54 94.5,54" transform="rotate(270 100 100)"/>
+        <polygon points="100,10 105.5,54 94.5,54" transform="rotate(315 100 100)"/>
+      </g>
+
+      <!-- noyau solaire (statique) -->
+      <circle cx="100" cy="100" r="40" fill="url(#core)"/>
+      <!-- reflet -->
+      <ellipse cx="89" cy="88" rx="9" ry="6" fill="rgba(255,255,255,.22)"
+               transform="rotate(-22 89 88)"/>
+    </svg>
+  </div>
+
+</header>
+
+<!-- ═══ SECTION TITLE ═══ -->
+<div class="section-label">
+  <h2>Choisissez votre activité</h2>
+  <div class="divider">
+    <div class="div-line"></div>
+    <div class="div-dot"></div>
+    <div class="div-line"></div>
+  </div>
+</div>
+
+<!-- ═══ GAME GRID ═══ -->
+<main class="grid">
+
+  <!-- PICTIONARY -->
+  <a class="card c-pict" href="Pictionary_Canicule.html" target="_blank">
+    <div class="card-bar"></div>
+    <div class="card-head">
+      <div class="card-icon">🎨</div>
+      <div class="card-names">
+        <div class="card-title">Pictionary</div>
+        <div class="card-sub">Dessin · Équipes · 45 s</div>
+      </div>
+    </div>
+    <div class="card-body">
+      <p class="card-desc">Un dessinateur, une équipe qui devine. Tirez un mot, dessinez en 45 secondes sans écrire ni parler. Trois niveaux : CP/CE1, CE2/CM1, CM1/CM2.</p>
+      <div class="tags">
+        <span class="tag">✏️ Dessin libre</span>
+        <span class="tag">👥 Équipes</span>
+        <span class="tag">⏱ 45 s</span>
+        <span class="tag">3 niveaux</span>
+      </div>
+    </div>
+    <span class="card-cta">LANCER LE JEU →</span>
+  </a>
+
+  <!-- PETIT BAC -->
+  <a class="card c-bac" href="PetitBac_Canicule.html" target="_blank">
+    <div class="card-bar"></div>
+    <div class="card-head">
+      <div class="card-icon">🅰️</div>
+      <div class="card-names">
+        <div class="card-title">Petit Bac</div>
+        <div class="card-sub">Lettres · Chrono · Roue</div>
+      </div>
+    </div>
+    <div class="card-body">
+      <p class="card-desc">Tirez une lettre au hasard, remplissez toutes les catégories (animal, prénom, ville, pays, objet, plante, métier) avant la fin du chrono. 45 secondes top départ !</p>
+      <div class="tags">
+        <span class="tag">🔤 Roue des lettres</span>
+        <span class="tag">👥 Équipes</span>
+        <span class="tag">⏱ 45 s</span>
+      </div>
+    </div>
+    <span class="card-cta">TOURNER LA ROUE →</span>
+  </a>
+
+  <!-- JEU DE L'OIE -->
+  <a class="card c-loie" href="Jeu_de_lOie_Canicule.html" target="_blank">
+    <div class="card-bar"></div>
+    <div class="card-head">
+      <div class="card-icon">🎲</div>
+      <div class="card-names">
+        <div class="card-title">Jeu de l'Oie</div>
+        <div class="card-sub">Plateau · Révisions · 1–5 joueurs</div>
+      </div>
+    </div>
+    <div class="card-body">
+      <p class="card-desc">Le grand classique ! Lancez le dé, avancez sur le plateau, répondez aux questions. Mode CP, CE/CM Facile, et CM Difficile. Jusqu'à 5 joueurs ou équipes.</p>
+      <div class="tags">
+        <span class="tag">🎲 Plateau</span>
+        <span class="tag">1–5 joueurs</span>
+        <span class="tag">📺 Projecteur</span>
+        <span class="tag">CP → CM</span>
+      </div>
+    </div>
+    <span class="card-cta">LANCER LE DÉ →</span>
+  </a>
+
+  <!-- QUIZ ARDOISE -->
+  <a class="card c-quiz" href="Quiz_Cycles_Canicule.html" target="_blank">
+    <div class="card-bar"></div>
+    <div class="card-head">
+      <div class="card-icon">🧠</div>
+      <div class="card-names">
+        <div class="card-title">Quiz Ardoise</div>
+        <div class="card-sub">Révisions · Par cycles · Classe entière</div>
+      </div>
+    </div>
+    <div class="card-body">
+      <p class="card-desc">Choisissez votre cycle (CP/CE1, CE2, CM1/CM2), puis Maths ou Français. Chaque élève répond sur ardoise. Basé sur les attendus de fin de cycle.</p>
+      <div class="tags">
+        <span class="tag">📋 Ardoise</span>
+        <span class="tag">Classe entière</span>
+        <span class="tag">📺 Projecteur</span>
+        <span class="tag">Maths &amp; Français</span>
+      </div>
+    </div>
+    <span class="card-cta">DÉMARRER LE QUIZ →</span>
+  </a>
+
+</main>
+
+<!-- ═══ FOOTER ═══ -->
+<footer>
+  <span class="ft-left">☀️ Jeux Spéciale Canicule · Classe CM2</span>
+  <span class="ft-right">Jeux en équipes · Prêt pour projecteur</span>
+</footer>
+
+</body>
+</html>

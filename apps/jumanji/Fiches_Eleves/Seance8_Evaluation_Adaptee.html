@@ -1,0 +1,399 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Jumanji — Séance 8 — Évaluation — Version adaptée</title>
+<style>
+@import url('https://fonts.googleapis.com/css2?family=Cinzel:wght@700;900&family=Lato:ital,wght@0,400;0,700;1,400&display=swap');
+:root {
+  --gold: #b8860b; --gold-light: #f5e6b0; --gold-border: #d4a800;
+  --green: #1a5c2a; --green-light: #e8f5ec; --green-mid: #4a9c5a;
+  --ink: #1a1a1a; --ink2: #3a3a3a; --ink3: #666;
+  --bg: #ffffff; --bg2: #fafaf8; --bg3: #f5f3ee;
+  --border: #ddd; --border2: #c5b882;
+  --red: #c0392b; --blue: #1a4a8a;
+}
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+body {
+  font-family: 'Lato', 'Segoe UI', Arial, sans-serif;
+  background: #f0ede6;
+  color: var(--ink);
+  min-height: 100vh;
+  padding: 24px 16px 60px;
+}
+
+/* ── PAGE FICHE ── */
+.fiche-page {
+  background: white;
+  max-width: 820px; margin: 0 auto;
+  border-radius: 4px;
+  box-shadow: 0 2px 20px rgba(0,0,0,0.12);
+  overflow: hidden;
+}
+
+/* ── HEADER ── */
+.fiche-header {
+  background: var(--green);
+  padding: 0;
+  position: relative;
+}
+.header-stripe {
+  height: 6px;
+  background: repeating-linear-gradient(90deg, var(--gold-border) 0, var(--gold-border) 20px, var(--green) 20px, var(--green) 40px);
+}
+.header-inner {
+  padding: 18px 28px 14px;
+  display: flex; align-items: flex-start; justify-content: space-between; gap: 20px;
+}
+.header-left { flex: 1; }
+.header-serie {
+  font-size: 0.6rem; text-transform: uppercase; letter-spacing: 3px;
+  color: rgba(255,255,255,0.65); margin-bottom: 3px;
+}
+.header-jumanji {
+  font-family: 'Cinzel', serif;
+  font-size: 1.9rem; font-weight: 900; letter-spacing: 5px;
+  color: var(--gold-border);
+  line-height: 1; text-shadow: 1px 1px 0 rgba(0,0,0,0.3);
+}
+.header-subtitle {
+  font-size: 0.78rem; color: rgba(255,255,255,0.8);
+  margin-top: 5px; letter-spacing: 0.3px;
+}
+.header-badge {
+  background: var(--gold-border);
+  color: white;
+  font-family: 'Cinzel', serif; font-weight: 900;
+  border-radius: 6px; padding: 6px 16px; text-align: center;
+  flex-shrink: 0; min-width: 70px;
+  box-shadow: inset 0 -2px 0 rgba(0,0,0,0.2);
+}
+.badge-num { font-size: 1.8rem; line-height: 1; display: block; }
+.badge-label { font-size: 0.55rem; letter-spacing: 2px; display: block; opacity: 0.85; }
+
+/* ── IDENTITY BAR ── */
+.identity-bar {
+  background: var(--bg3);
+  border-top: 2px solid var(--gold-border);
+  border-bottom: 1px solid var(--border);
+  padding: 9px 28px;
+  display: flex; gap: 32px; align-items: center;
+}
+.id-field { display: flex; align-items: center; gap: 8px; flex: 1; }
+.id-label {
+  font-size: 0.65rem; font-weight: 700; text-transform: uppercase;
+  letter-spacing: 1px; color: var(--ink3); white-space: nowrap;
+}
+.id-line {
+  flex: 1; border: none; border-bottom: 1.5px solid var(--border2);
+  background: transparent; font-size: 0.9rem; color: var(--ink);
+  padding: 2px 4px; outline: none; font-family: inherit;
+}
+
+/* ── BODY ── */
+.fiche-body { padding: 22px 28px 28px; }
+
+/* ── SECTION ── */
+.section { margin-bottom: 20px; }
+.section-head {
+  display: flex; align-items: center; gap: 10px;
+  padding: 7px 14px;
+  background: var(--green);
+  border-radius: 6px 6px 0 0;
+}
+.section-icon { font-size: 1rem; }
+.section-title {
+  font-family: 'Cinzel', serif; font-size: 0.78rem; font-weight: 700;
+  color: white; text-transform: uppercase; letter-spacing: 1.5px; flex: 1;
+}
+.section-pts {
+  font-size: 0.68rem; color: var(--gold-light);
+  background: rgba(255,255,255,0.15); padding: 2px 8px; border-radius: 10px;
+}
+.section-body {
+  border: 1.5px solid var(--border);
+  border-top: none; border-radius: 0 0 6px 6px;
+  padding: 16px 18px; background: white;
+}
+
+/* ── CONSIGNE ── */
+.consigne {
+  background: var(--gold-light); border-left: 4px solid var(--gold-border);
+  padding: 8px 12px; font-size: 0.8rem; color: var(--ink2);
+  font-style: italic; margin-bottom: 14px; border-radius: 0 4px 4px 0;
+}
+
+/* ── QUESTIONS ── */
+.question { margin-bottom: 16px; }
+.question:last-child { margin-bottom: 0; }
+.q-row { display: flex; gap: 10px; align-items: flex-start; margin-bottom: 6px; }
+.q-num {
+  width: 22px; height: 22px; border-radius: 50%;
+  background: var(--green); color: white;
+  font-size: 0.68rem; font-weight: 700;
+  display: flex; align-items: center; justify-content: center;
+  flex-shrink: 0; margin-top: 1px;
+}
+.q-text { font-size: 0.86rem; color: var(--ink2); line-height: 1.6; flex: 1; }
+.write-lines { padding-left: 32px; }
+.write-line {
+  display: block; border: none; border-bottom: 1px solid #ccc;
+  width: 100%; height: 26px; background: transparent; margin-bottom: 2px;
+}
+
+/* ── TABLE ── */
+.styled-table { width: 100%; border-collapse: collapse; font-size: 0.82rem; }
+.styled-table th {
+  background: var(--green-light);
+  color: var(--green); font-weight: 700;
+  padding: 8px 12px; text-align: left;
+  border: 1.5px solid var(--border);
+  font-size: 0.72rem; text-transform: uppercase; letter-spacing: 0.8px;
+}
+.styled-table td {
+  padding: 8px 12px; border: 1px solid var(--border);
+  color: var(--ink2); vertical-align: top;
+}
+.styled-table tr:nth-child(even) td { background: var(--bg2); }
+.td-given { background: var(--gold-light) !important; color: var(--ink) !important; font-style: italic; }
+.td-blank { background: white !important; min-height: 30px; }
+.write-in-cell {
+  width: 100%; border: none; background: transparent;
+  color: var(--ink); font-size: 0.82rem; resize: none;
+  min-height: 40px; font-family: inherit; line-height: 1.5; outline: none;
+}
+
+/* ── RELIER ── */
+.relier-wrap { display: flex; gap: 16px; align-items: flex-start; }
+.relier-col { flex: 1; }
+.relier-left .relier-item {
+  background: var(--green-light); border: 1.5px solid var(--green-mid);
+  border-radius: 6px; padding: 9px 12px; margin-bottom: 8px;
+  display: flex; align-items: center; gap: 8px;
+  font-size: 0.84rem; color: var(--ink); font-weight: 700;
+}
+.relier-right .relier-item {
+  background: var(--bg3); border: 1px solid var(--border);
+  border-radius: 6px; padding: 9px 12px; margin-bottom: 8px;
+  display: flex; align-items: center; gap: 8px;
+  font-size: 0.82rem; color: var(--ink2);
+}
+.relier-num {
+  width: 22px; height: 22px; border-radius: 50%; flex-shrink: 0;
+  display: flex; align-items: center; justify-content: center;
+  font-size: 0.7rem; font-weight: 700;
+}
+.relier-left .relier-num { background: var(--green); color: white; }
+.relier-right .relier-num { background: var(--border); color: var(--ink3); }
+.relier-mid {
+  display: flex; flex-direction: column; align-items: center; justify-content: center;
+  padding: 0 4px; gap: 8px; padding-top: 4px;
+}
+.relier-mid-line { width: 2px; height: 30px; background: var(--border); }
+.relier-answer-row {
+  margin-top: 12px; padding: 8px 12px;
+  background: var(--bg3); border-radius: 4px;
+  font-size: 0.75rem; color: var(--ink3); letter-spacing: 1px;
+}
+
+/* ── CAUSE / EFFET ── */
+.ce-row { display: grid; grid-template-columns: 1fr 32px 1fr; gap: 0; margin-bottom: 8px; align-items: stretch; }
+.ce-box { border: 1px solid var(--border); border-radius: 6px; padding: 9px 12px; font-size: 0.82rem; min-height: 48px; }
+.ce-given { background: var(--gold-light); color: var(--ink); font-style: italic; border-color: var(--gold-border); }
+.ce-blank { background: white; }
+.ce-arrow { display: flex; align-items: center; justify-content: center; color: var(--green); font-size: 1.1rem; font-weight: 700; }
+.badge-cause { font-size: 0.6rem; text-transform: uppercase; letter-spacing: 1px; color: var(--blue); font-weight: 700; margin-bottom: 3px; }
+.badge-effet { font-size: 0.6rem; text-transform: uppercase; letter-spacing: 1px; color: var(--green); font-weight: 700; margin-bottom: 3px; }
+
+/* ── FRISE ── */
+.frise-event { display: grid; grid-template-columns: 40px 80px 1fr; }
+.frise-num {
+  background: var(--green); color: white; font-weight: 900;
+  display: flex; align-items: center; justify-content: center;
+  font-size: 0.88rem; border-bottom: 1px solid rgba(255,255,255,0.2);
+}
+.frise-pages {
+  background: var(--green-light); border-left: 3px solid var(--gold-border);
+  border-right: 1px solid var(--border); border-bottom: 1px solid var(--border);
+  display: flex; align-items: center; justify-content: center;
+  font-size: 0.72rem; color: var(--green); font-weight: 700; text-align: center; padding: 4px;
+}
+.frise-content {
+  border-bottom: 1px solid var(--border); padding: 9px 12px; font-size: 0.82rem;
+}
+.frise-content.given { background: var(--gold-light); color: var(--ink); font-style: italic; }
+.frise-content.blank { background: white; min-height: 46px; }
+
+/* ── QCM OPTIONS ── */
+.qcm-options { display: grid; grid-template-columns: 1fr 1fr; gap: 6px; margin: 8px 0 0 32px; }
+.qcm-opt {
+  display: flex; align-items: center; gap: 8px;
+  border: 1px solid var(--border); border-radius: 6px; padding: 8px 12px;
+  font-size: 0.83rem; color: var(--ink2); background: var(--bg3);
+}
+.qcm-box {
+  width: 16px; height: 16px; border-radius: 3px;
+  border: 2px solid var(--border); flex-shrink: 0;
+}
+
+/* ── SCHÉMA NARRATIF ── */
+.schema-step { display: flex; gap: 12px; align-items: flex-start; margin-bottom: 12px; }
+.schema-icon {
+  width: 40px; height: 40px; border-radius: 50%; flex-shrink: 0;
+  background: var(--green-light); border: 2px solid var(--green-mid);
+  display: flex; align-items: center; justify-content: center; font-size: 1rem;
+}
+.schema-body {
+  flex: 1; border: 1px solid var(--border); border-radius: 6px; padding: 10px 14px;
+  background: var(--bg3);
+}
+.schema-label { font-size: 0.65rem; text-transform: uppercase; letter-spacing: 1.5px; color: var(--green); font-weight: 700; margin-bottom: 3px; }
+.schema-prompt { font-size: 0.78rem; color: var(--ink3); font-style: italic; margin-bottom: 6px; }
+
+/* ── DÉBAT ── */
+.debat-q { border: 1px solid var(--border); border-radius: 6px; overflow: hidden; margin-bottom: 14px; }
+.debat-q-head { background: var(--green-light); border-bottom: 1px solid var(--border); padding: 9px 14px; font-size: 0.86rem; font-weight: 700; color: var(--green); }
+.debat-q-body { padding: 12px 14px; }
+.debat-positions { display: flex; gap: 8px; margin-bottom: 10px; }
+.debat-pos {
+  flex: 1; border: 1.5px solid var(--border); border-radius: 6px;
+  padding: 8px 12px; display: flex; align-items: center; gap: 8px;
+  font-size: 0.82rem; color: var(--ink2); background: white;
+}
+.debat-pos-oui { border-color: #27ae60; }
+.debat-pos-non { border-color: #c0392b; }
+
+/* ── EVAL QCM ── */
+.eval-opt {
+  display: flex; align-items: center; gap: 10px;
+  border: 1px solid var(--border); border-radius: 6px; padding: 9px 14px;
+  margin-bottom: 7px; font-size: 0.84rem; color: var(--ink2); background: var(--bg3);
+}
+.eval-letter {
+  width: 24px; height: 24px; border-radius: 50%;
+  border: 2px solid var(--border); flex-shrink: 0;
+  display: flex; align-items: center; justify-content: center;
+  font-size: 0.72rem; font-weight: 700; color: var(--ink3);
+}
+
+/* ── BONUS ── */
+.bonus {
+  background: linear-gradient(135deg, var(--gold-light), var(--green-light));
+  border: 1.5px solid var(--gold-border); border-radius: 8px; padding: 14px 16px; margin-top: 8px;
+}
+.bonus-title { font-size: 0.65rem; text-transform: uppercase; letter-spacing: 2px; color: var(--gold); font-weight: 700; margin-bottom: 6px; }
+.bonus-text { font-size: 0.83rem; color: var(--ink2); line-height: 1.6; margin-bottom: 8px; }
+
+/* ── FOOTER ── */
+.fiche-footer {
+  background: var(--bg3); border-top: 2px solid var(--gold-border);
+  padding: 10px 28px; display: flex; align-items: center; justify-content: space-between;
+}
+.footer-brand { font-family: 'Cinzel', serif; font-size: 0.65rem; color: var(--ink3); letter-spacing: 2px; }
+.footer-total { font-size: 0.86rem; color: var(--ink2); }
+.footer-total strong { color: var(--green); font-size: 1.1rem; }
+
+/* ── PRINT ── */
+@media print {
+  body { background: white; padding: 0; }
+  .fiche-page { box-shadow: none; border-radius: 0; }
+  .write-line { border-bottom-color: #bbb; }
+  a { color: inherit; text-decoration: none; }
+}
+</style>
+</head>
+<body>
+<div class="fiche-page">
+  <div class="fiche-header">
+    <div class="header-stripe"></div>
+    <div class="header-inner">
+      <div class="header-left">
+        <div class="header-serie">Lecture suivie CM2 · Chris Van Allsburg</div>
+        <div class="header-jumanji">JUMANJI</div>
+        <div class="header-subtitle">Évaluation — Version adaptée — Jumanji — Évaluation de lecture</div>
+      </div>
+      <div class="header-badge">
+        <span class="badge-num">S8</span>
+        <span class="badge-label">Séance 8/8</span>
+      </div>
+    </div>
+  </div>
+  <div class="identity-bar">
+    <div class="id-field"><span class="id-label">Nom</span><input class="id-line" type="text"></div>
+    <div class="id-field"><span class="id-label">Prénom</span><input class="id-line" type="text"></div>
+    <div class="id-field" style="flex:0.5;"><span class="id-label">Date</span><input class="id-line" type="text"></div>
+  </div>
+  <div class="fiche-body">
+<div style="background:var(--gold-light);border:1.5px solid var(--gold-border);border-radius:6px;padding:10px 14px;margin-bottom:18px;font-size:0.83rem;color:var(--ink2);">
+📖 Tu peux relire l'album. Pour les QCM, <strong>entoure</strong> la lettre de la bonne réponse.
+</div><div class="section">
+  <div class="section-head">
+    <span class="section-icon">🔤</span>
+    <span class="section-title">Partie A — Questions à choix multiples</span>
+    <span class="section-pts">8 points</span>
+  </div>
+  <div class="section-body">
+<div class="question">
+  <div class="q-row"><div class="q-num">1</div><div class="q-text">Où les enfants trouvent-ils le jeu Jumanji ? <span style="font-size:0.7rem;color:var(--ink3);">(2 pts)</span></div></div>
+  <div style="margin:8px 0 0 32px;"><div class="eval-opt"><div class="eval-letter">A</div>Dans le parc du quartier, sous un arbre</div><div class="eval-opt"><div class="eval-letter">B</div>Dans une boutique de jouets</div><div class="eval-opt"><div class="eval-letter">C</div>Dans le grenier</div><div class="eval-opt"><div class="eval-letter">D</div>Devant leur maison</div></div>
+</div>
+<div class="question">
+  <div class="q-row"><div class="q-num">2</div><div class="q-text">Que se passe-t-il chaque fois qu'un joueur avance son pion ? <span style="font-size:0.7rem;color:var(--ink3);">(2 pts)</span></div></div>
+  <div style="margin:8px 0 0 32px;"><div class="eval-opt"><div class="eval-letter">A</div>Le joueur gagne des points</div><div class="eval-opt"><div class="eval-letter">B</div>Le jeu s'arrête</div><div class="eval-opt"><div class="eval-letter">C</div>Un animal ou un événement dangereux surgit vraiment</div><div class="eval-opt"><div class="eval-letter">D</div>Rien de spécial</div></div>
+</div>
+<div class="question">
+  <div class="q-row"><div class="q-num">3</div><div class="q-text">Comment les enfants réussissent-ils à terminer la partie ? <span style="font-size:0.7rem;color:var(--ink3);">(2 pts)</span></div></div>
+  <div style="margin:8px 0 0 32px;"><div class="eval-opt"><div class="eval-letter">A</div>Peter remet le jeu dans sa boîte</div><div class="eval-opt"><div class="eval-letter">B</div>Judy crie « JUMANJI ! » à la case finale</div><div class="eval-opt"><div class="eval-letter">C</div>Leurs parents rentrent</div><div class="eval-opt"><div class="eval-letter">D</div>Ils détruisent le plateau</div></div>
+</div>
+<div class="question">
+  <div class="q-row"><div class="q-num">4</div><div class="q-text">Que font les enfants du jeu à la fin de l'histoire ? <span style="font-size:0.7rem;color:var(--ink3);">(2 pts)</span></div></div>
+  <div style="margin:8px 0 0 32px;"><div class="eval-opt"><div class="eval-letter">A</div>Ils le gardent</div><div class="eval-opt"><div class="eval-letter">B</div>Ils le donnent à leurs parents</div><div class="eval-opt"><div class="eval-letter">C</div>Ils le jettent</div><div class="eval-opt"><div class="eval-letter">D</div>Ils le remettent sous l'arbre du parc</div></div>
+</div>
+</div>
+</div><div class="section">
+  <div class="section-head">
+    <span class="section-icon">✏️</span>
+    <span class="section-title">Partie B — Questions courtes</span>
+    <span class="section-pts">8 points</span>
+  </div>
+  <div class="section-body">
+<div class="consigne">📌 Réponds en une ou deux phrases.</div>
+<div class="question">
+  <div class="q-row"><div class="q-num">5</div><div class="q-text">Cite le nom de deux animaux qui apparaissent pendant la partie.</div></div>
+  <div class="write-lines"><div class="write-line"></div><div class="write-line"></div></div>
+</div>
+<div class="question">
+  <div class="q-row"><div class="q-num">6</div><div class="q-text">Pourquoi les enfants ne peuvent-ils pas arrêter la partie en cours de route ?</div></div>
+  <div class="write-lines"><div class="write-line"></div><div class="write-line"></div><div class="write-line"></div></div>
+</div>
+<div class="question">
+  <div class="q-row"><div class="q-num">7</div><div class="q-text">Comment sais-tu que l'histoire de Jumanji n'est pas une histoire réelle ?</div></div>
+  <div class="write-lines"><div class="write-line"></div><div class="write-line"></div></div>
+</div>
+<div class="question">
+  <div class="q-row"><div class="q-num">8</div><div class="q-text">Judy et Peter ont-ils eu raison de jouer à Jumanji ? Dis OUI ou NON et explique pourquoi.</div></div>
+  <div class="write-lines"><div class="write-line"></div><div class="write-line"></div><div class="write-line"></div></div>
+</div>
+</div>
+</div><div class="section">
+  <div class="section-head">
+    <span class="section-icon">💬</span>
+    <span class="section-title">Partie C — Question ouverte</span>
+    <span class="section-pts">4 points</span>
+  </div>
+  <div class="section-body">
+<div class="question">
+  <div class="q-row"><div class="q-num">9</div><div class="q-text">Explique en quelques lignes ce que tu as aimé ou pas aimé dans cet album.</div></div>
+  <div class="write-lines"><div class="write-line"></div><div class="write-line"></div><div class="write-line"></div><div class="write-line"></div><div class="write-line"></div></div>
+</div>
+</div>
+</div>
+  </div>
+  <div class="fiche-footer">
+    <div class="footer-brand">JUMANJI · CM2 · S8</div>
+    <div class="footer-total">Total : <strong>_____</strong> / 20</div>
+  </div>
+</div>
+</body>
+</html>

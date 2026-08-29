@@ -1,0 +1,570 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Grand Tournoi CM2 — Guide Journée Complète</title>
+<style>
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+:root{--gold:#ffd700;--gold2:#ffec6e;--navy:#0b0f2e;--navy2:#161b45;--panel:#1a2050;--border:#2a3580;--text:#dde4ff;--ok:#00e676;--danger:#f44336;--warn:#ff9800;
+  --t1:#e53935;--t2:#1e88e5;--t3:#43a047;--t4:#fb8c00}
+body{background:var(--navy);color:var(--text);font-family:"Segoe UI",Arial,sans-serif;min-height:100vh}
+body::before{content:"";position:fixed;inset:0;background:radial-gradient(ellipse 80% 40% at 50% 0%,rgba(255,215,0,.07) 0%,transparent 70%);pointer-events:none;z-index:0}
+.wrap{position:relative;z-index:1;max-width:860px;margin:0 auto;padding:16px 18px}
+.hdr{text-align:center;padding:26px 0 14px}
+.hdr h1{font-size:2rem;font-weight:900;letter-spacing:.12em;background:linear-gradient(135deg,#ffd700,#fff,#ffd700);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text}
+.hdr-sub{font-size:.85rem;color:var(--gold);opacity:.7;letter-spacing:.15em;text-transform:uppercase;margin-top:4px}
+.nav{display:flex;gap:6px;flex-wrap:wrap;justify-content:center;margin-bottom:18px}
+.nav-btn{background:var(--panel);border:1px solid var(--border);border-radius:8px;color:var(--text);cursor:pointer;font-size:.82rem;font-weight:700;padding:9px 16px;transition:.2s;opacity:.6}
+.nav-btn:hover{opacity:.9;border-color:var(--gold)}
+.nav-btn.active{background:var(--gold);color:var(--navy);border-color:var(--gold);opacity:1}
+.tab{display:none}.tab.active{display:block}
+.card{background:var(--panel);border:1px solid var(--border);border-radius:14px;margin-bottom:16px;overflow:hidden}
+.card-hdr{padding:14px 20px;font-weight:800;font-size:1rem;letter-spacing:.06em;display:flex;align-items:center;gap:10px}
+.card-body{padding:18px 20px}
+/* scores */
+.teams-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:12px}
+.team-box{border-radius:12px;overflow:hidden}
+.team-hdr{padding:10px 16px;font-weight:800;font-size:.9rem;letter-spacing:.08em;display:flex;align-items:center;gap:8px}
+.team-score{font-size:3rem;font-weight:900;text-align:center;padding:10px 0;line-height:1}
+.team-btns{display:flex;gap:0}
+.team-btns button{flex:1;border:none;cursor:pointer;font-size:1.1rem;font-weight:900;padding:9px 0;transition:.15s}
+.team-btns button:hover{filter:brightness(1.2)}
+.t1-bg{background:rgba(229,57,53,.15);border:1px solid rgba(229,57,53,.3)}
+.t2-bg{background:rgba(30,136,229,.15);border:1px solid rgba(30,136,229,.3)}
+.t3-bg{background:rgba(67,160,71,.15);border:1px solid rgba(67,160,71,.3)}
+.t4-bg{background:rgba(251,140,0,.15);border:1px solid rgba(251,140,0,.3)}
+.t1{color:var(--t1)}.t2{color:var(--t2)}.t3{color:var(--t3)}.t4{color:var(--t4)}
+.t1-hdr{background:var(--t1);color:white}.t2-hdr{background:var(--t2);color:white}
+.t3-hdr{background:var(--t3);color:white}.t4-hdr{background:var(--t4);color:white}
+/* planning */
+.timeline{position:relative;padding-left:28px}
+.timeline::before{content:"";position:absolute;left:10px;top:0;bottom:0;width:2px;background:var(--border)}
+.tl-item{position:relative;margin-bottom:14px;background:var(--panel);border:1px solid var(--border);border-radius:10px;padding:12px 16px}
+.tl-item::before{content:"";position:absolute;left:-22px;top:14px;width:12px;height:12px;border-radius:50%;background:var(--gold);border:2px solid var(--navy)}
+.tl-time{font-size:.78rem;color:var(--gold);font-weight:800;letter-spacing:.06em;text-transform:uppercase;margin-bottom:3px}
+.tl-title{font-weight:800;color:white;font-size:.95rem;margin-bottom:3px}
+.tl-desc{font-size:.84rem;opacity:.65;line-height:1.6}
+.tl-item.pause{border-color:rgba(255,215,0,.2);background:rgba(255,215,0,.04)}
+.tl-item.pause::before{background:var(--border)}
+/* quiz */
+.quiz-q{background:rgba(255,215,0,.06);border:1px solid rgba(255,215,0,.2);border-radius:12px;padding:22px;margin:14px 0}
+.quiz-num{font-size:.8rem;color:var(--gold);font-weight:700;text-transform:uppercase;letter-spacing:.1em;margin-bottom:6px}
+.quiz-text{font-size:1.15rem;font-weight:700;color:white;line-height:1.5}
+.quiz-cat{display:inline-block;font-size:.75rem;font-weight:700;border-radius:20px;padding:3px 12px;margin-top:8px}
+.quiz-ans{background:rgba(0,230,118,.1);border:1px solid rgba(0,230,118,.25);border-radius:8px;padding:12px 18px;margin-top:10px;color:var(--ok);font-size:1rem;font-weight:800;display:none;text-align:center}
+.quiz-ans.vis{display:block}
+.quiz-nav{display:flex;gap:10px;margin-top:14px;align-items:center;flex-wrap:wrap}
+.btn-reveal{background:var(--gold);border:none;border-radius:8px;color:var(--navy);cursor:pointer;font-size:.9rem;font-weight:900;padding:11px 22px;transition:.2s}
+.btn-reveal:hover{background:var(--gold2)}
+.btn-q{background:var(--panel);border:1px solid var(--border);border-radius:8px;color:var(--text);cursor:pointer;font-size:.9rem;font-weight:700;padding:11px 18px;transition:.2s}
+.btn-q:hover:not(:disabled){border-color:var(--gold);color:var(--gold)}
+.btn-q:disabled{opacity:.3;cursor:default}
+.q-counter{font-size:.85rem;opacity:.5;margin-left:auto}
+.cat-geo{background:rgba(30,136,229,.2);color:#64b5f6}
+.cat-hist{background:rgba(229,57,53,.2);color:#ef9a9a}
+.cat-sci{background:rgba(67,160,71,.2);color:#a5d6a7}
+.cat-fr{background:rgba(156,39,176,.2);color:#ce93d8}
+.cat-math{background:rgba(251,140,0,.2);color:#ffcc80}
+.btn-proj{background:linear-gradient(135deg,#1a0a40,#2d1280);border:1px solid rgba(156,39,176,.5);border-radius:8px;color:#ce93d8;cursor:pointer;font-size:.9rem;font-weight:900;padding:11px 20px;transition:.2s}
+.btn-proj:hover{background:linear-gradient(135deg,#2d1280,#4a1fcc);border-color:#ce93d8}
+/* PROJECTEUR OVERLAY */
+#proj-quiz{position:fixed;inset:0;background:#03060f;z-index:9999;display:none;flex-direction:column;align-items:center;justify-content:center;padding:40px}
+#proj-quiz.open{display:flex}
+.pq-inner{max-width:1000px;width:100%;text-align:center}
+.pq-num{font-size:1.1rem;color:var(--gold);font-weight:700;text-transform:uppercase;letter-spacing:.15em;margin-bottom:20px;opacity:.7}
+.pq-cat{display:inline-block;font-size:1rem;font-weight:800;border-radius:30px;padding:6px 20px;margin-bottom:24px}
+.pq-q{font-size:2.8rem;font-weight:900;color:white;line-height:1.3;margin-bottom:32px}
+.pq-ans{font-size:2.2rem;font-weight:900;color:var(--ok);background:rgba(0,230,118,.1);border:2px solid rgba(0,230,118,.3);border-radius:16px;padding:20px 36px;display:none;margin-bottom:28px}
+.pq-ans.vis{display:block}
+.pq-nav{display:flex;gap:16px;justify-content:center;align-items:center;flex-wrap:wrap}
+.pq-btn{border:none;border-radius:12px;cursor:pointer;font-size:1rem;font-weight:900;padding:14px 30px;transition:.2s}
+.pq-btn-rev{background:var(--gold);color:var(--navy)}
+.pq-btn-rev:hover{background:var(--gold2)}
+.pq-btn-nav{background:rgba(255,255,255,.1);border:1px solid rgba(255,255,255,.2);color:white}
+.pq-btn-nav:hover:not(:disabled){background:rgba(255,255,255,.2)}
+.pq-btn-nav:disabled{opacity:.3;cursor:default}
+.pq-btn-close{background:rgba(244,67,54,.15);border:1px solid rgba(244,67,54,.3);color:var(--danger)}
+.pq-btn-close:hover{background:rgba(244,67,54,.3)}
+.pq-hint{font-size:.85rem;color:rgba(255,255,255,.3);margin-top:20px}
+/* défis papier */
+.defi-papier-card{background:rgba(255,255,255,.03);border:1px solid var(--border);border-radius:12px;padding:18px 20px;margin-bottom:14px}
+.defi-papier-card .dp-head{display:flex;align-items:center;gap:12px;margin-bottom:12px}
+.dp-icon{font-size:1.8rem;flex-shrink:0}
+.dp-title{font-weight:900;color:white;font-size:.98rem}
+.dp-sub{font-size:.8rem;opacity:.6;margin-top:2px}
+.dp-body{font-size:.88rem;line-height:1.8;opacity:.85}
+.dp-body strong{color:white;opacity:1}
+.print-box{background:rgba(255,215,0,.05);border:1px solid rgba(255,215,0,.2);border-radius:8px;padding:12px 16px;margin-top:10px;font-size:.85rem;line-height:1.7;color:#ffcc80}
+/* setup */
+.setup{max-width:600px;margin:0 auto;text-align:center}
+.setup h2{font-size:1.4rem;font-weight:900;color:white;margin-bottom:6px}
+.setup p{font-size:.88rem;opacity:.6;margin-bottom:24px;line-height:1.7}
+.team-inputs{display:grid;grid-template-columns:1fr 1fr;gap:12px;text-align:left;margin-bottom:20px}
+.team-input-group{background:var(--panel);border:1px solid var(--border);border-radius:10px;padding:12px 16px}
+.team-input-group label{font-size:.78rem;font-weight:800;text-transform:uppercase;letter-spacing:.08em;display:block;margin-bottom:6px}
+.team-input-group input{background:#0d1230;border:1px solid var(--border);border-radius:6px;color:white;font-size:.95rem;font-weight:700;padding:9px 12px;width:100%;outline:none;transition:.2s}
+.team-input-group input:focus{border-color:var(--gold)}
+.btn-launch{background:linear-gradient(135deg,var(--gold),#e6b800);border:none;border-radius:12px;color:var(--navy);cursor:pointer;font-size:1.05rem;font-weight:900;letter-spacing:.08em;padding:15px 40px;transition:.2s;text-transform:uppercase}
+.btn-launch:hover{transform:translateY(-2px);box-shadow:0 8px 24px rgba(255,215,0,.3)}
+/* podium */
+.podium-wrap{display:flex;align-items:flex-end;justify-content:center;gap:12px;margin:24px 0;height:180px}
+.podium-col{display:flex;flex-direction:column;align-items:center;width:120px}
+.podium-col .team-nm{font-size:.85rem;font-weight:800;margin-bottom:6px;text-align:center}
+.podium-col .pts{font-size:1.3rem;font-weight:900;margin-bottom:4px}
+.podium-block{width:100%;border-radius:10px 10px 0 0;display:flex;align-items:center;justify-content:center;font-size:1.8rem}
+.pos1 .podium-block{height:130px;background:linear-gradient(135deg,#ffd700,#e6b800)}
+.pos2 .podium-block{height:95px;background:linear-gradient(135deg,#90a4ae,#607d8b)}
+.pos3 .podium-block{height:68px;background:linear-gradient(135deg,#a0785a,#795548)}
+.pos4 .podium-block{height:50px;background:rgba(255,255,255,.1)}
+.screen{display:none}.screen.active{display:block}
+</style>
+</head>
+<body>
+
+<!-- PROJECTEUR QUIZ OVERLAY -->
+<div id="proj-quiz">
+  <div class="pq-inner">
+    <div class="pq-num" id="pq-num">Question 1 / 25</div>
+    <div id="pq-cat" class="pq-cat cat-geo"></div>
+    <div class="pq-q" id="pq-q"></div>
+    <div class="pq-ans" id="pq-ans"></div>
+    <div class="pq-nav">
+      <button class="pq-btn pq-btn-nav" id="pq-prev" onclick="pqMove(-1)">&#8592; Préc.</button>
+      <button class="pq-btn pq-btn-rev" id="pq-rev" onclick="pqReveal()">&#128065; RÉVÉLER</button>
+      <button class="pq-btn pq-btn-nav" id="pq-next" onclick="pqMove(1)">Suiv. &#8594;</button>
+      <button class="pq-btn pq-btn-close" onclick="closePQ()">&#10005; Quitter</button>
+    </div>
+    <div class="pq-hint">Espace = révéler &nbsp;|&nbsp; &#8592;&#8594; = naviguer &nbsp;|&nbsp; Échap = quitter</div>
+  </div>
+</div>
+
+<div class="wrap">
+<div class="hdr">
+  <div style="font-size:2.4rem;margin-bottom:4px">&#127942;</div>
+  <h1>LE GRAND TOURNOI CM2</h1>
+  <div class="hdr-sub">Journ&#233;e compl&#232;te &middot; 8h30 &rarr; 16h30 &middot; 4 &#233;quipes</div>
+</div>
+
+<!-- SETUP -->
+<div class="screen active" id="s-setup">
+  <div class="card"><div class="card-body"><div class="setup">
+    <h2>&#9876; Constitution des &#233;quipes</h2>
+    <p>Entrez les noms des 4 &#233;quipes avant de lancer la journ&#233;e.</p>
+    <div class="team-inputs">
+      <div class="team-input-group" style="border-color:rgba(229,57,53,.4)">
+        <label style="color:var(--t1)">&#128308; &#201;quipe 1</label>
+        <input id="tn1" value="&#201;toile" maxlength="20">
+      </div>
+      <div class="team-input-group" style="border-color:rgba(30,136,229,.4)">
+        <label style="color:var(--t2)">&#128309; &#201;quipe 2</label>
+        <input id="tn2" value="Boussole" maxlength="20">
+      </div>
+      <div class="team-input-group" style="border-color:rgba(67,160,71,.4)">
+        <label style="color:var(--t3)">&#129001; &#201;quipe 3</label>
+        <input id="tn3" value="Bor&#233;al" maxlength="20">
+      </div>
+      <div class="team-input-group" style="border-color:rgba(251,140,0,.4)">
+        <label style="color:var(--t4)">&#129000; &#201;quipe 4</label>
+        <input id="tn4" value="Mistral" maxlength="20">
+      </div>
+    </div>
+    <button class="btn-launch" onclick="launchDay()">&#128640; LANCER LA JOURN&#201;E</button>
+  </div></div></div>
+</div>
+
+<!-- MAIN -->
+<div class="screen" id="s-main">
+<nav class="nav">
+  <button class="nav-btn active" onclick="showTab('planning',this)">&#128197; Programme</button>
+  <button class="nav-btn" onclick="showTab('scores',this)">&#127942; Scores</button>
+  <button class="nav-btn" onclick="showTab('quiz',this)">&#127919; Quiz G&#233;ant</button>
+  <button class="nav-btn" onclick="showTab('defis',this)">&#128196; D&#233;fis Papier</button>
+  <button class="nav-btn" onclick="showTab('finale',this)">&#127908; Finale &amp; Podium</button>
+</nav>
+
+<!-- PROGRAMME -->
+<div class="tab active" id="tab-planning">
+  <div class="card">
+    <div class="card-hdr" style="background:linear-gradient(135deg,#1a2050,#0d1230);border-bottom:1px solid var(--border)">
+      &#128197; Programme de la journ&#233;e
+    </div>
+    <div class="card-body">
+      <div class="timeline">
+        <div class="tl-item">
+          <div class="tl-time">8h30 &#8211; 9h00</div>
+          <div class="tl-title">&#127916; Ouverture &amp; constitution des &#233;quipes</div>
+          <div class="tl-desc">Accueil, tirage au sort ou choix des &#233;quipes, distribution des badges couleur, explication des r&#232;gles. Tableau de score au tableau.</div>
+        </div>
+        <div class="tl-item" style="border-left:3px solid var(--gold)">
+          <div class="tl-time">9h00 &#8211; 10h30</div>
+          <div class="tl-title">&#127919; &#201;PREUVE 1 &#8212; Le Grand Quiz (25 questions niveau 3&#232;me)</div>
+          <div class="tl-desc">Questions affich&#233;es une &#224; une au vid&#233;oprojecteur (Mode Pr&#233;sentation). Chaque &#233;quipe &#233;crit sur ardoise, r&#233;v&#232;le en simultan&#233;. <strong style="color:var(--gold)">+2 pts par bonne r&#233;ponse.</strong></div>
+        </div>
+        <div class="tl-item pause">
+          <div class="tl-time">10h30 &#8211; 10h45</div>
+          <div class="tl-title">&#9728; R&#233;cr&#233;ation</div>
+          <div class="tl-desc">Distribuer les feuilles des D&#233;fis Papier pendant la r&#233;cr&#233;ation.</div>
+        </div>
+        <div class="tl-item" style="border-left:3px solid var(--t2)">
+          <div class="tl-time">10h45 &#8211; 12h00</div>
+          <div class="tl-title">&#128196; &#201;PREUVE 2 &#8212; D&#233;fis Papier (4 rounds × 15 min)</div>
+          <div class="tl-desc">Toutes les &#233;quipes jouent en m&#234;me temps sur feuilles imprim&#233;es. 4 d&#233;fis diff&#233;rents. Z&#233;ro mat&#233;riel sp&#233;cial &#8212; juste papier et stylo. <strong style="color:var(--gold)">+3 pts 1er, +2 pts 2&#232;me, +1 pt 3&#232;me.</strong></div>
+        </div>
+        <div class="tl-item pause">
+          <div class="tl-time">12h00 &#8211; 13h30</div>
+          <div class="tl-title">&#127829; D&#233;jeuner</div>
+          <div class="tl-desc">Imprimer les feuilles de l&#8217;apr&#232;s-midi pendant la pause si ce n&#8217;est pas fait.</div>
+        </div>
+        <div class="tl-item" style="border-left:3px solid var(--t3)">
+          <div class="tl-time">13h30 &#8211; 14h00</div>
+          <div class="tl-title">&#127925; Transition &#8212; Blind Test Musical (d&#233;tente)</div>
+          <div class="tl-desc">10 extraits de 15 secondes. &#201;crire le titre sur feuille brouillon. <strong style="color:var(--gold)">+1 pt par bonne r&#233;ponse.</strong></div>
+        </div>
+        <div class="tl-item" style="border-left:3px solid var(--gold)">
+          <div class="tl-time">14h00 &#8211; 15h20</div>
+          <div class="tl-title">&#128196; &#201;PREUVE 3 &#8212; D&#233;fis Papier suite (4 nouveaux rounds)</div>
+          <div class="tl-desc">4 nouveaux d&#233;fis papier. M&#234;me format : toutes les &#233;quipes jouent ensemble, en simultan&#233;. <strong style="color:var(--gold)">+3 pts 1er, +2 pts 2&#232;me, +1 pt 3&#232;me.</strong></div>
+        </div>
+        <div class="tl-item pause">
+          <div class="tl-time">15h20 &#8211; 15h35</div>
+          <div class="tl-title">&#9728; R&#233;cr&#233;ation</div>
+        </div>
+        <div class="tl-item" style="border-left:3px solid var(--t1)">
+          <div class="tl-time">15h35 &#8211; 16h15</div>
+          <div class="tl-title">&#127908; &#201;PREUVE FINALE &#8212; L&#8217;Objet du Futur</div>
+          <div class="tl-desc">30 min de cr&#233;ation (feuille A3 + stylos) + pr&#233;sentation de 60 secondes par &#233;quipe. Vote de la classe. <strong style="color:var(--gold)">6 / 4 / 2 / 1 pts.</strong></div>
+        </div>
+        <div class="tl-item">
+          <div class="tl-time">16h15 &#8211; 16h30</div>
+          <div class="tl-title">&#127942; C&#233;r&#233;monie de cl&#244;ture &amp; podium</div>
+          <div class="tl-desc">Comptage final, podium, m&#233;dailles symboliques, bilan de la journ&#233;e.</div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- SCORES -->
+<div class="tab" id="tab-scores">
+  <div class="card">
+    <div class="card-hdr" style="background:linear-gradient(135deg,#1a1a0a,#2a2500);border-bottom:1px solid rgba(255,215,0,.2);color:var(--gold)">
+      &#127942; Tableau des scores
+    </div>
+    <div class="card-body">
+      <div class="teams-grid">
+        <div class="team-box t1-bg">
+          <div class="team-hdr t1-hdr"><span>&#128308;</span><span id="lbl1">&#201;toile</span></div>
+          <div class="team-score t1" id="sc1">0</div>
+          <div class="team-btns">
+            <button style="background:rgba(229,57,53,.3);color:var(--t1)" onclick="adj(1,-1)">&#8722;1</button>
+            <button style="background:rgba(229,57,53,.5);color:white" onclick="adj(1,1)">+1</button>
+            <button style="background:rgba(229,57,53,.7);color:white" onclick="adj(1,2)">+2</button>
+            <button style="background:rgba(229,57,53,.9);color:white" onclick="adj(1,3)">+3</button>
+          </div>
+        </div>
+        <div class="team-box t2-bg">
+          <div class="team-hdr t2-hdr"><span>&#128309;</span><span id="lbl2">Boussole</span></div>
+          <div class="team-score t2" id="sc2">0</div>
+          <div class="team-btns">
+            <button style="background:rgba(30,136,229,.3);color:var(--t2)" onclick="adj(2,-1)">&#8722;1</button>
+            <button style="background:rgba(30,136,229,.5);color:white" onclick="adj(2,1)">+1</button>
+            <button style="background:rgba(30,136,229,.7);color:white" onclick="adj(2,2)">+2</button>
+            <button style="background:rgba(30,136,229,.9);color:white" onclick="adj(2,3)">+3</button>
+          </div>
+        </div>
+        <div class="team-box t3-bg">
+          <div class="team-hdr t3-hdr"><span>&#129001;</span><span id="lbl3">Bor&#233;al</span></div>
+          <div class="team-score t3" id="sc3">0</div>
+          <div class="team-btns">
+            <button style="background:rgba(67,160,71,.3);color:var(--t3)" onclick="adj(3,-1)">&#8722;1</button>
+            <button style="background:rgba(67,160,71,.5);color:white" onclick="adj(3,1)">+1</button>
+            <button style="background:rgba(67,160,71,.7);color:white" onclick="adj(3,2)">+2</button>
+            <button style="background:rgba(67,160,71,.9);color:white" onclick="adj(3,3)">+3</button>
+          </div>
+        </div>
+        <div class="team-box t4-bg">
+          <div class="team-hdr t4-hdr"><span>&#129000;</span><span id="lbl4">Mistral</span></div>
+          <div class="team-score t4" id="sc4">0</div>
+          <div class="team-btns">
+            <button style="background:rgba(251,140,0,.3);color:var(--t4)" onclick="adj(4,-1)">&#8722;1</button>
+            <button style="background:rgba(251,140,0,.5);color:white" onclick="adj(4,1)">+1</button>
+            <button style="background:rgba(251,140,0,.7);color:white" onclick="adj(4,2)">+2</button>
+            <button style="background:rgba(251,140,0,.9);color:white" onclick="adj(4,3)">+3</button>
+          </div>
+        </div>
+      </div>
+      <div style="margin-top:14px;display:flex;gap:10px;flex-wrap:wrap">
+        <button onclick="if(confirm('Remettre tous les scores à 0 ?')){{scores=[0,0,0,0];renderScores()}}" style="background:rgba(244,67,54,.1);border:1px solid rgba(244,67,54,.2);border-radius:8px;color:var(--danger);cursor:pointer;font-size:.82rem;font-weight:700;padding:8px 14px">&#8634; Reset</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- QUIZ -->
+<div class="tab" id="tab-quiz">
+  <div class="card">
+    <div class="card-hdr" style="background:linear-gradient(135deg,#1a1035,#120d28);border-bottom:1px solid rgba(156,39,176,.3);color:#ce93d8">
+      &#127919; Quiz G&#233;ant &#8212; 25 questions niveau 3&#232;me &middot; +2 pts par bonne r&#233;ponse
+    </div>
+    <div class="card-body">
+      <p style="font-size:.84rem;opacity:.55;margin-bottom:10px">Chaque &#233;quipe &#233;crit sur ardoise et r&#233;v&#232;le en simultan&#233;.</p>
+      <div class="quiz-q" id="quiz-panel"></div>
+      <div class="quiz-nav">
+        <button class="btn-q" id="btn-prev" onclick="moveQ(-1)">&#8592; Pr&#233;c.</button>
+        <button class="btn-reveal" id="btn-rev" onclick="toggleAns()">&#128065; R&#201;V&#201;LER</button>
+        <button class="btn-q" id="btn-next" onclick="moveQ(1)">Suiv. &#8594;</button>
+        <button class="btn-proj" onclick="openPQ()">&#127916; Mode Pr&#233;sentation</button>
+        <span class="q-counter" id="q-count"></span>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- DÉFIS PAPIER -->
+<div class="tab" id="tab-defis">
+  <div class="card">
+    <div class="card-hdr" style="background:linear-gradient(135deg,#0d2040,#08192e);border-bottom:1px solid rgba(30,136,229,.3);color:#90caf9">
+      &#128196; D&#233;fis Papier &#8212; 8 rounds &middot; 100% imprimable &middot; z&#233;ro mat&#233;riel sp&#233;cial
+    </div>
+    <div class="card-body">
+      <div style="background:rgba(255,255,255,.04);border-radius:10px;padding:13px 16px;margin-bottom:18px;font-size:.87rem;line-height:1.85">
+        <strong style="color:white">Format :</strong> toutes les &#233;quipes jouent le m&#234;me d&#233;fi en m&#234;me temps, sur des feuilles imprim&#233;es identiques. L&#8217;&#233;quipe qui finit en premier (ou obtient le meilleur score) remporte les points.<br>
+        <strong style="color:white">Mat&#233;riel unique :</strong> imprimante + stylos/crayons. Rien d&#8217;autre.
+      </div>
+
+      <div style="font-size:.8rem;font-weight:800;color:var(--gold);text-transform:uppercase;letter-spacing:.1em;margin-bottom:10px;opacity:.7">&#127775; Matin (10h45&#8211;12h00)</div>
+
+      <div class="defi-papier-card">
+        <div class="dp-head"><div class="dp-icon">&#128269;</div><div><div class="dp-title">Round 1 &#8212; L&#8217;Enqu&#234;te du Manoir</div><div class="dp-sub">D&#233;duction &middot; 15 min</div></div></div>
+        <div class="dp-body">Chaque &#233;quipe re&#231;oit un <strong>dossier d&#8217;enqu&#234;te imprim&#233;</strong> (1 page recto) : un r&#233;cit d&#8217;un vol dans un manoir, 4 suspects, 6 indices. Ils doivent d&#233;signer le coupable, le lieu et le mobile sur une feuille-r&#233;ponse.<br>
+        L&#8217;&#233;quipe qui trouve la bonne solution remporte 3 pts (2 pts si 2/3 &#233;l&#233;ments corrects).</div>
+        <div class="print-box">&#128247; <strong>&#192; imprimer :</strong> 4 exemplaires du dossier (voir feuille imprimable) + 4 feuilles-r&#233;ponse</div>
+      </div>
+
+      <div class="defi-papier-card">
+        <div class="dp-head"><div class="dp-icon">&#128065;</div><div><div class="dp-title">Round 2 &#8212; Cryptogramme : D&#233;chiffre le Message</div><div class="dp-sub">Logique &middot; 15 min</div></div></div>
+        <div class="dp-body">Un message secret est crypt&#233; avec un <strong>code de substitution simple</strong> (chaque lettre est remplac&#233;e par une autre). La cl&#233; est partiellement donn&#233;e (5 lettres d&#233;j&#224; d&#233;chiffr&#233;es). Les &#233;quipes d&#233;couvrent les lettres manquantes et lisent le message complet.<br>
+        <strong>Gagne l&#8217;&#233;quipe qui &#233;crit le message d&#233;chiffr&#233; en premier et correctement.</strong></div>
+        <div class="print-box">&#128247; <strong>&#192; imprimer :</strong> 4 exemplaires de la feuille cryptogramme (message + grille de d&#233;codage)</div>
+      </div>
+
+      <div class="defi-papier-card">
+        <div class="dp-head"><div class="dp-icon">&#9997;</div><div><div class="dp-title">Round 3 &#8212; Pictionary Papier Expres</div><div class="dp-sub">Cr&#233;ativit&#233; &middot; 15 min</div></div></div>
+        <div class="dp-body">Chaque &#233;quipe re&#231;oit une <strong>liste de 8 mots/concepts</strong> &#224; faire deviner uniquement par le dessin (pas de lettres, pas de chiffres, pas de paroles). Un &#233;l&#232;ve dessine, les autres de l&#8217;&#233;quipe devinent &#224; voix basse. On tourne. <strong>+1 pt par mot trouv&#233; en moins de 30 secondes.</strong><br>
+        Exemples de mots : &#171; &#233;clipse &#187;, &#171; allitération &#187;, &#171; d&#233;mocratie &#187;, &#171; tsunami &#187;...</div>
+        <div class="print-box">&#128247; <strong>&#192; imprimer :</strong> 4 listes identiques de 8 mots (m&#234;mes mots pour tout le monde) + feuilles de brouillon</div>
+      </div>
+
+      <div class="defi-papier-card">
+        <div class="dp-head"><div class="dp-icon">&#129518;</div><div><div class="dp-title">Round 4 &#8212; Cascade de Devinettes</div><div class="dp-sub">Culture g&#233;n&#233;rale &middot; 15 min</div></div></div>
+        <div class="dp-body">10 devinettes &#233;crites sur une feuille, de plus en plus difficiles. Chaque &#233;quipe r&#233;pond par &#233;crit. <strong>+1 pt par bonne r&#233;ponse, bonus +2 pts si le top 10 est complet.</strong><br>
+        Exemples : &#171; J&#8217;ai des dents mais je ne mords pas. J&#8217;ai des chiffres mais je ne calcule pas. Qui suis-je ? &#187; (Une montre) &mdash; &#171; Plus on m&#8217;&#244;te, plus je grandis. Qui suis-je ? &#187; (Un trou)</div>
+        <div class="print-box">&#128247; <strong>&#192; imprimer :</strong> 4 exemplaires de la feuille devinettes (10 devinettes + zone r&#233;ponse)</div>
+      </div>
+
+      <div style="font-size:.8rem;font-weight:800;color:var(--gold);text-transform:uppercase;letter-spacing:.1em;margin:20px 0 10px;opacity:.7">&#127775; Apr&#232;s-midi (14h00&#8211;15h20)</div>
+
+      <div class="defi-papier-card">
+        <div class="dp-head"><div class="dp-icon">&#127981;</div><div><div class="dp-title">Round 5 &#8212; Plan Fugue : &#201;vasion sur Papier</div><div class="dp-sub">Logique &middot; 15 min</div></div></div>
+        <div class="dp-body">Un mini escape-game sur papier : 4 &#233;nigmes cha&#238;n&#233;es dont chaque r&#233;ponse d&#233;verrouille la suivante. La derni&#232;re donne un mot-code &#224; &#233;crire sur la feuille-r&#233;ponse. <strong>+3 pts &#224; l&#8217;&#233;quipe qui donne le bon mot-code en premier.</strong></div>
+        <div class="print-box">&#128247; <strong>&#192; imprimer :</strong> 4 exemplaires de la feuille &#233;nigmes cha&#238;n&#233;es (recto A4)</div>
+      </div>
+
+      <div class="defi-papier-card">
+        <div class="dp-head"><div class="dp-icon">&#128203;</div><div><div class="dp-title">Round 6 &#8212; Texte &#224; Trous Collectif</div><div class="dp-sub">Fran&#231;ais &middot; 15 min</div></div></div>
+        <div class="dp-body">Un texte narratif de 15 lignes avec 20 mots manquants (nature du mot indiqu&#233;e : <em>nom, verbe, adjectif...</em>). Chaque &#233;quipe choisit SES mots, puis l&#8217;enseignant lit chaque version &#224; voix haute. <strong>Vote de la classe pour la version la plus dr&#244;le/cr&#233;ative. +3 pts vainqueur.</strong><br>
+        <em>(&#201;quivalent fran&#231;ais du Mad Libs)</em></div>
+        <div class="print-box">&#128247; <strong>&#192; imprimer :</strong> 4 exemplaires du texte &#224; trous</div>
+      </div>
+
+      <div class="defi-papier-card">
+        <div class="dp-head"><div class="dp-icon">&#128220;</div><div><div class="dp-title">Round 7 &#8212; Mots Crois&#233;s Express</div><div class="dp-sub">Culture g&#233;n&#233;rale &middot; 15 min</div></div></div>
+        <div class="dp-body">Grille de mots crois&#233;s 8&times;8 avec 12 d&#233;finitions (6 horizontales, 6 verticales), toutes li&#233;es au programme CM2/3&#232;me. <strong>+1 pt par mot correct. Bonus +3 pts si la grille est enti&#232;rement compl&#233;t&#233;e.</strong></div>
+        <div class="print-box">&#128247; <strong>&#192; imprimer :</strong> 4 exemplaires de la grille (+ grille correction pour l&#8217;enseignant)</div>
+      </div>
+
+      <div class="defi-papier-card">
+        <div class="dp-head"><div class="dp-icon">&#127775;</div><div><div class="dp-title">Round 8 &#8212; Haiku Challenge</div><div class="dp-sub">Po&#233;sie &middot; Cr&#233;ativit&#233; &middot; 15 min</div></div></div>
+        <div class="dp-body">Chaque &#233;quipe compose 2 ha&#239;kus (po&#232;me japonais : 5 syllabes / 7 syllabes / 5 syllabes) sur un th&#232;me tir&#233; au sort (&#171; l&#8217;espace &#187;, &#171; la r&#233;cr&#233;ation &#187;, &#171; un robot &#187;...). Lecture &#224; voix haute. <strong>Vote de la classe (style + respect de la forme) : +3 pts vainqueur, +1 pt participation.</strong></div>
+        <div class="print-box">&#128247; <strong>&#192; imprimer :</strong> 4 cartes th&#232;me (&#224; tirer au sort) + feuille rappel r&#232;gle ha&#239;ku</div>
+      </div>
+
+    </div>
+  </div>
+</div>
+
+<!-- FINALE -->
+<div class="tab" id="tab-finale">
+  <div class="card">
+    <div class="card-hdr" style="background:linear-gradient(135deg,#1a1500,#2a2100);border-bottom:1px solid rgba(255,215,0,.2);color:var(--gold)">
+      &#127908; &#201;preuve Finale &#8212; L&#8217;Objet du Futur &middot; 15h35&#8211;16h15
+    </div>
+    <div class="card-body">
+      <p style="font-size:.88rem;line-height:1.8;margin-bottom:14px">30 min de cr&#233;ation + 4 &#215; 60 secondes de pitch. Chaque &#233;quipe invente un objet impossible, le dessine sur une feuille A3 et le vend &#224; la classe.</p>
+      <div style="background:rgba(255,255,255,.04);border-radius:10px;padding:14px 18px;font-size:.88rem;line-height:1.85;margin-bottom:14px">
+        <strong style="color:white">Mat&#233;riel (100% imprimable ou disponible en classe) :</strong><br>
+        &#8594; 1 feuille A3 (ou 2 A4 scotch&#233;es) par &#233;quipe &nbsp;|&nbsp; Stylos/feutres &nbsp;|&nbsp; 1 fiche de travail imprim&#233;e par &#233;quipe
+      </div>
+      <div style="background:rgba(255,215,0,.06);border:1px solid rgba(255,215,0,.15);border-radius:8px;padding:14px 18px;font-size:.87rem;line-height:2.1;margin-bottom:18px">
+        <strong style="color:var(--gold)">FICHE DE TRAVAIL (imprimer 4 exemplaires) :</strong><br>
+        &#9999; Nom de l&#8217;objet : ___________________<br>
+        &#9999; Fonction principale : ___________________<br>
+        &#9999; Fonction secondaire 1 : ___________________<br>
+        &#9999; Fonction secondaire 2 : ___________________<br>
+        &#9999; Slogan (1 phrase) : ___________________<br>
+        &#9999; Prix imaginaire : ___________ cr&#233;dits galactiques
+      </div>
+      <div style="font-size:.8rem;font-weight:800;color:var(--gold);text-transform:uppercase;letter-spacing:.1em;margin-bottom:10px;opacity:.7">&#127942; Podium final</div>
+      <div class="podium-wrap" id="podium-wrap"></div>
+      <button onclick="buildPodium()" style="background:var(--gold);border:none;border-radius:8px;color:var(--navy);cursor:pointer;font-size:.9rem;font-weight:900;padding:12px 28px;margin-top:4px">&#127942; Afficher le podium</button>
+    </div>
+  </div>
+</div>
+
+</div><!-- /s-main -->
+</div><!-- /wrap -->
+
+<script>
+let teams = ["Étoile","Boussole","Boréal","Mistral"];
+let scores = [0,0,0,0];
+
+function launchDay(){
+  ["tn1","tn2","tn3","tn4"].forEach((id,i)=>{
+    const v=document.getElementById(id).value.trim();
+    if(v) teams[i]=v;
+  });
+  document.getElementById("s-setup").classList.remove("active");
+  document.getElementById("s-main").classList.add("active");
+  renderScores(); renderQuiz();
+}
+function renderScores(){
+  [1,2,3,4].forEach(i=>{
+    document.getElementById("lbl"+i).textContent=teams[i-1];
+    document.getElementById("sc"+i).textContent=scores[i-1];
+  });
+}
+function adj(t,d){scores[t-1]=Math.max(0,scores[t-1]+d);renderScores();}
+function showTab(id,btn){
+  document.querySelectorAll(".tab").forEach(t=>t.classList.remove("active"));
+  document.querySelectorAll(".nav-btn").forEach(b=>b.classList.remove("active"));
+  document.getElementById("tab-"+id).classList.add("active");
+  if(btn) btn.classList.add("active");
+}
+
+const QUIZ = [
+  // ── GÉO ──
+  {q:"L'Afrique du Sud a 3 capitales. Cite-en au moins deux.",ans:"Pretoria (exécutive) · Le Cap (législative) · Bloemfontein (judiciaire)",cat:"geo"},
+  {q:"Quel pays d'Amérique du Sud est le seul à avoir le portugais comme langue officielle ?",ans:"Le Brésil",cat:"geo"},
+  {q:"Quelle mer intérieure est bordée par 5 pays dont la Russie, l'Iran et le Kazakhstan ?",ans:"La mer Caspienne (le plus grand lac du monde par la surface)",cat:"geo"},
+  {q:"Quel pays est le plus peuplé d'Afrique en 2024 ?",ans:"Le Nigeria (~220 millions d'habitants)",cat:"geo"},
+  {q:"Par combien de pays la Suisse est-elle entourée ? Citez-les.",ans:"5 pays : France · Allemagne · Autriche · Liechtenstein · Italie",cat:"geo"},
+  // ── HISTOIRE ──
+  {q:"En quelle année la guerre de Cent Ans s'est-elle terminée, et avec quelle bataille ?",ans:"1453 — bataille de Castillon. La France chasse les Anglais.",cat:"hist"},
+  {q:"Qui a inventé l'imprimerie à caractères mobiles en Europe, et vers quelle année ?",ans:"Johannes Gutenberg, vers 1450, à Mayence (Allemagne)",cat:"hist"},
+  {q:"Quel traité signé en 1919 a officiellement mis fin à la Première Guerre Mondiale ?",ans:"Le traité de Versailles (28 juin 1919)",cat:"hist"},
+  {q:"En quelle année l'URSS s'est-elle officiellement dissoute ?",ans:"1991 (le 25 décembre 1991)",cat:"hist"},
+  {q:"Qui était l'empereur qui a unifié la Gaule et une grande partie de l'Europe sous son empire au VIIIe siècle ?",ans:"Charlemagne (couronné en 800 ap. J.-C.)",cat:"hist"},
+  // ── SCIENCES ──
+  {q:"Quel gaz représente environ 78 % de l'atmosphère terrestre ? (ce n'est pas l'oxygène)",ans:"L'azote (N₂)",cat:"sci"},
+  {q:"Quelle est la vitesse approximative du son dans l'air ?",ans:"340 m/s — soit environ 1 224 km/h",cat:"sci"},
+  {q:"Quel est le symbole chimique du plomb dans le tableau périodique ?",ans:"Pb (du latin Plumbum)",cat:"sci"},
+  {q:"Quelle est la distance moyenne entre la Terre et le Soleil ?",ans:"150 millions de km (1 unité astronomique)",cat:"sci"},
+  {q:"Dans le tableau périodique, que signifie le numéro atomique d'un élément ?",ans:"Le nombre de protons dans le noyau de l'atome",cat:"sci"},
+  // ── FRANÇAIS ──
+  {q:"Qu'est-ce qu'un oxymore ? Donne un exemple tiré de la littérature.",ans:"Figure de style associant deux mots contradictoires. Ex : 'cette obscure clarté' (Corneille, Le Cid)",cat:"fr"},
+  {q:"Quelle est la différence entre une métaphore et une comparaison ?",ans:"La comparaison utilise 'comme' ou 'tel'. La métaphore pose une équivalence directe sans outil comparatif.",cat:"fr"},
+  {q:"Dans 'Le Bourgeois Gentilhomme' de Molière, que découvre M. Jourdain qu'il fait sans le savoir ?",ans:"Il fait de la prose — 'Par ma foi, il y a plus de quarante ans que je dis de la prose sans que j'en susse rien !'",cat:"fr"},
+  {q:"Comment s'appelle la figure de style qui consiste à répéter une même consonne au début de plusieurs mots ?",ans:"Une allitération. Ex : 'Pour qui sont ces serpents qui sifflent sur vos têtes ?'",cat:"fr"},
+  {q:"Quel auteur français du XXe siècle a écrit 'L'Étranger' et 'La Peste' ? Il a reçu le Nobel en 1957.",ans:"Albert Camus",cat:"fr"},
+  // ── MATHS ──
+  {q:"Dans un triangle rectangle, les deux côtés de l'angle droit mesurent 5 cm et 12 cm. Quelle est l'hypoténuse ?",ans:"13 cm (5² + 12² = 25 + 144 = 169 = 13²)",cat:"math"},
+  {q:"Un article est soldé de 30%, puis encore de 20% supplémentaires. La remise totale est-elle de 50% ?",ans:"Non ! Elle est de 44%. (0,7 × 0,8 = 0,56, donc −44% du prix initial)",cat:"math"},
+  {q:"Quelle est la valeur de π arrondie au millième ?",ans:"3,142 (plus précisément 3,14159…)",cat:"math"},
+  {q:"La circonférence d'un cercle est de 62,8 cm. Quel est son rayon ? (π ≈ 3,14)",ans:"10 cm (C = 2πr → r = 62,8 ÷ 6,28 = 10)",cat:"math"},
+  {q:"Si x − 3 = 2x + 5, quelle est la valeur de x ?",ans:"x = −8 (x − 2x = 5 + 3 → −x = 8 → x = −8)",cat:"math"}
+];
+
+const CAT_LABEL={geo:"🌍 Géographie",hist:"⚔ Histoire",sci:"🔬 Sciences",fr:"📚 Français & Culture",math:"🔢 Maths"};
+const CAT_CSS={geo:"cat-geo",hist:"cat-hist",sci:"cat-sci",fr:"cat-fr",math:"cat-math"};
+let curQ=0, ansVis=false;
+
+function renderQuiz(){
+  const q=QUIZ[curQ];
+  document.getElementById("quiz-panel").innerHTML=
+    '<div class="quiz-num">Question '+(curQ+1)+' / '+QUIZ.length+'</div>'+
+    '<div class="quiz-text">'+q.q+'</div>'+
+    '<span class="quiz-cat '+CAT_CSS[q.cat]+'">'+CAT_LABEL[q.cat]+'</span>'+
+    '<div class="quiz-ans" id="qans">✅ '+q.ans+'</div>';
+  ansVis=false;
+  document.getElementById("q-count").textContent=(curQ+1)+"/"+QUIZ.length;
+  document.getElementById("btn-prev").disabled=curQ===0;
+  document.getElementById("btn-next").disabled=curQ===QUIZ.length-1;
+  document.getElementById("btn-rev").textContent="👁 RÉVÉLER";
+  if(document.getElementById("proj-quiz").classList.contains("open")) renderPQ();
+}
+function moveQ(d){curQ=Math.max(0,Math.min(QUIZ.length-1,curQ+d));renderQuiz();}
+function toggleAns(){
+  ansVis=!ansVis;
+  document.getElementById("qans").classList.toggle("vis",ansVis);
+  document.getElementById("btn-rev").textContent=ansVis?"🙈 CACHER":"👁 RÉVÉLER";
+}
+
+// ── MODE PRÉSENTATION ──
+let pqAnsVis=false;
+function openPQ(){
+  renderPQ();
+  document.getElementById("proj-quiz").classList.add("open");
+  try{document.documentElement.requestFullscreen();}catch(e){}
+}
+function closePQ(){
+  document.getElementById("proj-quiz").classList.remove("open");
+  try{document.exitFullscreen();}catch(e){}
+}
+function renderPQ(){
+  const q=QUIZ[curQ];
+  document.getElementById("pq-num").textContent="Question "+(curQ+1)+" / "+QUIZ.length;
+  const catEl=document.getElementById("pq-cat");
+  catEl.textContent=CAT_LABEL[q.cat];
+  catEl.className="pq-cat "+CAT_CSS[q.cat];
+  document.getElementById("pq-q").textContent=q.q;
+  const a=document.getElementById("pq-ans");
+  a.textContent="✅ "+q.ans;
+  a.classList.remove("vis");
+  pqAnsVis=false;
+  document.getElementById("pq-rev").textContent="👁 RÉVÉLER";
+  document.getElementById("pq-prev").disabled=curQ===0;
+  document.getElementById("pq-next").disabled=curQ===QUIZ.length-1;
+}
+function pqReveal(){
+  pqAnsVis=!pqAnsVis;
+  document.getElementById("pq-ans").classList.toggle("vis",pqAnsVis);
+  document.getElementById("pq-rev").textContent=pqAnsVis?"🙈 CACHER":"👁 RÉVÉLER";
+}
+function pqMove(d){curQ=Math.max(0,Math.min(QUIZ.length-1,curQ+d));renderPQ();renderQuiz();}
+
+document.addEventListener("keydown",e=>{
+  const open=document.getElementById("proj-quiz").classList.contains("open");
+  if(e.key==="Escape"&&open){closePQ();return;}
+  if(!open) return;
+  if(e.key===" "||e.key==="Enter"){e.preventDefault();pqReveal();}
+  if(e.key==="ArrowRight") pqMove(1);
+  if(e.key==="ArrowLeft")  pqMove(-1);
+});
+
+// ── PODIUM ──
+function buildPodium(){
+  const ranked=[...scores.map((s,i)=>({s,t:teams[i],i}))].sort((a,b)=>b.s-a.s);
+  const medals=["🥇","🥈","🥉","4️⃣"];
+  const cols=["pos1","pos2","pos3","pos4"];
+  const order=[1,0,2,3];
+  let html="";
+  order.forEach(rank=>{
+    const e=ranked[rank];
+    html+=`<div class="podium-col ${cols[rank]}"><div class="team-nm">${e.t}</div><div class="pts">${e.s} pts</div><div class="podium-block">${medals[rank]}</div></div>`;
+  });
+  document.getElementById("podium-wrap").innerHTML=html;
+}
+</script>
+</body>
+</html>
