@@ -1,0 +1,338 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Correction Séance 3 — Questionnaire n°2 + Cause/Effet</title>
+<style>
+@import url('https://fonts.googleapis.com/css2?family=Cinzel:wght@700;900&family=Lato:ital,wght@0,400;0,700;1,400&display=swap');
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+:root {
+  --bg: #0a1a0f; --card: #112316; --card2: #162c1a; --border: #1e4d22;
+  --gold: #c9a227; --gold2: #f0c040; --green: #4ade80; --green2: #22c55e;
+  --text: #e8f5e9; --text2: #a7c8a9; --text3: #6b917a;
+  --correct: #22c55e; --reveal: #c9a227;
+}
+html, body { width:100%; height:100%; overflow:hidden; background:var(--bg); color:var(--text); font-family:'Lato',sans-serif; }
+
+/* ── DECK SHELL ── */
+.deck { width:100vw; height:100vh; display:flex; flex-direction:column; }
+
+/* ── TOP BAR ── */
+.top-bar {
+  flex-shrink:0;
+  background: linear-gradient(90deg,#0a1a0f,#112316);
+  border-bottom:2px solid var(--gold);
+  padding:8px 20px;
+  display:flex; align-items:center; justify-content:space-between;
+}
+.tb-brand { font-family:'Cinzel',serif; font-size:1.1rem; font-weight:900; color:var(--gold); letter-spacing:4px; }
+.tb-seance { font-size:0.75rem; color:var(--text2); letter-spacing:1px; }
+.tb-progress { display:flex; align-items:center; gap:10px; }
+.progress-dots { display:flex; gap:5px; }
+.dot { width:10px; height:10px; border-radius:50%; background:var(--border); transition:background .3s; }
+.dot.active { background:var(--gold); }
+.dot.done { background:var(--green2); }
+.tb-counter { font-size:0.72rem; color:var(--text3); min-width:50px; text-align:right; }
+
+/* ── SLIDE AREA ── */
+.slides-wrap { flex:1; position:relative; overflow:hidden; }
+.slide {
+  position:absolute; inset:0;
+  display:flex; flex-direction:column; align-items:center; justify-content:center;
+  padding:28px 60px;
+  opacity:0; pointer-events:none;
+  transform:translateX(60px);
+  transition:opacity .35s ease, transform .35s ease;
+}
+.slide.active {
+  opacity:1; pointer-events:all; transform:translateX(0);
+}
+.slide.exit-left { opacity:0; transform:translateX(-60px); }
+
+/* ── TITLE SLIDE ── */
+.slide-title-wrap { text-align:center; }
+.slide-jumanji {
+  font-family:'Cinzel',serif; font-size:5rem; font-weight:900; letter-spacing:8px;
+  color:var(--gold2); text-shadow:0 4px 40px rgba(201,162,39,0.6);
+  line-height:1;
+}
+.slide-seance-num {
+  font-family:'Cinzel',serif; font-size:1.6rem; color:var(--gold);
+  letter-spacing:4px; margin:16px 0 8px;
+}
+.slide-seance-title { font-size:1.1rem; color:var(--text2); letter-spacing:1px; }
+.slide-hint { font-size:0.78rem; color:var(--text3); margin-top:32px; letter-spacing:1px; }
+.slide-deco {
+  font-size:3rem; margin:20px 0;
+  animation: pulse 3s ease-in-out infinite;
+}
+@keyframes pulse { 0%,100%{opacity:.6;transform:scale(1)} 50%{opacity:1;transform:scale(1.08)} }
+
+/* ── QUESTION SLIDE ── */
+.slide-q-label {
+  font-size:0.78rem; text-transform:uppercase; letter-spacing:3px;
+  color:var(--gold); margin-bottom:18px; align-self:flex-start;
+}
+.slide-q-num {
+  font-family:'Cinzel',serif; font-size:1rem; color:var(--text3);
+  align-self:flex-start; margin-bottom:8px;
+}
+.slide-q-text {
+  font-size:2.1rem; color:var(--text); line-height:1.5; font-weight:700;
+  text-align:center; max-width:1100px; margin-bottom:24px;
+}
+.slide-q-text.small { font-size:1.6rem; }
+  .slide-q-text.xsmall { font-size:1.3rem; }
+
+/* ── REVEAL BUTTON ── */
+.btn-reveal {
+  background:transparent; border:2px solid var(--gold);
+  color:var(--gold); font-family:'Lato',sans-serif; font-weight:700;
+  font-size:1rem; letter-spacing:2px; text-transform:uppercase;
+  padding:14px 44px; border-radius:8px; cursor:pointer;
+  transition:all .2s;
+}
+.btn-reveal:hover { background:rgba(201,162,39,0.15); }
+
+/* ── ANSWER BOX ── */
+.answer-box {
+  max-width:1100px; width:100%;
+  background:var(--card); border:2px solid var(--green2);
+  border-radius:14px; padding:22px 32px;
+  opacity:0; transform:translateY(20px);
+  transition:opacity .4s ease, transform .4s ease;
+  pointer-events:none;
+}
+.answer-box.revealed { opacity:1; transform:translateY(0); pointer-events:all; }
+.answer-label {
+  font-size:0.75rem; text-transform:uppercase; letter-spacing:3px;
+  color:var(--green); margin-bottom:12px; font-weight:700;
+}
+.answer-text {
+  font-size:1.45rem; color:var(--text); line-height:1.6;
+}
+.answer-text.small { font-size:1.2rem; }
+.answer-text em { color:var(--gold2); font-style:normal; }
+.answer-extra {
+  margin-top:12px; font-size:1rem; color:var(--text2);
+  font-style:italic; border-top:1px solid var(--border); padding-top:10px;
+}
+
+/* ── GRID ANSWERS (pour relier, tableaux…) ── */
+.answer-grid { display:grid; gap:8px; }
+.answer-grid-2 { grid-template-columns:1fr 1fr; }
+.answer-pill {
+  background:var(--card2); border:1px solid var(--border);
+  border-radius:8px; padding:10px 16px;
+  display:flex; align-items:center; gap:12px;
+  font-size:0.95rem; color:var(--text);
+}
+.answer-pill-key {
+  font-family:'Cinzel',serif; font-weight:700; color:var(--gold);
+  font-size:1rem; flex-shrink:0; min-width:28px;
+}
+.arrow-ok { color:var(--green); font-size:1.2rem; }
+
+/* ── CE SLIDE ── */
+.ce-slide-row { display:grid; grid-template-columns:1fr 40px 1fr; gap:8px; margin-bottom:8px; align-items:center; }
+.ce-box-s {
+  border-radius:8px; padding:12px 16px; font-size:0.92rem; line-height:1.5;
+}
+.ce-given-s { background:rgba(201,162,39,0.12); border:1px solid rgba(201,162,39,0.3); color:var(--text); font-style:italic; }
+.ce-ans-s { background:rgba(74,222,128,0.1); border:2px solid var(--green2); color:var(--text); }
+.ce-arrow-s { text-align:center; font-size:1.4rem; color:var(--gold); }
+
+/* ── FRISE SLIDE ── */
+.frise-slide { width:100%; }
+.frise-s-row { display:grid; grid-template-columns:36px 70px 1fr; margin-bottom:4px; }
+.frise-s-num { background:var(--gold); color:#0a1a0f; font-weight:900; font-size:0.8rem; display:flex;align-items:center;justify-content:center; }
+.frise-s-pg { background:rgba(201,162,39,0.1); border-left:3px solid var(--gold); border-right:1px solid var(--border); display:flex;align-items:center;justify-content:center; font-size:0.7rem; color:var(--gold2); font-weight:700; text-align:center; padding:3px; }
+.frise-s-txt { padding:8px 12px; font-size:0.82rem; line-height:1.4; border-bottom:1px solid var(--border); }
+.frise-s-txt.given-s { background:rgba(201,162,39,0.06); color:var(--text2); font-style:italic; }
+.frise-s-txt.ans-s { background:rgba(74,222,128,0.08); color:var(--green); }
+
+/* ── BOTTOM BAR ── */
+.bottom-bar {
+  flex-shrink:0;
+  background:#0a1a0f; border-top:1px solid var(--border);
+  padding:8px 20px;
+  display:flex; align-items:center; justify-content:space-between;
+}
+.bb-hint { font-size:0.7rem; color:var(--text3); }
+.bb-nav { display:flex; gap:10px; }
+.btn-nav {
+  background:var(--card); border:1px solid var(--border);
+  color:var(--text2); padding:7px 20px; border-radius:6px;
+  cursor:pointer; font-size:0.8rem; font-weight:700; letter-spacing:1px;
+  transition:all .15s;
+}
+.btn-nav:hover { border-color:var(--gold); color:var(--gold); }
+.btn-nav:disabled { opacity:.3; cursor:default; }
+.btn-nav.primary { background:rgba(201,162,39,0.15); border-color:var(--gold); color:var(--gold); }
+</style>
+</head>
+<body>
+<div class="deck">
+  <div class="top-bar">
+    <div>
+      <div class="tb-brand">JUMANJI</div>
+      <div class="tb-seance">Correction · Séance 3 · Questionnaire n°2 + Cause/Effet</div>
+    </div>
+    <div class="tb-progress">
+      <div class="progress-dots"><div class="dot" id="dot-0"></div><div class="dot" id="dot-1"></div><div class="dot" id="dot-2"></div><div class="dot" id="dot-3"></div><div class="dot" id="dot-4"></div><div class="dot" id="dot-5"></div><div class="dot" id="dot-6"></div><div class="dot" id="dot-7"></div><div class="dot" id="dot-8"></div><div class="dot" id="dot-9"></div><div class="dot" id="dot-10"></div></div>
+      <div class="tb-counter" id="counter">1 / 11</div>
+    </div>
+  </div>
+  <div class="slides-wrap">
+    <div class="slide" id="slide-0">
+  <div class="slide-title-wrap">
+    <div class="slide-jumanji">JUMANJI</div>
+    <div class="slide-deco">⚡</div>
+    <div class="slide-seance-num">Séance 3</div>
+    <div class="slide-seance-title">Questionnaire n°2 + Cause/Effet — Pages 11 à 18</div>
+    <div class="slide-hint">→ Appuie sur espace ou → pour avancer · R pour révéler la réponse</div>
+  </div>
+</div><div class="slide" id="slide-1">
+  <div class="slide-q-label">Question 1</div>
+  <div class="slide-q-text">Quel est le deuxième événement qui arrive dans la partie ?</div>
+  <button class="btn-reveal" onclick="reveal(this)">🔍 Révéler la réponse &nbsp;(R)</button>
+  <div class="answer-box" style="margin-top:0;">
+    <div class="answer-label">✅ Réponse attendue</div>
+    <div class="answer-text">Les <em>rhinocéros</em> chargent à travers la maison, défoncent les murs et sèment la destruction.</div>
+    
+  </div>
+</div><div class="slide" id="slide-2">
+  <div class="slide-q-label">Question 2</div>
+  <div class="slide-q-text">Comment les enfants réagissent-ils face au lion ?</div>
+  <button class="btn-reveal" onclick="reveal(this)">🔍 Révéler la réponse &nbsp;(R)</button>
+  <div class="answer-box" style="margin-top:0;">
+    <div class="answer-label">✅ Réponse attendue</div>
+    <div class="answer-text">Ils tentent de fuir. <em>Judy fait preuve de sang-froid</em> et parvient à attirer le lion dans une pièce pour l'enfermer. Peter est tétanisé.</div>
+    
+  </div>
+</div><div class="slide" id="slide-3">
+  <div class="slide-q-label">Question 3</div>
+  <div class="slide-q-text">Qu'est-ce qui provoque l'arrivée des rhinocéros ?</div>
+  <button class="btn-reveal" onclick="reveal(this)">🔍 Révéler la réponse &nbsp;(R)</button>
+  <div class="answer-box" style="margin-top:0;">
+    <div class="answer-label">✅ Réponse attendue</div>
+    <div class="answer-text">Un joueur (Peter ou Judy) <em>lance les dés et avance son pion</em> sur une case mentionnant les rhinocéros. La case se réalise immédiatement.</div>
+    
+  </div>
+</div><div class="slide" id="slide-4">
+  <div class="slide-q-label">Question 4</div>
+  <div class="slide-q-text">Les enfants peuvent-ils abandonner la partie ?</div>
+  <button class="btn-reveal" onclick="reveal(this)">🔍 Révéler la réponse &nbsp;(R)</button>
+  <div class="answer-box" style="margin-top:0;">
+    <div class="answer-label">✅ Réponse attendue</div>
+    <div class="answer-text"><em>Non.</em> La règle inscrite sur la boîte stipule que le jeu doit être terminé une fois commencé. Ils sont obligés de continuer jusqu'à ce que quelqu'un crie "JUMANJI" en atteignant la case finale.</div>
+    <div class="answer-extra">Passage clé : "Ce jeu doit être terminé une fois commencé."</div>
+  </div>
+</div><div class="slide" id="slide-5">
+  <div class="slide-q-label">Question 5</div>
+  <div class="slide-q-text">Comment les enfants se sentent-ils ?</div>
+  <button class="btn-reveal" onclick="reveal(this)">🔍 Révéler la réponse &nbsp;(R)</button>
+  <div class="answer-box" style="margin-top:0;">
+    <div class="answer-label">✅ Réponse attendue</div>
+    <div class="answer-text"><em>Terreur, panique, désespoir.</em> Ils sont épuisés, dépassés par les événements. Mots précis attendus : terrifiés, paniqués, désespérés, impuissants.</div>
+    
+  </div>
+</div><div class="slide" id="slide-6">
+  <div class="slide-q-label">Cause → Effet — Ligne 1</div>
+  <div class="slide-q-text">Peter lance les dés et avance son pion. → ???</div>
+  <button class="btn-reveal" onclick="reveal(this)">🔍 Révéler la réponse &nbsp;(R)</button>
+  <div class="answer-box" style="margin-top:0;">
+    <div class="answer-label">✅ Réponse attendue</div>
+    <div class="answer-text"><div class="ce-slide-row"><div class="ce-box-s ce-given-s"><div style="font-size:0.6rem;color:var(--gold);text-transform:uppercase;letter-spacing:1px;margin-bottom:4px;">CAUSE</div>Peter lance les dés et avance son pion.</div><div class="ce-arrow-s">→</div><div class="ce-box-s ce-ans-s"><div style="font-size:0.6rem;color:var(--green);text-transform:uppercase;letter-spacing:1px;margin-bottom:4px;">EFFET</div>Un lion surgit dans la maison.</div></div></div>
+    
+  </div>
+</div><div class="slide" id="slide-7">
+  <div class="slide-q-label">Cause → Effet — Ligne 2</div>
+  <div class="slide-q-text">??? → « Des rhinocéros vous chargent » (case déclenchée)</div>
+  <button class="btn-reveal" onclick="reveal(this)">🔍 Révéler la réponse &nbsp;(R)</button>
+  <div class="answer-box" style="margin-top:0;">
+    <div class="answer-label">✅ Réponse attendue</div>
+    <div class="answer-text"><div class="ce-slide-row"><div class="ce-box-s ce-ans-s"><div style="font-size:0.6rem;color:var(--green);text-transform:uppercase;letter-spacing:1px;margin-bottom:4px;">CAUSE</div>Judy / Peter lance les dés — la case « rhinocéros » est déclenchée.</div><div class="ce-arrow-s">→</div><div class="ce-box-s ce-given-s"><div style="font-size:0.6rem;color:var(--gold);text-transform:uppercase;letter-spacing:1px;margin-bottom:4px;">EFFET</div>Des rhinocéros chargent à travers la maison.</div></div></div>
+    
+  </div>
+</div><div class="slide" id="slide-8">
+  <div class="slide-q-label">Cause → Effet — Ligne 3</div>
+  <div class="slide-q-text">La case indique « Un lion vous regarde ». → ???</div>
+  <button class="btn-reveal" onclick="reveal(this)">🔍 Révéler la réponse &nbsp;(R)</button>
+  <div class="answer-box" style="margin-top:0;">
+    <div class="answer-label">✅ Réponse attendue</div>
+    <div class="answer-text"><div class="ce-slide-row"><div class="ce-box-s ce-given-s"><div style="font-size:0.6rem;color:var(--gold);text-transform:uppercase;letter-spacing:1px;margin-bottom:4px;">CAUSE</div>La case indique « Un lion vous regarde ».</div><div class="ce-arrow-s">→</div><div class="ce-box-s ce-ans-s"><div style="font-size:0.6rem;color:var(--green);text-transform:uppercase;letter-spacing:1px;margin-bottom:4px;">EFFET</div>Un lion surgit vraiment dans la maison.</div></div></div>
+    
+  </div>
+</div><div class="slide" id="slide-9">
+  <div class="slide-q-label">Cause → Effet — Ligne 4</div>
+  <div class="slide-q-text">??? → Les animaux ont envahi toutes les pièces.</div>
+  <button class="btn-reveal" onclick="reveal(this)">🔍 Révéler la réponse &nbsp;(R)</button>
+  <div class="answer-box" style="margin-top:0;">
+    <div class="answer-label">✅ Réponse attendue</div>
+    <div class="answer-text"><div class="ce-slide-row"><div class="ce-box-s ce-ans-s"><div style="font-size:0.6rem;color:var(--green);text-transform:uppercase;letter-spacing:1px;margin-bottom:4px;">CAUSE</div>Les cases se déclenchent les unes après les autres — les enfants ne peuvent pas arrêter la partie.</div><div class="ce-arrow-s">→</div><div class="ce-box-s ce-given-s"><div style="font-size:0.6rem;color:var(--gold);text-transform:uppercase;letter-spacing:1px;margin-bottom:4px;">EFFET</div>Les animaux ont envahi toutes les pièces.</div></div></div>
+    
+  </div>
+</div><div class="slide" id="slide-10">
+  <div class="slide-q-label">Cause → Effet — Ligne 5</div>
+  <div class="slide-q-text">Les enfants ne retrouvent plus la boîte du jeu. → ???</div>
+  <button class="btn-reveal" onclick="reveal(this)">🔍 Révéler la réponse &nbsp;(R)</button>
+  <div class="answer-box" style="margin-top:0;">
+    <div class="answer-label">✅ Réponse attendue</div>
+    <div class="answer-text"><div class="ce-slide-row"><div class="ce-box-s ce-given-s"><div style="font-size:0.6rem;color:var(--gold);text-transform:uppercase;letter-spacing:1px;margin-bottom:4px;">CAUSE</div>Les enfants ne retrouvent plus la boîte du jeu.</div><div class="ce-arrow-s">→</div><div class="ce-box-s ce-ans-s"><div style="font-size:0.6rem;color:var(--green);text-transform:uppercase;letter-spacing:1px;margin-bottom:4px;">EFFET</div>Ils paniquent et désespèrent — sans la boîte, impossible de lire les cases.</div></div></div>
+    
+  </div>
+</div>
+  </div>
+  <div class="bottom-bar">
+    <div class="bb-hint">← → ou espace · R = révéler</div>
+    <div class="bb-nav">
+      <button class="btn-nav" id="btn-prev">← Précédent</button>
+      <button class="btn-nav primary" id="btn-next">Suivant →</button>
+    </div>
+  </div>
+</div>
+<script>
+const slides = document.querySelectorAll('.slide');
+const dots = document.querySelectorAll('.dot');
+const counter = document.getElementById('counter');
+let cur = 0;
+
+function goTo(n) {
+  if (n < 0 || n >= slides.length) return;
+  slides[cur].classList.remove('active');
+  slides[cur].classList.add('exit-left');
+  setTimeout(() => slides[cur].classList.remove('exit-left'), 400);
+  if (dots[cur]) { dots[cur].classList.remove('active'); dots[cur].classList.add('done'); }
+  cur = n;
+  slides[cur].classList.add('active');
+  if (dots[cur]) { dots[cur].classList.remove('done'); dots[cur].classList.add('active'); }
+  if (counter) counter.textContent = (cur+1) + ' / ' + slides.length;
+  document.getElementById('btn-prev').disabled = cur === 0;
+  document.getElementById('btn-next').disabled = cur === slides.length - 1;
+  // hide any revealed answer on new slide
+  document.querySelectorAll('.answer-box').forEach(a => a.classList.remove('revealed'));
+  document.querySelectorAll('.btn-reveal').forEach(b => { b.style.display=''; });
+}
+
+function reveal(btn) {
+  const box = btn.nextElementSibling;
+  box.classList.add('revealed');
+  btn.style.display = 'none';
+}
+
+document.addEventListener('keydown', e => {
+  if (e.key === 'ArrowRight' || e.key === ' ' || e.key === 'PageDown') { e.preventDefault(); goTo(cur+1); }
+  if (e.key === 'ArrowLeft' || e.key === 'PageUp') { e.preventDefault(); goTo(cur-1); }
+  if (e.key === 'r' || e.key === 'R') {
+    const btn = slides[cur].querySelector('.btn-reveal');
+    if (btn) reveal(btn);
+  }
+});
+document.getElementById('btn-prev').addEventListener('click', () => goTo(cur-1));
+document.getElementById('btn-next').addEventListener('click', () => goTo(cur+1));
+goTo(0);
+</script>
+</body>
+</html>

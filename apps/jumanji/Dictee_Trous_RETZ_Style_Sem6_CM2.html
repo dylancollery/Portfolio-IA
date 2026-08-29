@@ -1,0 +1,232 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<title>Dictée à trous — Jumanji — Niveau 1 — CM2</title>
+<style>
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+body {
+  font-family: 'Segoe UI', Arial, sans-serif;
+  background: white;
+  color: #111;
+}
+
+@media print {
+  body { margin: 0; }
+  .page { width: 210mm; padding: 8mm 14mm 6mm 14mm; page-break-after: always; }
+  .page:last-child { page-break-after: auto; }
+}
+@media screen {
+  body { background: #ddd; }
+  .page { background: white; max-width: 210mm; margin: 12px auto; padding: 8mm 14mm 6mm 14mm; box-shadow: 0 2px 10px rgba(0,0,0,.25); }
+}
+
+/* ---- TITRE PAGE ---- */
+.page-title {
+  text-align: center;
+  font-size: 22pt;
+  font-weight: bold;
+  letter-spacing: -0.02em;
+  margin-bottom: 4px;
+  color: #111;
+}
+.page-subtitle {
+  text-align: right;
+  font-size: 8pt;
+  color: #888;
+  margin-bottom: 10px;
+}
+
+/* ---- COPY BLOC ---- */
+.copy {
+  padding: 6px 0 10px 0;
+}
+
+/* ---- ÉLÈVE INFO ---- */
+.eleve-line {
+  display: flex;
+  gap: 20px;
+  font-size: 9pt;
+  color: #444;
+  margin-bottom: 8px;
+}
+.eleve-line .champ {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+.eleve-line .underline {
+  border-bottom: 1px solid #666;
+  display: inline-block;
+  min-width: 80px;
+  height: 14px;
+}
+
+/* ---- TEXTE À TROUS ---- */
+.dictee {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 5px 8px;
+  font-size: 14.5pt;
+  line-height: 2.4;
+  padding: 2px 6px;
+}
+
+/* Segments de texte */
+.w {
+  white-space: nowrap;
+}
+
+/* Cases grises */
+.b {
+  display: inline-block;
+  height: 1em;
+  background: #c8c8c8;
+  border-radius: 2px;
+  vertical-align: middle;
+  flex-shrink: 0;
+}
+
+/* Largeurs selon longueur du mot */
+.b-xs  { width: 32px;  }   /* 2 chars  : ou, où    */
+.b-sm  { width: 52px;  }   /* 5 chars  : vieux     */
+.b-md  { width: 68px;  }   /* 6-7 chars: gravée, dorées */
+.b-lg  { width: 105px; }   /* 11 chars : découvrirent, poussiéreux, mystérieuse */
+.b-xl  { width: 125px; }   /* 14 chars : s'aventuraient, n'abandonnez */
+
+/* ---- LIGNE DE COUPE ---- */
+.cut {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  margin: 4px 0;
+  color: #bbb;
+}
+.cut .scissors {
+  font-size: 12pt;
+  flex-shrink: 0;
+  transform: rotate(90deg);
+  display: inline-block;
+}
+.cut .dash {
+  flex: 1;
+  border-top: 1.5px dashed #bbb;
+}
+</style>
+</head>
+<body>
+<div class="page">
+
+  <div class="page-title">Jumanji</div>
+  <div class="page-subtitle">Dictée à trous · Orthographe 16 — <em>ou</em> et <em>où</em> · Niveau 1 · CM2 · Semaine du 8 juin 2026</div>
+
+  <!-- ===== COPIE 1 ===== -->
+  <div class="copy">
+    <div class="eleve-line">
+      <div class="champ">Nom : <span class="underline"></span></div>
+      <div class="champ">Prénom : <span class="underline"></span></div>
+      <div class="champ">Date : <span class="underline" style="min-width:60px;"></span></div>
+    </div>
+    <div class="dictee">
+      <span class="w">Judy et Peter</span>
+      <span class="b b-lg"></span>
+      <span class="w"><em>Jumanji</em> dans le</span>
+      <span class="b b-sm"></span>
+      <span class="w">grenier</span>
+      <span class="b b-lg"></span>
+      <span class="b b-xs"></span>
+      <span class="w">ils ne</span>
+      <span class="b b-xl"></span>
+      <span class="w">jamais.</span>
+      <span class="w">Sur la boîte</span>
+      <span class="b b-lg"></span>
+      <span class="w">, une règle était</span>
+      <span class="b b-md"></span>
+      <span class="w">en lettres</span>
+      <span class="b b-md"></span>
+      <span class="w">: «&thinsp;Gagnez</span>
+      <span class="b b-xs"></span>
+      <span class="b b-xl"></span>
+      <span class="w">jamais&thinsp;!&thinsp;»</span>
+    </div>
+  </div>
+
+  <!-- ===== LIGNE DE COUPE ===== -->
+  <div class="cut">
+    <span class="scissors">✂</span>
+    <div class="dash"></div>
+  </div>
+
+  <!-- ===== COPIE 2 ===== -->
+  <div class="copy">
+    <div class="eleve-line">
+      <div class="champ">Nom : <span class="underline"></span></div>
+      <div class="champ">Prénom : <span class="underline"></span></div>
+      <div class="champ">Date : <span class="underline" style="min-width:60px;"></span></div>
+    </div>
+    <div class="dictee">
+      <span class="w">Judy et Peter</span>
+      <span class="b b-lg"></span>
+      <span class="w"><em>Jumanji</em> dans le</span>
+      <span class="b b-sm"></span>
+      <span class="w">grenier</span>
+      <span class="b b-lg"></span>
+      <span class="b b-xs"></span>
+      <span class="w">ils ne</span>
+      <span class="b b-xl"></span>
+      <span class="w">jamais.</span>
+      <span class="w">Sur la boîte</span>
+      <span class="b b-lg"></span>
+      <span class="w">, une règle était</span>
+      <span class="b b-md"></span>
+      <span class="w">en lettres</span>
+      <span class="b b-md"></span>
+      <span class="w">: «&thinsp;Gagnez</span>
+      <span class="b b-xs"></span>
+      <span class="b b-xl"></span>
+      <span class="w">jamais&thinsp;!&thinsp;»</span>
+    </div>
+  </div>
+
+  <!-- ===== LIGNE DE COUPE ===== -->
+  <div class="cut">
+    <span class="scissors">✂</span>
+    <div class="dash"></div>
+  </div>
+
+  <!-- ===== COPIE 3 ===== -->
+  <div class="copy">
+    <div class="eleve-line">
+      <div class="champ">Nom : <span class="underline"></span></div>
+      <div class="champ">Prénom : <span class="underline"></span></div>
+      <div class="champ">Date : <span class="underline" style="min-width:60px;"></span></div>
+    </div>
+    <div class="dictee">
+      <span class="w">Judy et Peter</span>
+      <span class="b b-lg"></span>
+      <span class="w"><em>Jumanji</em> dans le</span>
+      <span class="b b-sm"></span>
+      <span class="w">grenier</span>
+      <span class="b b-lg"></span>
+      <span class="b b-xs"></span>
+      <span class="w">ils ne</span>
+      <span class="b b-xl"></span>
+      <span class="w">jamais.</span>
+      <span class="w">Sur la boîte</span>
+      <span class="b b-lg"></span>
+      <span class="w">, une règle était</span>
+      <span class="b b-md"></span>
+      <span class="w">en lettres</span>
+      <span class="b b-md"></span>
+      <span class="w">: «&thinsp;Gagnez</span>
+      <span class="b b-xs"></span>
+      <span class="b b-xl"></span>
+      <span class="w">jamais&thinsp;!&thinsp;»</span>
+    </div>
+  </div>
+
+</div>
+</body>
+</html>

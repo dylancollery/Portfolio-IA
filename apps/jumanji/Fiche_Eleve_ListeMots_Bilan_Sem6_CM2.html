@@ -1,0 +1,241 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<title>Fiche Élève — Liste de mots + Dictée bilan — Semaine 6 — CM2</title>
+<style>
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+body { font-family: Arial, sans-serif; font-size: 10pt; color: #111; background: white; }
+
+@media print {
+  body { font-size: 10pt; }
+  .page { page-break-after: always; padding: 12mm 12mm 10mm 12mm; }
+  .page:last-child { page-break-after: auto; }
+  .cut-line { border-top: 1.5px dashed #aaa; margin: 14px 0 12px; display: flex; align-items: center; gap: 6px; font-size: 7.5pt; color: #aaa; }
+}
+@media screen {
+  body { background: #ddd; }
+  .page { background: white; max-width: 210mm; margin: 10px auto; padding: 12mm; box-shadow: 0 2px 8px rgba(0,0,0,.2); }
+  .cut-line { border-top: 1.5px dashed #aaa; margin: 14px 0 12px; display: flex; align-items: center; gap: 6px; font-size: 7.5pt; color: #aaa; }
+}
+
+/* ---- EN-TÊTE ÉLÈVE ---- */
+.eleve-header { border: 1.5px solid #1a1a2e; border-radius: 5px; padding: 6px 10px; margin-bottom: 10px; display: flex; justify-content: space-between; align-items: center; }
+.eleve-title { font-size: 11pt; font-weight: bold; color: #1a1a2e; }
+.eleve-title .sub { font-size: 8pt; font-weight: normal; color: #555; display: block; margin-top: 1px; }
+.eleve-info { font-size: 9pt; text-align: right; color: #555; line-height: 1.8; }
+.eleve-info span { border-bottom: 1px solid #999; display: inline-block; min-width: 80px; }
+
+/* ---- SECTION LISTE DE MOTS ---- */
+.section-title { font-size: 10pt; font-weight: bold; color: white; background: #1a1a2e; padding: 4px 10px; border-radius: 3px; margin-bottom: 8px; }
+
+/* ---- RÈGLE OU / OÙ ---- */
+.regle-box { border: 2px solid #1565c0; border-radius: 5px; padding: 7px 10px; margin-bottom: 10px; background: #e3f2fd; }
+.regle-box h3 { font-size: 9.5pt; color: #0d47a1; margin-bottom: 5px; }
+.regle-row { display: flex; gap: 10px; }
+.regle-item { flex: 1; background: white; border-radius: 4px; padding: 5px 8px; border: 1px solid #90caf9; }
+.regle-item .mot { font-size: 13pt; font-weight: bold; text-align: center; display: block; margin-bottom: 3px; }
+.ou-c { color: #e65100; }
+.ou-acc-c { color: #0d47a1; }
+.regle-item p { font-size: 8pt; color: #333; line-height: 1.4; }
+.regle-item em { font-size: 8pt; color: #555; font-style: italic; }
+
+/* ---- GRILLE MOTS ---- */
+.mots-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 5px; margin-bottom: 4px; }
+.mot-card { border: 1px solid #ccc; border-radius: 4px; padding: 5px 8px; text-align: center; }
+.mot-card .mot-fr { font-size: 10pt; font-weight: bold; color: #1a1a2e; }
+.mot-card .mot-cat { font-size: 7pt; color: #888; text-transform: uppercase; letter-spacing: .05em; display: block; margin-bottom: 1px; }
+
+.mots-verbes { display: flex; flex-wrap: wrap; gap: 5px; margin-bottom: 4px; }
+.verbe-tag { background: #e8f5e9; border: 1px solid #a5d6a7; border-radius: 3px; padding: 3px 8px; font-size: 9pt; color: #1b5e20; font-style: italic; }
+
+.mots-adj { display: flex; flex-wrap: wrap; gap: 5px; margin-bottom: 4px; }
+.adj-tag { background: #f3e5f5; border: 1px solid #ce93d8; border-radius: 3px; padding: 3px 8px; font-size: 9pt; color: #4a148c; }
+
+.mots-inv { display: flex; flex-wrap: wrap; gap: 5px; margin-bottom: 8px; }
+.inv-tag { background: #fff3e0; border: 1px solid #ffcc80; border-radius: 3px; padding: 3px 8px; font-size: 9pt; color: #e65100; }
+
+.cat-label { font-size: 8pt; font-weight: bold; color: #555; margin-bottom: 4px; text-transform: uppercase; letter-spacing: .06em; }
+
+/* ---- DICTÉE BILAN ---- */
+.bilan-header { background: #bf360c; color: white; border-radius: 5px 5px 0 0; padding: 6px 10px; display: flex; justify-content: space-between; align-items: center; }
+.bilan-header h2 { font-size: 10pt; font-weight: bold; }
+.bilan-header .bilan-meta { font-size: 7.5pt; opacity: .85; text-align: right; line-height: 1.4; }
+.bilan-body { border: 2px solid #bf360c; border-top: none; border-radius: 0 0 5px 5px; padding: 8px 10px; }
+
+.niveau-legende { display: flex; gap: 10px; margin-bottom: 8px; font-size: 8pt; }
+.niv-leg { display: flex; align-items: center; gap: 4px; }
+.niv-dot { width: 12px; height: 12px; border-radius: 2px; flex-shrink: 0; }
+
+.bilan-texte { font-size: 11pt; line-height: 2.0; }
+
+/* Surlignages niveaux */
+.l1 { background: #fff9c4; border-radius: 2px; padding: 0 1px; }
+.l2 { background: #c8e6c9; border-radius: 2px; padding: 0 1px; }
+.l3 { background: #ffccbc; border-radius: 2px; padding: 0 1px; }
+
+/* Mise en valeur ou/où */
+.ou-bold { font-weight: bold; text-decoration: underline; }
+
+/* Lignes de correction */
+.lignes { margin-top: 12px; }
+.ligne { border-bottom: 1px solid #ccc; height: 24px; margin-bottom: 2px; }
+
+/* Signature */
+.note-bas { font-size: 7.5pt; color: #888; margin-top: 6px; font-style: italic; }
+
+.stars { display: flex; gap: 8px; margin-bottom: 6px; font-size: 8pt; color: #555; }
+.star-box { display: flex; align-items: center; gap: 3px; }
+.star { font-size: 10pt; }
+</style>
+</head>
+<body>
+
+<!-- ==================== PAGE 1 — LISTE DE MOTS ==================== -->
+<div class="page">
+
+<div class="eleve-header">
+  <div class="eleve-title">
+    📋 Orthographe 16 — Mots à apprendre
+    <span class="sub">Semaine du 8 au 12 juin 2026 · CM2 · Dictée vendredi</span>
+  </div>
+  <div class="eleve-info">
+    Nom : <span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span><br>
+    Prénom : <span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span>
+  </div>
+</div>
+
+<!-- RÈGLE -->
+<div class="regle-box">
+  <h3>⚡ La règle à retenir : écrire <em>ou</em> et <em>où</em></h3>
+  <div class="regle-row">
+    <div class="regle-item">
+      <span class="mot ou-acc-c">où</span>
+      <p><strong>Avec accent grave</strong> — adverbe ou pronom de lieu.<br>On peut le remplacer par <strong>là où</strong>.</p>
+      <em>Exemple : Où se passe cette histoire ? (= Là où se passe cette histoire)</em>
+    </div>
+    <div class="regle-item">
+      <span class="mot ou-c">ou</span>
+      <p><strong>Sans accent</strong> — conjonction de coordination. Exprime un choix.<br>On peut le remplacer par <strong>ou bien</strong>.</p>
+      <em>Exemple : À Hawaï ou ailleurs ? (= à Hawaï ou bien ailleurs)</em>
+    </div>
+  </div>
+</div>
+
+<!-- NOMS -->
+<div class="cat-label">Noms (de la dictée Jumanji)</div>
+<div class="mots-grid">
+  <div class="mot-card"><span class="mot-cat">nom</span><div class="mot-fr">le grenier</div></div>
+  <div class="mot-card"><span class="mot-cat">nom</span><div class="mot-fr">la boîte</div></div>
+  <div class="mot-card"><span class="mot-cat">nom</span><div class="mot-fr">une règle</div></div>
+  <div class="mot-card"><span class="mot-cat">nom</span><div class="mot-fr">les dés</div></div>
+  <div class="mot-card"><span class="mot-cat">nom</span><div class="mot-fr">un lion</div></div>
+  <div class="mot-card"><span class="mot-cat">nom</span><div class="mot-fr">un singe</div></div>
+  <div class="mot-card"><span class="mot-cat">nom</span><div class="mot-fr">les meubles</div></div>
+  <div class="mot-card"><span class="mot-cat">nom</span><div class="mot-fr">le calme</div></div>
+</div>
+
+<!-- VERBES -->
+<div class="cat-label" style="margin-top:6px;">Verbes au passé simple</div>
+<div class="mots-verbes">
+  <span class="verbe-tag">découvrirent</span>
+  <span class="verbe-tag">lança</span>
+  <span class="verbe-tag">apparut</span>
+  <span class="verbe-tag">s'installèrent</span>
+  <span class="verbe-tag">avança</span>
+  <span class="verbe-tag">saisit</span>
+  <span class="verbe-tag">disparut</span>
+</div>
+
+<!-- ADJECTIFS -->
+<div class="cat-label" style="margin-top:6px;">Adjectifs</div>
+<div class="mots-adj">
+  <span class="adj-tag">poussiéreux</span>
+  <span class="adj-tag">mystérieux(se)</span>
+  <span class="adj-tag">rugissant</span>
+  <span class="adj-tag">turbulents</span>
+  <span class="adj-tag">courageuse</span>
+</div>
+
+<!-- HOMOPHONES -->
+<div class="cat-label" style="margin-top:6px;">Homophones — point clé de la semaine !</div>
+<div class="mots-inv">
+  <span class="inv-tag" style="background:#e3f2fd;border-color:#90caf9;color:#0d47a1;font-weight:bold;">où (lieu)</span>
+  <span class="inv-tag" style="background:#fff9c4;border-color:#f9a825;color:#e65100;font-weight:bold;">ou (choix)</span>
+  <span class="inv-tag">aussitôt</span>
+  <span class="inv-tag">jamais</span>
+  <span class="inv-tag">enfin</span>
+  <span class="inv-tag">ni … ni</span>
+</div>
+
+<div class="note-bas">💡 Astuce : pour chaque <strong>où</strong>, vérifie que tu peux le remplacer par "là où". Pour chaque <strong>ou</strong>, vérifie que tu peux dire "ou bien".</div>
+
+</div>
+
+<!-- ==================== PAGE 2 — DICTÉE BILAN ==================== -->
+<div class="page">
+
+<div class="eleve-header">
+  <div class="eleve-title">
+    ✏ Dictée bilan — Jumanji
+    <span class="sub">Vendredi 12 juin 2026 · CM2 · Orthographe 16 — <em>ou</em> et <em>où</em></span>
+  </div>
+  <div class="eleve-info">
+    Nom : <span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span><br>
+    Prénom : <span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span>
+  </div>
+</div>
+
+<div class="bilan-header">
+  <h2>Dictée bilan · Thème : Jumanji</h2>
+  <div class="bilan-meta">Orthographe 16 — écrire ou et où<br>3 niveaux selon surligneur</div>
+</div>
+<div class="bilan-body">
+
+  <div class="niveau-legende">
+    <div class="niv-leg"><div class="niv-dot" style="background:#fff9c4; border:1px solid #f9a825;"></div>Niveau 1 — 30 mots (s'arrêter après le 1er paragraphe)</div>
+    <div class="niv-leg"><div class="niv-dot" style="background:#c8e6c9; border:1px solid #43a047;"></div>Niveau 2 — ~66 mots (s'arrêter après le 2ème paragraphe)</div>
+    <div class="niv-leg"><div class="niv-dot" style="background:#ffccbc; border:1px solid #bf360c;"></div>Niveau 3 — ~100 mots (texte entier)</div>
+  </div>
+
+  <div class="bilan-texte">
+    <span class="l1">Judy et Peter découvrirent <em>Jumanji</em> dans le vieux grenier poussiéreux <span class="ou-bold">où</span> ils ne s'aventuraient jamais. Sur la boîte mystérieuse, une règle était gravée en lettres dorées : « Gagnez <span class="ou-bold">ou</span> n'abandonnez jamais ! »</span>
+    <br><br>
+    <span class="l2">Devait-on jouer <span class="ou-bold">ou</span> poser la boîte ? Peter lança les dés. Aussitôt, un lion rugissant apparut là <span class="ou-bold">où</span> les deux enfants se trouvaient. Des singes bruyants et turbulents s'installèrent dans la cuisine <span class="ou-bold">ou</span> sur les meubles du salon.</span>
+    <br><br>
+    <span class="l3">Judy, courageuse, ne voulait ni fuir ni perdre. Elle avança sa pièce là <span class="ou-bold">où</span> le jeu l'indiquait, saisit les dés avec courage et cria enfin : « Jumanji ! » Tout disparut. La maison retrouva son calme.</span>
+  </div>
+
+  <div class="stars" style="margin-top:10px;">
+    <div class="star-box"><span class="star">⭐</span> J'ai bien écrit tous les <u>ou</u> et <u>où</u></div>
+    <div class="star-box"><span class="star">⭐</span> J'ai vérifié les accords</div>
+    <div class="star-box"><span class="star">⭐</span> J'ai relu ma ponctuation</div>
+  </div>
+
+</div>
+
+<!-- LIGNES D'ÉCRITURE -->
+<div class="lignes">
+  <div class="ligne"></div>
+  <div class="ligne"></div>
+  <div class="ligne"></div>
+  <div class="ligne"></div>
+  <div class="ligne"></div>
+  <div class="ligne"></div>
+  <div class="ligne"></div>
+  <div class="ligne"></div>
+  <div class="ligne"></div>
+  <div class="ligne"></div>
+  <div class="ligne"></div>
+  <div class="ligne"></div>
+  <div class="ligne"></div>
+  <div class="ligne"></div>
+  <div class="ligne"></div>
+</div>
+
+<div class="note-bas">📌 Rappel : <strong>où</strong> (accent grave) = lieu · <strong>ou</strong> (sans accent) = choix (remplaçable par "ou bien") · Les <strong>ou/où</strong> soulignés dans le texte modèle ci-dessus sont les points clés à maîtriser.</div>
+
+</div>
+
+</body>
+</html>

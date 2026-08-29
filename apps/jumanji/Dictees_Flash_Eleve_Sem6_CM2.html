@@ -1,0 +1,352 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<title>Dictées Flash Élève — Semaine 6 — CM2</title>
+<style>
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+body { font-family: Arial, sans-serif; background: white; font-size: 10pt; color: #111; }
+
+@media print {
+  .page { width: 210mm; padding: 12mm 14mm; page-break-after: always; }
+  .page:last-child { page-break-after: auto; }
+}
+@media screen {
+  body { background: #ccc; }
+  .page { background: white; max-width: 210mm; margin: 12px auto; padding: 12mm 14mm; box-shadow: 0 2px 10px rgba(0,0,0,.25); }
+}
+
+/* En-tête */
+.page-header {
+  border: 2px solid #7b1fa2;
+  border-radius: 5px;
+  padding: 6px 10px;
+  margin-bottom: 14px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  background: #f8f0ff;
+}
+.page-header h1 { font-size: 11pt; font-weight: bold; color: #4a148c; }
+.page-header .sub { font-size: 8pt; color: #6a1b9a; margin-top: 2px; }
+.page-header .eleve-bloc { text-align: right; font-size: 9pt; color: #555; line-height: 1.9; }
+.page-header .eleve-bloc span { border-bottom: 1px solid #999; display: inline-block; min-width: 90px; }
+
+/* Rappel règle */
+.rappel {
+  display: flex;
+  gap: 8px;
+  margin-bottom: 14px;
+}
+.rappel-item {
+  flex: 1;
+  border-radius: 4px;
+  padding: 4px 8px;
+  font-size: 8.5pt;
+  line-height: 1.4;
+}
+.r-acc { background: #e3f2fd; border: 1.5px solid #90caf9; }
+.r-acc .big { font-size: 14pt; font-weight: bold; color: #0d47a1; display: block; text-align: center; }
+.r-no { background: #fff9c4; border: 1.5px solid #f9a825; }
+.r-no .big { font-size: 14pt; font-weight: bold; color: #e65100; display: block; text-align: center; }
+.rappel-item p { color: #333; }
+.rappel-item em { color: #666; font-size: 8pt; }
+
+/* Consigne */
+.consigne {
+  background: #f5f5f5;
+  border-left: 3px solid #7b1fa2;
+  border-radius: 0 4px 4px 0;
+  padding: 5px 10px;
+  font-size: 8.5pt;
+  color: #444;
+  margin-bottom: 12px;
+  line-height: 1.5;
+}
+.consigne strong { color: #4a148c; }
+
+/* Groupes à dicter (flash 1) */
+.groupes { margin-bottom: 14px; }
+.groupe-item {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin-bottom: 10px;
+}
+.num-badge {
+  background: #7b1fa2;
+  color: white;
+  font-size: 8pt;
+  font-weight: bold;
+  width: 20px;
+  height: 20px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+}
+.ligne-ecr {
+  flex: 1;
+  border-bottom: 1.5px solid #ccc;
+  height: 26px;
+}
+
+/* Phrases à dicter (flash 2) */
+.phrases { margin-bottom: 14px; }
+.phrase-bloc {
+  margin-bottom: 14px;
+}
+.phrase-num { font-size: 8pt; font-weight: bold; color: #7b1fa2; margin-bottom: 3px; }
+.lignes-double .ligne-ecr { margin-bottom: 4px; }
+
+/* Section correction */
+.correction {
+  border: 1.5px dashed #bbb;
+  border-radius: 4px;
+  padding: 7px 10px;
+  margin-top: 12px;
+  background: #fafafa;
+}
+.correction h3 { font-size: 8.5pt; font-weight: bold; color: #555; margin-bottom: 6px; text-transform: uppercase; letter-spacing: .05em; }
+.cor-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 5px; }
+.cor-item {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+.cor-num {
+  background: #4caf50;
+  color: white;
+  font-size: 7.5pt;
+  font-weight: bold;
+  width: 18px;
+  height: 18px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+}
+.cor-txt { font-size: 9pt; font-style: italic; color: #333; }
+.cor-ou { font-weight: bold; }
+.ou-c { color: #e65100; }
+.ou-acc-c { color: #0d47a1; }
+
+/* Score */
+.score-box {
+  display: flex;
+  justify-content: flex-end;
+  gap: 12px;
+  margin-top: 10px;
+}
+.score-item {
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  padding: 4px 10px;
+  text-align: center;
+  font-size: 8pt;
+  color: #666;
+}
+.score-item .val { font-size: 14pt; font-weight: bold; color: #1a1a2e; display: block; }
+
+.sep-decor {
+  text-align: center;
+  font-size: 7.5pt;
+  color: #bbb;
+  letter-spacing: .1em;
+  margin: 12px 0;
+}
+
+.ou-encadre {
+  display: inline-block;
+  border: 1.5px solid #0d47a1;
+  border-radius: 2px;
+  padding: 0 2px;
+  font-weight: bold;
+  color: #0d47a1;
+  background: #e3f2fd;
+}
+.ou-souligne {
+  display: inline-block;
+  border: 1.5px solid #e65100;
+  border-radius: 2px;
+  padding: 0 2px;
+  font-weight: bold;
+  color: #e65100;
+  background: #fff9c4;
+}
+</style>
+</head>
+<body>
+
+<!-- ==================== PAGE 1 — FLASH N°1 ==================== -->
+<div class="page">
+
+  <div class="page-header">
+    <div>
+      <h1>✏ Dictée flash n°1 — Orthographe 16</h1>
+      <div class="sub">Mardi 9 juin 2026 · CM2 · Thème : Lava (Hawaï)</div>
+    </div>
+    <div class="eleve-bloc">
+      Nom : <span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span><br>
+      Prénom : <span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span>
+    </div>
+  </div>
+
+  <div class="rappel">
+    <div class="rappel-item r-acc">
+      <span class="big">où</span>
+      <p>Accent grave → <strong>lieu</strong></p>
+      <em>= là où</em>
+    </div>
+    <div class="rappel-item r-no">
+      <span class="big">ou</span>
+      <p>Sans accent → <strong>choix</strong></p>
+      <em>= ou bien</em>
+    </div>
+  </div>
+
+  <div class="consigne">
+    <strong>Consigne :</strong> Écris les groupes de mots dictés par ton professeur. Fais attention aux accents, aux majuscules et aux accords.
+  </div>
+
+  <div class="groupes">
+    <div class="groupe-item">
+      <div class="num-badge">1</div>
+      <div class="ligne-ecr"></div>
+    </div>
+    <div class="groupe-item">
+      <div class="num-badge">2</div>
+      <div class="ligne-ecr"></div>
+    </div>
+    <div class="groupe-item">
+      <div class="num-badge">3</div>
+      <div class="ligne-ecr"></div>
+    </div>
+    <div class="groupe-item">
+      <div class="num-badge">4</div>
+      <div class="ligne-ecr"></div>
+    </div>
+    <div class="groupe-item">
+      <div class="num-badge">5</div>
+      <div class="ligne-ecr"></div>
+    </div>
+  </div>
+
+  <div class="sep-decor">✦ ✦ correction ✦ ✦</div>
+
+  <div class="correction">
+    <h3>Correction</h3>
+    <div class="cor-grid">
+      <div class="cor-item"><div class="cor-num">1</div><div class="cor-txt">plusieurs volcans</div></div>
+      <div class="cor-item"><div class="cor-num">2</div><div class="cor-txt">une éruption volcanique</div></div>
+      <div class="cor-item"><div class="cor-num">3</div><div class="cor-txt">sept-cents îles</div></div>
+      <div class="cor-item"><div class="cor-num">4</div><div class="cor-txt">des animaux légendaires</div></div>
+      <div class="cor-item"><div class="cor-num">5</div><div class="cor-txt">un chant amoureux</div></div>
+    </div>
+  </div>
+
+  <div class="score-box">
+    <div class="score-item">
+      <span class="val">&nbsp;&nbsp;&nbsp;/ 5&nbsp;&nbsp;&nbsp;</span>
+      groupes corrects
+    </div>
+    <div class="score-item">
+      <span class="val">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span>
+      appréciation
+    </div>
+  </div>
+
+</div>
+
+<!-- ==================== PAGE 2 — FLASH N°2 ==================== -->
+<div class="page">
+
+  <div class="page-header">
+    <div>
+      <h1>✏ Dictée flash n°2 — Orthographe 16</h1>
+      <div class="sub">Jeudi 11 juin 2026 · CM2 · Focus : <em>ou</em> et <em>où</em></div>
+    </div>
+    <div class="eleve-bloc">
+      Nom : <span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span><br>
+      Prénom : <span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span>
+    </div>
+  </div>
+
+  <div class="rappel">
+    <div class="rappel-item r-acc">
+      <span class="big">où</span>
+      <p>Accent grave → <strong>lieu</strong></p>
+      <em>Exemple : Où vas-tu ? (= là où tu vas)</em>
+    </div>
+    <div class="rappel-item r-no">
+      <span class="big">ou</span>
+      <p>Sans accent → <strong>choix</strong></p>
+      <em>Exemple : Le chat ou le chien ? (= ou bien)</em>
+    </div>
+  </div>
+
+  <div class="consigne">
+    <strong>Consigne :</strong> Écris les phrases dictées. Fais particulièrement attention aux mots <em>ou</em> et <em>où</em> — l'un a un accent, l'autre non. Pense aussi à la ponctuation.
+  </div>
+
+  <div class="phrases">
+    <div class="phrase-bloc">
+      <div class="phrase-num">Phrase 1 :</div>
+      <div class="lignes-double">
+        <div class="ligne-ecr"></div>
+        <div class="ligne-ecr"></div>
+      </div>
+    </div>
+    <div class="phrase-bloc">
+      <div class="phrase-num">Phrase 2 :</div>
+      <div class="lignes-double">
+        <div class="ligne-ecr"></div>
+        <div class="ligne-ecr"></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Encadré analyse -->
+  <div style="border:1.5px solid #7b1fa2; border-radius:5px; padding:8px 10px; margin-bottom:12px; background:#f8f0ff;">
+    <div style="font-size:8.5pt; font-weight:bold; color:#4a148c; margin-bottom:6px;">📌 Analyse : entoure le bon mot et explique ton choix</div>
+    <div style="font-size:9pt; line-height:2.2; color:#333;">
+      Dans la phrase 1, j'ai écrit <strong>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</strong> parce que c'est un mot qui exprime ________________<br>
+      Dans la phrase 2, j'ai écrit <strong>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</strong> parce que c'est un mot qui exprime ________________
+    </div>
+  </div>
+
+  <div class="sep-decor">✦ ✦ correction ✦ ✦</div>
+
+  <div class="correction">
+    <h3>Correction</h3>
+    <div style="font-size:10pt; line-height:2.0; margin-bottom:8px;">
+      <strong>Phrase 1 :</strong> <span class="ou-encadre">Où</span> se dressent les volcans de Hawaï ?<br>
+      <strong>Phrase 2 :</strong> Ils sont sur la terre <span class="ou-souligne">ou</span> sous l'océan.
+    </div>
+    <div style="font-size:8pt; color:#555; line-height:1.5;">
+      ● <span class="ou-encadre">Où</span> = accent grave → exprime un <strong>lieu</strong> (là où se dressent les volcans…)<br>
+      ● <span class="ou-souligne">ou</span> = sans accent → exprime un <strong>choix</strong> (sur la terre <em>ou bien</em> sous l'océan)
+    </div>
+  </div>
+
+  <div class="score-box">
+    <div class="score-item">
+      <span class="val">&nbsp;&nbsp;&nbsp;/ 2&nbsp;&nbsp;&nbsp;</span>
+      phrases correctes
+    </div>
+    <div class="score-item">
+      <span class="val">&nbsp;&nbsp;&nbsp;/ 2&nbsp;&nbsp;&nbsp;</span>
+      ou / où corrects
+    </div>
+    <div class="score-item">
+      <span class="val">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span>
+      appréciation
+    </div>
+  </div>
+
+</div>
+
+</body>
+</html>

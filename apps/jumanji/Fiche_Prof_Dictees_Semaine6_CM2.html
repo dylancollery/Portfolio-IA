@@ -1,0 +1,197 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<title>Fiche Professeur — Dictées Semaine 6 — CM2</title>
+<style>
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+body { font-family: Arial, sans-serif; font-size: 9pt; color: #111; background: white; }
+
+@media print {
+  body { font-size: 8.5pt; }
+  .page { page-break-after: always; padding: 10mm 10mm 8mm 10mm; }
+  .page:last-child { page-break-after: auto; }
+}
+@media screen {
+  body { background: #ddd; }
+  .page { background: white; max-width: 210mm; margin: 10px auto; padding: 10mm; box-shadow: 0 2px 8px rgba(0,0,0,.2); }
+}
+
+.doc-title { background: #1a1a2e; color: white; padding: 5px 10px; display: flex; justify-content: space-between; align-items: center; margin-bottom: 7px; border-radius: 4px; }
+.doc-title h1 { font-size: 10pt; font-weight: bold; }
+.doc-title .meta { font-size: 7.5pt; opacity: .8; text-align: right; }
+
+.legend { display: flex; gap: 14px; font-size: 7.5pt; margin-bottom: 7px; flex-wrap: wrap; }
+.leg { display: flex; align-items: center; gap: 3px; }
+.leg-sq { width: 10px; height: 10px; border-radius: 2px; flex-shrink: 0; }
+
+.grid { display: grid; grid-template-columns: 1fr 1fr; gap: 6px; }
+.span2 { grid-column: span 2; }
+
+.card { border: 1px solid #ccc; border-radius: 4px; overflow: hidden; }
+.card-head { padding: 4px 8px; display: flex; justify-content: space-between; align-items: center; }
+.card-head .ref { font-weight: bold; font-size: 9pt; color: white; }
+.card-head .info { font-size: 7pt; color: rgba(255,255,255,.9); text-align: right; line-height: 1.4; }
+.card-body { padding: 6px 8px; }
+
+/* Type colors */
+.flash-h  { background: #7b1fa2; }
+.bilan-h  { background: #bf360c; }
+.retz-h   { background: #558b2f; }
+
+.txt { line-height: 1.6; font-size: 8.5pt; margin-bottom: 5px; }
+.num { font-size: 7pt; color: #999; margin-right: 3px; font-weight: bold; }
+
+.instr { font-size: 7.5pt; color: #555; font-style: italic; border-left: 2px solid #ccc; padding-left: 5px; margin-bottom: 5px; line-height: 1.4; }
+.instr strong { color: #333; font-style: normal; }
+
+.pts { background: #fce4ec; border: 1px solid #f48fb1; border-radius: 3px; padding: 3px 6px; font-size: 7.5pt; margin-top: 4px; color: #880e4f; line-height: 1.5; }
+.pts strong { color: #c62828; }
+
+.sep { border: none; border-top: 1.5px dashed #aaa; margin: 6px 0; }
+
+.tag { font-size: 7pt; font-weight: bold; color: white; border-radius: 2px; padding: 0 4px; margin-right: 4px; display: inline-block; vertical-align: middle; }
+.t-f { background: #7b1fa2; }
+.t-r { background: #558b2f; }
+.t-b { background: #bf360c; }
+
+/* Dictée bilan 3 niveaux */
+.bilan-wrap { margin-bottom: 5px; }
+.niveau { border-radius: 3px; padding: 5px 8px; margin-bottom: 4px; font-size: 8.5pt; line-height: 1.6; }
+.niv-label { font-size: 7pt; font-weight: bold; display: inline-block; border-radius: 2px; padding: 0 5px; margin-bottom: 3px; color: white; }
+.niv1 { background: #fffde7; border: 1px solid #f9a825; }
+.niv1 .niv-label { background: #f9a825; }
+.niv2 { background: #e8f5e9; border: 1px solid #43a047; }
+.niv2 .niv-label { background: #43a047; }
+.niv3 { background: #fbe9e7; border: 1px solid #bf360c; }
+.niv3 .niv-label { background: #bf360c; }
+.niv-count { font-size: 7pt; color: #777; margin-left: 4px; }
+
+.key { font-weight: bold; }
+.it { font-style: italic; }
+
+.ou-box { display: inline-block; background: #fff9c4; border: 1px solid #f9a825; border-radius: 2px; padding: 0 2px; font-weight: bold; font-size: 8.5pt; }
+.ou-acc { display: inline-block; background: #e1f5fe; border: 1px solid #0288d1; border-radius: 2px; padding: 0 2px; font-weight: bold; font-size: 8.5pt; }
+
+.footer { font-size: 7.5pt; color: #888; text-align: center; margin-top: 8px; }
+</style>
+</head>
+<body>
+
+<div class="page">
+
+<div class="doc-title">
+  <h1>📋 FICHE PROFESSEUR — Dictées · Semaine 6 · CM2 · 8–12 juin 2026</h1>
+  <div class="meta">Orthographe 16 : écrire <em>ou</em> et <em>où</em> · Flash ×2 + Bilan Jumanji<br>Imprimer recto simple</div>
+</div>
+
+<div class="legend">
+  <div class="leg"><div class="leg-sq" style="background:#558b2f"></div> FLASH RETZ (lire 2× par phrase)</div>
+  <div class="leg"><div class="leg-sq" style="background:#bf360c"></div> BILAN (lire par paragraphe, pause entre chaque)</div>
+  <div class="leg"><div class="leg-sq" style="background:#f9a825"></div> Niveau 1 — 30 mots</div>
+  <div class="leg"><div class="leg-sq" style="background:#43a047"></div> Niveau 2 — ~66 mots</div>
+  <div class="leg"><div class="leg-sq" style="background:#bf360c"></div> Niveau 3 — ~100 mots</div>
+  <div class="leg"><div class="leg-sq" style="background:#fff9c4; border:1px solid #f9a825"></div> <span class="ou-box">ou</span> conjonction (choix)</div>
+  <div class="leg"><div class="leg-sq" style="background:#e1f5fe; border:1px solid #0288d1"></div> <span class="ou-acc">où</span> adverbe (lieu)</div>
+</div>
+
+<div class="grid">
+
+  <!-- DICTÉE FLASH N°1 -->
+  <div class="card">
+    <div class="card-head retz-h">
+      <span class="ref">FLASH RETZ n°1 &nbsp;<span class="tag t-r">ORTHO 16</span></span>
+      <span class="info">Mardi 9 juin · 10 min<br>Correction immédiate au tableau</span>
+    </div>
+    <div class="card-body">
+      <div class="instr"><strong>Lecture :</strong> Dicter les groupes de mots séparément, lentement. Répéter 2 fois chaque groupe. Marquer une pause de 3 secondes. Pas de mise en phrase complète — ce sont des groupes nominaux et syntagmes.</div>
+      <div class="txt">
+        plusieurs <strong>volcans</strong> —<br>
+        une <strong>éruption</strong> <strong>volcanique</strong> —<br>
+        sept-cents <strong>îles</strong> —<br>
+        des animaux légendaires —<br>
+        un chant <strong>amoureux</strong>
+      </div>
+      <div class="pts">
+        <strong>Points de vigilance :</strong> plusieurs (sans -s final au pluriel de volcans ✓) · éruption (pas de h) · volcanique (-que) · sept-cents îles (tiret + s à cents + accent î) · légendaires (accord masc. plur.) · amoureux (accord masc. sing.) · <strong>Rappel oral avant :</strong> "ou ou où ?" — aujourd'hui c'est des groupes de mots, pas de ou/où. Ce sera dans la flash n°2 !
+      </div>
+    </div>
+  </div>
+
+  <!-- DICTÉE FLASH N°2 -->
+  <div class="card">
+    <div class="card-head retz-h">
+      <span class="ref">FLASH RETZ n°2 &nbsp;<span class="tag t-r">ORTHO 16</span></span>
+      <span class="info">Jeudi 11 juin · 10 min<br>Focus ou / où — correction collective</span>
+    </div>
+    <div class="card-body">
+      <div class="instr"><strong>Lecture :</strong> Lire la phrase 2 fois en entier. Marquer une pause après le point d'interrogation. Puis relire une 3ème fois mot à mot pour permettre la vérification. Écrire les 2 phrases séparément au tableau après la dictée.</div>
+      <div class="txt">
+        <span class="num">1.</span><span class="ou-acc">Où</span> se dressent les <strong>volcans</strong> de <strong>Hawaï</strong> ?<br>
+        <span class="num">2.</span>Ils sont sur la <strong>terre</strong> <span class="ou-box">ou</span> sous l'<strong>océan</strong>.
+      </div>
+      <div class="pts">
+        <strong>Points de vigilance :</strong> <span class="ou-acc">Où</span> (accent grave, début de phrase interrogative = lieu) · se dressent (accord 3ème pers. plur.) · Hawaï (tréma sur i) · <span class="ou-box">ou</span> (sans accent = choix entre deux choses, remplaçable par "ou bien") · l'océan (élision)<br>
+        <strong>Correction :</strong> Demander à 2 élèves : "Pourquoi Où avec accent ? / Pourquoi ou sans accent ici ?"
+      </div>
+    </div>
+  </div>
+
+  <!-- DICTÉE BILAN JUMANJI -->
+  <div class="card span2">
+    <div class="card-head bilan-h">
+      <span class="ref">DICTÉE BILAN — Jumanji &nbsp;<span class="tag t-b">CRÉÉE SUR THÈME JUMANJI</span></span>
+      <span class="info">Vendredi 12 juin · 20 min · Ortho 16 — ou / où · 3 niveaux : 30 / ~66 / ~100 mots</span>
+    </div>
+    <div class="card-body">
+      <div class="instr">
+        <strong>Déroulement :</strong> (1) Lire le texte complet 1 fois (les élèves écoutent sans écrire). (2) Dicter paragraphe par paragraphe avec une pause entre chaque. (3) Relire chaque phrase 2 fois lentement. (4) Relecture globale finale — 3 min. (5) Correction collective au tableau.<br>
+        <strong>Différenciation :</strong> Niveau 1 (jaune) = s'arrête après le 1er paragraphe · Niveau 2 (vert) = s'arrête après le 2ème · Niveau 3 (rouge) = texte complet.
+      </div>
+
+      <div class="bilan-wrap">
+
+        <div class="niveau niv1">
+          <div><span class="niv-label">NIVEAU 1</span><span class="niv-count">30 mots</span></div>
+          <span class="it">Judy et Peter découvrirent</span> <em>Jumanji</em> <span class="it">dans le vieux grenier poussiéreux</span> <span class="ou-acc">où</span> <span class="it">ils ne s'aventuraient jamais. Sur la boîte mystérieuse, une règle était gravée en lettres dorées : « Gagnez</span> <span class="ou-box">ou</span> <span class="it">n'abandonnez jamais ! »</span>
+        </div>
+
+        <div class="niveau niv2">
+          <div><span class="niv-label">NIVEAU 2</span><span class="niv-count">+ ~36 mots → ~66 mots</span></div>
+          <span class="it">Devait-on jouer</span> <span class="ou-box">ou</span> <span class="it">poser la boîte ? Peter lança les dés. Aussitôt, un lion rugissant apparut là</span> <span class="ou-acc">où</span> <span class="it">les deux enfants se trouvaient. Des singes bruyants et turbulents s'installèrent dans la cuisine</span> <span class="ou-box">ou</span> <span class="it">sur les meubles du salon.</span>
+        </div>
+
+        <div class="niveau niv3">
+          <div><span class="niv-label">NIVEAU 3</span><span class="niv-count">+ ~33 mots → ~100 mots</span></div>
+          <span class="it">Judy, courageuse, ne voulait ni fuir ni perdre. Elle avança sa pièce là</span> <span class="ou-acc">où</span> <span class="it">le jeu l'indiquait, saisit les dés avec courage et cria enfin : « Jumanji ! » Tout disparut. La maison retrouva son calme.</span>
+        </div>
+
+      </div>
+
+      <div class="pts">
+        <strong>Points de vigilance :</strong>
+        <span class="ou-acc">où</span> (×3, accent grave, lieu) vs <span class="ou-box">ou</span> (×3, sans accent, choix) ← <strong>point principal de la dictée</strong> ·
+        découvrirent (passé simple, -irent) ·
+        poussiéreux (-eux, masc. sing.) ·
+        mystérieuse (-euse, fém.) ·
+        gravée (accord fém. avec « règle ») ·
+        lança (passé simple, -ça) ·
+        rugissant (-ant, invariable) ·
+        turbulents (accord masc. plur. avec « singes ») ·
+        s'installèrent (-èrent, passé simple) ·
+        courageuse (fém.) ·
+        avança · saisit · disparut (passé simple irréguliers) ·
+        guillemets + point d'exclamation à l'intérieur
+      </div>
+    </div>
+  </div>
+
+</div>
+
+<div class="footer">
+  📋 Fiche Professeur — Dictées Semaine 6 · CM2 P5 · 2025-2026 · Orthographe 16 RETZ + Dictée bilan thème Jumanji (Van Allsburg)
+</div>
+
+</div>
+</body>
+</html>

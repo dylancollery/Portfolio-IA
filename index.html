@@ -1,0 +1,1077 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>Dylan Collery — Ingénieur pédagogique IA</title>
+<meta name="description" content="Portfolio de Dylan Collery, professeur des écoles devenu ingénieur pédagogique spécialisé IA. Projets, CV, contact."/>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400;9..144,500;9..144,600;9..144,700&family=Inter:wght@400;500;600;700;800&family=Caveat:wght@600;700&display=swap" rel="stylesheet">
+<style>
+/* ============================================================
+   TOKENS
+   ============================================================ */
+:root{
+  --bg:#14231b; --bg-2:#1b2e23; --bg-3:#22392b;
+  --line:rgba(244,241,232,.13); --line-strong:rgba(244,241,232,.22);
+  --chalk:#f4f1e6; --chalk-dim:#a9b8ab; --chalk-faint:#7c8c7e;
+  --red:#e2564c; --red-dim:rgba(226,86,76,.15); --red-line:rgba(226,86,76,.4);
+  --gold:#e3bf68; --gold-dim:rgba(227,191,104,.14);
+  --radius:14px; --radius-sm:9px;
+  --serif:'Fraunces',Georgia,'Times New Roman',serif;
+  --sans:'Inter',-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;
+  --hand:'Caveat',cursive;
+  --ease:cubic-bezier(.22,.68,0,1);
+}
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+html{scroll-behavior:smooth}
+@media (prefers-reduced-motion:reduce){ html{scroll-behavior:auto} }
+body{
+  font-family:var(--sans); background:var(--bg); color:var(--chalk);
+  line-height:1.6; overflow-x:hidden; position:relative;
+}
+body::before{
+  content:''; position:fixed; inset:0; pointer-events:none; z-index:1; opacity:.05;
+  background-image:radial-gradient(rgba(244,241,232,.9) .6px, transparent .6px);
+  background-size:3px 3px;
+}
+a{color:var(--gold); text-decoration:none}
+a:hover{text-decoration:underline}
+::selection{background:var(--red); color:#fff}
+:focus-visible{outline:2px solid var(--gold); outline-offset:3px; border-radius:4px}
+img{max-width:100%; display:block}
+
+.eyebrow{
+  font-family:var(--sans); font-size:.72rem; font-weight:700; letter-spacing:.14em;
+  text-transform:uppercase; color:var(--gold);
+}
+.reveal{opacity:1; transform:none}
+.js-anim .reveal{opacity:0; transform:translateY(22px); transition:opacity .7s var(--ease), transform .7s var(--ease)}
+.js-anim .reveal.in{opacity:1; transform:translateY(0)}
+@media (prefers-reduced-motion:reduce){ .js-anim .reveal{opacity:1; transform:none; transition:none} }
+
+/* ============================================================
+   NAV
+   ============================================================ */
+nav{
+  position:fixed; top:0; left:0; right:0; z-index:200;
+  display:flex; align-items:center; justify-content:space-between;
+  padding:.9rem 2rem; background:rgba(20,35,27,.82); backdrop-filter:blur(14px);
+  border-bottom:1px solid var(--line);
+}
+.nav-mark{display:flex; align-items:center; gap:.6rem}
+.nav-mark .badge{
+  width:30px; height:30px; border-radius:8px; background:var(--red);
+  display:flex; align-items:center; justify-content:center;
+  font-family:var(--serif); font-weight:700; font-size:.85rem; color:var(--bg);
+  transform:rotate(-4deg);
+}
+.nav-mark .name{font-family:var(--serif); font-weight:600; font-size:1rem; color:var(--chalk)}
+.nav-links{display:flex; gap:.15rem; list-style:none; flex-wrap:wrap}
+.nav-links a{color:var(--chalk-dim); font-size:.86rem; padding:.45rem .75rem; border-radius:6px; transition:all .2s}
+.nav-links a:hover{color:var(--chalk); background:rgba(244,241,232,.06); text-decoration:none}
+.nav-links a.active{color:var(--chalk); background:rgba(244,241,232,.08)}
+.nav-links a.active::after{content:''; display:block; height:2px; margin-top:2px; background:var(--red); border-radius:2px}
+.nav-links a.cv-link{color:var(--bg); background:var(--gold); font-weight:700}
+.nav-links a.cv-link:hover{background:#ecd08a}
+.nav-links a.cv-link.active::after{background:var(--bg)}
+
+/* ============================================================
+   BUTTONS
+   ============================================================ */
+.btn{
+  padding:.75rem 1.5rem; border-radius:8px; font-size:.9rem; font-weight:700;
+  cursor:pointer; border:1px solid transparent; transition:transform .15s var(--ease), box-shadow .15s, border-color .15s, background .15s, color .15s;
+  display:inline-flex; align-items:center; gap:.5rem; font-family:var(--sans);
+}
+.btn:hover{transform:translateY(-2px); text-decoration:none}
+.btn-primary{background:var(--red); color:#fff2f1; box-shadow:0 6px 24px rgba(226,86,76,.28)}
+.btn-primary:hover{box-shadow:0 10px 30px rgba(226,86,76,.4)}
+.btn-outline{background:transparent; color:var(--chalk); border-color:var(--line-strong)}
+.btn-outline:hover{border-color:var(--gold); color:var(--gold)}
+.btn-ghost{background:var(--bg-3); color:var(--chalk-dim); border-color:var(--line)}
+.btn-ghost:hover{color:var(--chalk); border-color:var(--line-strong)}
+.btn-sm{padding:.5rem 1rem; font-size:.8rem; border-radius:7px}
+
+/* ============================================================
+   HERO
+   ============================================================ */
+.hero{
+  min-height:100vh; display:flex; flex-direction:column; align-items:flex-start;
+  justify-content:center; padding:7rem 2rem 4rem; max-width:920px; margin:0 auto;
+  position:relative;
+}
+.hero-eyebrow{margin-bottom:1.4rem}
+.hero-name{
+  font-family:var(--serif); font-weight:600; font-size:clamp(2.1rem,6vw,3.8rem);
+  letter-spacing:-.01em; line-height:1.02; margin-bottom:1.6rem;
+}
+.hero-role-eyebrow{
+  font-family:var(--sans); font-size:.92rem; font-weight:600; color:var(--chalk-faint);
+  margin-bottom:.55rem; letter-spacing:.01em;
+}
+.hero-role{
+  font-family:var(--serif); font-weight:600; font-size:clamp(1.9rem,4.8vw,3rem);
+  color:var(--red); letter-spacing:-.01em; line-height:1.16; margin-bottom:1.8rem;
+}
+.hero-role.typing::after{
+  content:''; display:inline-block; width:2px; height:.85em; margin-left:3px;
+  background:var(--gold); vertical-align:-.1em; animation:blink 1s step-end infinite;
+}
+@keyframes blink{ 50%{opacity:0} }
+@media (prefers-reduced-motion:reduce){ .hero-role.typing::after{animation:none; opacity:0} }
+.hero-sub{
+  font-size:1.08rem; color:var(--chalk-dim); max-width:560px; margin-bottom:2.4rem;
+}
+.hero-cta{display:flex; gap:1rem; flex-wrap:wrap}
+.hero-scroll{
+  position:absolute; bottom:2.2rem; left:2rem; font-size:.78rem; color:var(--chalk-faint);
+  display:flex; align-items:center; gap:.5rem;
+}
+.hero-scroll .line{width:26px; height:1px; background:var(--chalk-faint)}
+
+/* ============================================================
+   SECTIONS (base)
+   ============================================================ */
+section{padding:5.5rem 2rem}
+.section-inner{max-width:1080px; margin:0 auto}
+.section-head{margin-bottom:2.8rem; max-width:620px}
+.section-title{
+  font-family:var(--serif); font-weight:600; font-size:clamp(1.7rem,3.4vw,2.4rem);
+  margin:.5rem 0 .8rem; letter-spacing:-.01em;
+}
+.section-desc{color:var(--chalk-dim); font-size:.98rem}
+
+#projets{background:var(--bg)}
+#competences{background:var(--bg-2)}
+#impact{background:var(--bg)}
+#apprendre{background:var(--bg-2)}
+#cv{background:var(--bg)}
+#contact{background:var(--bg-2)}
+
+/* ============================================================
+   FICHES (flagship case studies)
+   ============================================================ */
+.fiches{display:flex; flex-direction:column; gap:2.4rem; margin-bottom:4rem}
+.fiche{
+  position:relative; background:var(--bg-2); border:1px solid var(--line);
+  border-radius:var(--radius); padding:2.2rem 2rem 2.2rem 2.4rem; overflow:hidden;
+}
+.fiche::before{
+  content:''; position:absolute; left:0; top:0; bottom:0; width:4px; background:var(--red); opacity:.55;
+}
+.fiche-top{display:flex; align-items:flex-start; justify-content:space-between; gap:1.5rem; flex-wrap:wrap; margin-bottom:1.4rem}
+.fiche-kicker{display:flex; align-items:center; gap:.7rem; margin-bottom:.55rem}
+.fiche-icon{font-size:1.5rem; line-height:1}
+.fiche h3{
+  font-family:var(--serif); font-weight:600; font-size:clamp(1.25rem,2.6vw,1.65rem);
+  line-height:1.28; max-width:34ch;
+}
+.fiche-stamp{
+  flex-shrink:0; font-family:var(--hand); font-size:1.05rem; color:var(--gold);
+  border:1.5px solid var(--gold-dim); border-radius:999px; padding:.3rem 1rem;
+  transform:rotate(-3deg); white-space:nowrap;
+}
+.fiche-grid{
+  display:grid; grid-template-columns:1fr 1fr; gap:1.5rem 2rem; margin-bottom:1.6rem;
+}
+@media (max-width:760px){ .fiche-grid{grid-template-columns:1fr} }
+.fiche-block .label{
+  font-size:.68rem; font-weight:700; letter-spacing:.1em; text-transform:uppercase;
+  color:var(--gold); margin-bottom:.4rem; display:block;
+}
+.fiche-block p{font-size:.9rem; color:var(--chalk-dim); line-height:1.62}
+.fiche-foot{display:flex; align-items:center; justify-content:space-between; gap:1rem; flex-wrap:wrap; padding-top:1.4rem; border-top:1px dashed var(--line)}
+.fiche-tools{display:flex; flex-wrap:wrap; gap:.4rem}
+.pill{font-size:.72rem; background:var(--bg-3); border:1px solid var(--line); border-radius:999px; padding:.22rem .7rem; color:var(--chalk-dim)}
+.fiche-actions{display:flex; gap:.6rem; flex-wrap:wrap}
+
+/* ============================================================
+   AUTRES RÉALISATIONS (secondary grid)
+   ============================================================ */
+.secondary-head{display:flex; align-items:baseline; justify-content:space-between; gap:1rem; flex-wrap:wrap; margin-bottom:1.5rem}
+.secondary-head h3{font-family:var(--serif); font-weight:600; font-size:1.25rem}
+.secondary-count{font-size:.8rem; color:var(--chalk-faint)}
+.projects-grid{display:grid; grid-template-columns:repeat(auto-fill,minmax(270px,1fr)); gap:1.1rem}
+.project-card{
+  background:var(--bg-2); border:1px solid var(--line); border-radius:var(--radius-sm);
+  padding:1.3rem; transition:border-color .2s, transform .2s; display:flex; flex-direction:column;
+}
+.project-card:hover{border-color:var(--gold-dim); transform:translateY(-3px)}
+.project-icon{font-size:1.4rem; margin-bottom:.6rem}
+.project-tag{display:inline-block; font-size:.66rem; font-weight:700; letter-spacing:.03em; padding:.16rem .55rem; border-radius:999px; margin-bottom:.55rem; width:fit-content}
+.tag-blue{background:rgba(163,196,222,.14); color:#a3c4de}
+.tag-purple{background:rgba(199,163,222,.14); color:#c7a3de}
+.tag-green{background:var(--gold-dim); color:var(--gold)}
+.tag-orange{background:var(--red-dim); color:#f0968f}
+.project-card h4{font-family:var(--serif); font-size:.98rem; font-weight:600; margin-bottom:.45rem; line-height:1.3}
+.project-card p{font-size:.82rem; color:var(--chalk-dim); line-height:1.55; flex-grow:1}
+.project-tools{display:flex; flex-wrap:wrap; gap:.32rem; margin-top:.8rem}
+.tool-badge{font-size:.66rem; background:var(--bg-3); border:1px solid var(--line); border-radius:6px; padding:.14rem .45rem; color:var(--chalk-faint)}
+.project-actions{display:flex; gap:.5rem; margin-top:1rem; flex-wrap:wrap}
+.btn-mini{background:var(--bg-3); border:1px solid var(--line); color:var(--chalk-dim); border-radius:7px; padding:.4rem .75rem; font-size:.74rem; font-weight:600; cursor:pointer; transition:all .2s; text-decoration:none; display:inline-block; font-family:var(--sans)}
+.btn-mini:hover{color:var(--chalk); border-color:var(--line-strong); text-decoration:none}
+.btn-mini.accent{color:var(--gold); border-color:var(--gold-dim)}
+.btn-mini.accent:hover{background:var(--gold-dim)}
+.project-preview{margin-top:.75rem; border-radius:7px; overflow:hidden; border:1px solid var(--line); aspect-ratio:16/9; background:var(--bg-3)}
+.project-preview img{width:100%; height:100%; object-fit:cover}
+.add-project-card{border:1.5px dashed var(--line-strong); background:transparent; cursor:pointer; display:flex; flex-direction:column; align-items:center; justify-content:center; min-height:180px; gap:.6rem; color:var(--chalk-faint); font-size:.85rem}
+.add-project-card:hover{border-color:var(--gold); color:var(--gold)}
+.add-project-card span:first-child{font-size:1.7rem}
+
+/* ============================================================
+   COMPÉTENCES
+   ============================================================ */
+.skills-grid{display:grid; grid-template-columns:repeat(auto-fill,minmax(220px,1fr)); gap:1rem}
+.skill-category{background:var(--bg-3); border:1px solid var(--line); border-radius:var(--radius-sm); padding:1.3rem}
+.skill-category h4{font-family:var(--serif); font-size:.92rem; font-weight:600; color:var(--gold); margin-bottom:.75rem}
+.skill-list{list-style:none}
+.skill-list li{font-size:.85rem; color:var(--chalk-dim); padding:.32rem 0; border-bottom:1px solid var(--line); display:flex; align-items:center; gap:.5rem}
+.skill-list li:last-child{border-bottom:none}
+.skill-list li::before{content:'—'; color:var(--red); flex-shrink:0}
+
+/* ============================================================
+   IMPACT
+   ============================================================ */
+.stats-row{display:grid; grid-template-columns:repeat(auto-fit,minmax(140px,1fr)); gap:1px; background:var(--line); border:1px solid var(--line); border-radius:var(--radius); overflow:hidden; margin-bottom:3rem}
+.stat-card{background:var(--bg-2); padding:1.6rem 1rem; text-align:center}
+.stat-number{font-family:var(--serif); font-size:2.3rem; font-weight:600; color:var(--red); line-height:1; margin-bottom:.4rem}
+.stat-label{font-size:.76rem; color:var(--chalk-faint)}
+.apport-title{font-family:var(--serif); font-size:1.15rem; font-weight:600; margin-bottom:1.3rem}
+.apport-grid{display:grid; grid-template-columns:repeat(auto-fill,minmax(250px,1fr)); gap:1rem}
+.apport-card{background:var(--bg-2); border:1px solid var(--line); border-radius:var(--radius-sm); padding:1.25rem; display:flex; gap:.9rem; align-items:flex-start}
+.apport-icon{font-size:1.35rem; flex-shrink:0}
+.apport-card h4{font-size:.9rem; font-weight:700; margin-bottom:.3rem}
+.apport-card p{font-size:.8rem; color:var(--chalk-dim)}
+
+/* ============================================================
+   APPRENDRE
+   ============================================================ */
+.learn-grid{display:grid; grid-template-columns:repeat(auto-fill,minmax(250px,1fr)); gap:1rem}
+.learn-card{background:var(--bg-3); border:1px solid var(--line); border-radius:var(--radius-sm); padding:1.2rem; position:relative}
+.learn-level{position:absolute; top:1rem; right:1rem; font-size:.62rem; font-weight:700; padding:.15rem .5rem; border-radius:999px; text-transform:uppercase; letter-spacing:.05em}
+.level-dispo{background:var(--gold-dim); color:var(--gold)}
+.level-prochain{background:rgba(163,196,222,.14); color:#a3c4de}
+.level-avance{background:var(--red-dim); color:#f0968f}
+.learn-card h4{font-family:var(--serif); font-size:.92rem; font-weight:600; margin-bottom:.4rem; padding-right:4rem}
+.learn-card p{font-size:.8rem; color:var(--chalk-dim); margin-bottom:.85rem}
+.learn-tools{display:flex; flex-wrap:wrap; gap:.3rem}
+.learn-tool{font-size:.66rem; background:var(--bg-2); border:1px solid var(--line); border-radius:5px; padding:.12rem .45rem; color:var(--chalk-faint)}
+
+/* ============================================================
+   CV
+   ============================================================ */
+.cv-wrap{display:grid; grid-template-columns:auto 1fr; gap:2.4rem; align-items:center; background:var(--bg-2); border:1px solid var(--line); border-radius:var(--radius); padding:2.4rem; margin-bottom:1.6rem}
+@media (max-width:680px){ .cv-wrap{grid-template-columns:1fr; text-align:center; justify-items:center} }
+.cv-photo{width:120px; height:120px; border-radius:50%; overflow:hidden; position:relative; flex-shrink:0; border:2px solid var(--line-strong)}
+.cv-photo img{width:100%; height:100%; object-fit:cover; filter:grayscale(1) contrast(1.08) brightness(.95)}
+.cv-photo::after{content:''; position:absolute; inset:0; background:linear-gradient(155deg, rgba(226,86,76,.35), rgba(20,35,27,.55) 70%); mix-blend-mode:color}
+.cv-tag{display:inline-flex; align-items:center; gap:.4rem; background:var(--gold-dim); color:var(--gold); border-radius:999px; padding:.22rem .75rem; font-size:.72rem; font-weight:700; margin-bottom:.7rem}
+.cv-wrap h3{font-family:var(--serif); font-size:1.35rem; font-weight:600; margin-bottom:.5rem}
+.cv-wrap > div > p{color:var(--chalk-dim); font-size:.92rem; margin-bottom:1.3rem; max-width:52ch}
+.cv-actions{display:flex; gap:.75rem; flex-wrap:wrap}
+@media (max-width:680px){ .cv-actions{justify-content:center} }
+.cv-preview{border-radius:var(--radius-sm); overflow:hidden; border:1px solid var(--line); max-width:460px; margin:0 auto; background:#fff; box-shadow:0 20px 50px rgba(0,0,0,.35)}
+.cv-preview img{width:100%; display:block}
+
+/* ============================================================
+   CONTACT
+   ============================================================ */
+.contact-box{background:var(--bg-3); border:1px solid var(--line); border-radius:var(--radius); padding:2.6rem; text-align:center; max-width:520px; margin:0 auto}
+.contact-box h3{font-family:var(--serif); font-size:1.4rem; font-weight:600; margin-bottom:.7rem}
+.contact-box p{color:var(--chalk-dim); margin-bottom:1.6rem; font-size:.92rem}
+.contact-email{display:inline-flex; align-items:center; gap:.55rem; font-size:.95rem; font-weight:700; color:var(--bg); background:var(--gold); border-radius:8px; padding:.75rem 1.5rem}
+.contact-email:hover{background:#ecd08a; text-decoration:none}
+
+/* ============================================================
+   FOOTER
+   ============================================================ */
+footer{background:var(--bg); border-top:1px solid var(--line); padding:2rem; text-align:center; font-size:.8rem; color:var(--chalk-faint)}
+footer strong{color:var(--chalk-dim)}
+
+/* ============================================================
+   MODALS
+   ============================================================ */
+.modal-overlay{display:none; position:fixed; inset:0; z-index:500; background:rgba(10,17,13,.9); backdrop-filter:blur(8px); align-items:center; justify-content:center; padding:1.5rem}
+.modal-overlay.open{display:flex}
+.modal-box{background:var(--bg-2); border:1px solid var(--line-strong); border-radius:var(--radius); width:100%; max-width:760px; overflow:hidden}
+.modal-header{display:flex; align-items:center; justify-content:space-between; padding:1rem 1.25rem; border-bottom:1px solid var(--line)}
+.modal-title{font-family:var(--serif); font-size:1rem; font-weight:600}
+.modal-close{background:none; border:none; color:var(--chalk-dim); font-size:1.3rem; cursor:pointer; padding:.2rem .5rem; border-radius:6px}
+.modal-close:hover{color:var(--chalk); background:rgba(244,241,232,.08)}
+.modal-video-wrap{background:#000; aspect-ratio:16/9}
+.modal-video-wrap video{width:100%; height:100%; display:block}
+.video-list{padding:.75rem; display:flex; flex-wrap:wrap; gap:.5rem; border-top:1px solid var(--line)}
+.video-thumb{padding:.45rem .8rem; border-radius:7px; font-size:.78rem; background:var(--bg-3); border:1px solid var(--line); cursor:pointer; color:var(--chalk-dim); transition:all .2s; font-family:var(--sans)}
+.video-thumb:hover, .video-thumb.active{background:var(--gold-dim); border-color:var(--gold); color:var(--gold)}
+
+/* ===== VISIONNEUSE DE PROJET (in-page) ===== */
+.app-modal .modal-box{max-width:1120px; width:96vw; display:flex; flex-direction:column}
+.app-modal-header-actions{display:flex; align-items:center; gap:.6rem}
+.app-modal-frame-wrap{background:#fff; height:78vh}
+.app-modal-frame-wrap iframe{width:100%; height:100%; border:none; display:block}
+@media (max-width:640px){ .app-modal-frame-wrap{height:72vh} }
+
+/* ============================================================
+   ADMIN PANEL
+   ============================================================ */
+#admin-btn{position:fixed; bottom:1.5rem; right:1.5rem; z-index:300; width:44px; height:44px; border-radius:50%; background:var(--bg-3); border:1px solid var(--line-strong); color:var(--chalk-dim); font-size:1.1rem; cursor:pointer; display:flex; align-items:center; justify-content:center; box-shadow:0 4px 16px rgba(0,0,0,.4)}
+#admin-btn:hover{border-color:var(--gold); color:var(--gold); transform:rotate(25deg)}
+.admin-overlay{display:none; position:fixed; inset:0; z-index:400; background:rgba(0,0,0,.7)}
+.admin-overlay.open{display:block}
+.admin-panel{position:fixed; right:0; top:0; bottom:0; z-index:401; width:420px; max-width:100vw; background:var(--bg-2); border-left:1px solid var(--line-strong); display:flex; flex-direction:column; transform:translateX(100%); transition:transform .3s var(--ease)}
+.admin-panel.open{transform:translateX(0)}
+.admin-header{padding:1.25rem; border-bottom:1px solid var(--line); display:flex; align-items:center; justify-content:space-between}
+.admin-header h2{font-family:var(--serif); font-size:1.05rem; font-weight:600}
+.admin-close{background:none; border:none; color:var(--chalk-dim); font-size:1.2rem; cursor:pointer}
+.admin-body{flex:1; overflow-y:auto; padding:1.25rem; display:flex; flex-direction:column; gap:.7rem}
+.admin-project-item{background:var(--bg-3); border:1px solid var(--line); border-radius:10px; padding:1rem; display:flex; align-items:flex-start; gap:.7rem}
+.admin-project-item .proj-icon{font-size:1.3rem; flex-shrink:0}
+.admin-project-item .proj-info{flex:1; min-width:0}
+.admin-project-item .proj-info strong{font-size:.85rem; display:block; white-space:nowrap; overflow:hidden; text-overflow:ellipsis}
+.admin-project-item .proj-info span{font-size:.72rem; color:var(--chalk-faint)}
+.admin-project-item .proj-actions{display:flex; gap:.35rem; flex-shrink:0}
+.btn-edit,.btn-del{padding:.3rem .55rem; border-radius:6px; font-size:.72rem; cursor:pointer; border:1px solid var(--line); background:var(--bg-2); color:var(--chalk-dim)}
+.btn-edit:hover{border-color:var(--gold); color:var(--gold)}
+.btn-del:hover{border-color:var(--red); color:var(--red)}
+.admin-footer{padding:1rem 1.25rem; border-top:1px solid var(--line)}
+.btn-add-project{width:100%; padding:.7rem; border-radius:8px; background:var(--red); color:#fff; border:none; font-size:.88rem; font-weight:700; cursor:pointer; font-family:var(--sans)}
+
+/* ADMIN FORM */
+.form-overlay{display:none; position:fixed; inset:0; z-index:600; background:rgba(0,0,0,.8); align-items:center; justify-content:center; padding:1.5rem}
+.form-overlay.open{display:flex}
+.form-box{background:var(--bg-2); border:1px solid var(--line-strong); border-radius:var(--radius); width:100%; max-width:500px; max-height:90vh; overflow-y:auto}
+.form-header{padding:1.25rem; border-bottom:1px solid var(--line); display:flex; align-items:center; justify-content:space-between; position:sticky; top:0; background:var(--bg-2)}
+.form-header h3{font-family:var(--serif); font-size:.98rem; font-weight:600}
+.form-body{padding:1.25rem; display:flex; flex-direction:column; gap:1rem}
+.form-group{display:flex; flex-direction:column; gap:.4rem}
+.form-group label{font-size:.8rem; font-weight:600; color:var(--chalk-dim)}
+.form-group input,.form-group textarea,.form-group select{background:var(--bg-3); border:1px solid var(--line); border-radius:8px; padding:.6rem .75rem; color:var(--chalk); font-size:.88rem; font-family:inherit; outline:none; width:100%}
+.form-group input:focus,.form-group textarea:focus,.form-group select:focus{border-color:var(--gold)}
+.form-group textarea{resize:vertical; min-height:80px}
+.form-hint{font-size:.72rem; color:var(--chalk-faint); margin-top:.2rem}
+.form-footer{padding:1rem 1.25rem; border-top:1px solid var(--line); display:flex; gap:.75rem; justify-content:flex-end}
+.btn-cancel{padding:.6rem 1.1rem; border-radius:7px; background:transparent; border:1px solid var(--line); color:var(--chalk-dim); cursor:pointer; font-size:.88rem}
+.btn-save{padding:.6rem 1.3rem; border-radius:7px; background:var(--red); color:#fff; border:none; font-weight:700; cursor:pointer; font-size:.88rem}
+
+/* ============================================================
+   RESPONSIVE
+   ============================================================ */
+@media (max-width:640px){
+  nav{padding:.75rem 1.1rem}
+  .nav-links{gap:0}
+  .nav-links a{font-size:.78rem; padding:.35rem .5rem}
+  .nav-mark .name{display:none}
+  section{padding:3.75rem 1.25rem}
+  .hero{padding:5.5rem 1.25rem 3rem}
+  .fiche{padding:1.6rem 1.25rem 1.6rem 1.6rem}
+}
+</style>
+</head>
+<body>
+<script>document.documentElement.classList.add('js-anim');</script>
+
+<nav>
+  <div class="nav-mark">
+    <span class="badge">DC</span>
+    <span class="name">Dylan Collery</span>
+  </div>
+  <ul class="nav-links">
+    <li><a href="#projets">Projets</a></li>
+    <li><a href="#competences">Compétences</a></li>
+    <li><a href="#impact">Impact</a></li>
+    <li><a href="#apprendre">Apprendre</a></li>
+    <li><a href="#contact">Contact</a></li>
+    <li><a href="#cv" class="cv-link">CV</a></li>
+  </ul>
+</nav>
+
+<!-- ===== HERO ===== -->
+<section class="hero" id="accueil">
+  <p class="eyebrow hero-eyebrow">Portfolio d'ingénierie pédagogique</p>
+  <h1 class="hero-name">Dylan Collery</h1>
+  <p class="hero-role-eyebrow">Ancien professeur des écoles · Master MEEF 2</p>
+  <p class="hero-role" id="hero-role" data-text="Ingénieur pédagogique IA">Ingénieur pédagogique IA</p>
+  <p class="hero-sub">Deux ans de classe en CM2, un Master MEEF, puis un pivot : concevoir des séquences, des outils et des produits avec l'IA comme partenaire de fabrication — seul, sans équipe ni budget. Ce portfolio réunit ce que j'ai construit depuis.</p>
+  <div class="hero-cta">
+    <a href="#projets" class="btn btn-primary">Voir mes projets</a>
+    <a href="cv/CV_Dylan_Collery.pdf" download class="btn btn-outline">Télécharger mon CV</a>
+  </div>
+  <div class="hero-scroll"><span class="line"></span> Faire défiler</div>
+</section>
+
+<!-- ===== PROJETS ===== -->
+<section id="projets">
+  <div class="section-inner">
+    <div class="section-head reveal">
+      <p class="eyebrow">Trois projets, en détail</p>
+      <h2 class="section-title">Ce que j'ai vraiment construit</h2>
+      <p class="section-desc">Pas des maquettes : des outils utilisés en classe, sur un terrain de volley ou autour d'une table de jeu — conçus, écrits et livrés seul, avec l'IA comme partenaire de fabrication.</p>
+    </div>
+
+    <div class="fiches">
+
+      <!-- FICHE 1 : JUMANJI -->
+      <article class="fiche reveal">
+        <div class="fiche-top">
+          <div>
+            <div class="fiche-kicker"><span class="fiche-icon">🎬</span><span class="eyebrow">Séquence pédagogique · 8 séances</span></div>
+            <h3>Faire vivre un roman à toute une classe, seul, avec deux acteurs qui n'existent pas</h3>
+          </div>
+          <span class="fiche-stamp">vu, approuvé ✓</span>
+        </div>
+        <div class="fiche-grid">
+          <div class="fiche-block"><span class="label">Contexte</span><p>En CM2, la lecture longue de <em>Jumanji</em> doit tenir huit séances sur plusieurs semaines : compréhension, vocabulaire, production d'écrit. La version classique — fiches, cahier, lecture à voix haute — épuise l'attention bien avant la fin.</p></div>
+          <div class="fiche-block"><span class="label">Le défi</span><p>Garder vingt-cinq élèves de dix ans accrochés au texte pendant deux mois, sans moyens de production vidéo ni acteurs ni budget — et sans que ça dévore mes soirées.</p></div>
+          <div class="fiche-block"><span class="label">Ma démarche avec l'IA</span><p>Deux personnages créés avec Claude — Judy et Peter — doublés par des avatars vidéo générés (HeyGen, Pippit) qui introduisent chaque séance comme s'ils vivaient l'histoire. Sept vidéos scriptées, des visuels générés, des dictées différenciées et une séquence de grammaire adossée au texte, le tout assemblé en mini-site navigable séance par séance, fiches et corrections comprises.</p></div>
+          <div class="fiche-block"><span class="label">Le résultat</span><p>Huit séances clé en main, sept vidéos, deux personnages qui tiennent le fil narratif d'un bout à l'autre — une production qu'assurerait normalement une petite équipe, réalisée seule, en plus d'un temps plein d'enseignement.</p></div>
+        </div>
+        <div class="fiche-foot">
+          <div class="fiche-tools"><span class="pill">Claude</span><span class="pill">HeyGen</span><span class="pill">Pippit</span><span class="pill">DALL·E</span><span class="pill">HTML/CSS</span></div>
+          <div class="fiche-actions">
+            <button class="btn btn-ghost btn-sm" id="btn-jumanji-videos">▶ Voir les 7 vidéos</button>
+            <button class="btn btn-outline btn-sm" data-app-url="apps/jumanji/index.html" data-app-title="Séquence Jumanji — mini-site">Parcourir le mini-site →</button>
+          </div>
+        </div>
+      </article>
+
+      <!-- FICHE 2 : FATALE ERREUR -->
+      <article class="fiche reveal">
+        <div class="fiche-top">
+          <div>
+            <div class="fiche-kicker"><span class="fiche-icon">🕵️</span><span class="eyebrow">Lecture pas à pas · Visibiléo interactif</span></div>
+            <h3>Transformer une nouvelle policière en enquête qu'on peut vraiment mener</h3>
+          </div>
+          <span class="fiche-stamp">vu, approuvé ✓</span>
+        </div>
+        <div class="fiche-grid">
+          <div class="fiche-block"><span class="label">Contexte</span><p>« Fatale erreur » de Fredric Brown est une nouvelle à chute, pensée pour se découvrir fragment par fragment. Le questionnaire papier classique révèle tout trop vite, ou noie les élèves sous les questions.</p></div>
+          <div class="fiche-block"><span class="label">Le défi</span><p>Recréer la sensation de mener une véritable enquête — pas de cocher des cases — en autonomie, sur plusieurs séances, sans perdre les hypothèses posées la semaine précédente.</p></div>
+          <div class="fiche-block"><span class="label">Ma démarche avec l'IA</span><p>Avec Claude, un mur d'enquête interactif : post-its, cordelettes reliant les indices en SVG, nuage de mots des pistes retenues. Cinq fragments débloqués séance après séance, des questions inférentielles, et une sauvegarde automatique des hypothèses en localStorage — rien ne se perd d'une semaine à l'autre.</p></div>
+          <div class="fiche-block"><span class="label">Le résultat</span><p>Un outil que je n'aurais jamais pu commander à un prestataire pour une seule séquence de français — et qui rend six pages de texte aussi prenantes qu'une vraie enquête.</p></div>
+        </div>
+        <div class="fiche-foot">
+          <div class="fiche-tools"><span class="pill">Claude</span><span class="pill">HTML/JS</span><span class="pill">SVG</span><span class="pill">localStorage</span></div>
+          <div class="fiche-actions">
+            <button class="btn btn-outline btn-sm" data-app-url="apps/fatale-erreur.html" data-app-title="Fatale erreur — mur d'enquête">Ouvrir le mur d'enquête →</button>
+          </div>
+        </div>
+      </article>
+
+      <!-- FICHE 3 : SKULL KING -->
+      <article class="fiche reveal">
+        <div class="fiche-top">
+          <div>
+            <div class="fiche-kicker"><span class="fiche-icon">🏴‍☠️</span><span class="eyebrow">Application · hors cadre scolaire</span></div>
+            <h3>Sortir du cadre scolaire : une vraie application, du premier trait de code au dernier</h3>
+          </div>
+          <span class="fiche-stamp">vu, approuvé ✓</span>
+        </div>
+        <div class="fiche-grid">
+          <div class="fiche-block"><span class="label">Contexte</span><p>Skull King est un jeu de société à scores complexes — plis, bonus, malus, primes — que mon entourage joue régulièrement. Personne n'a envie de faire les comptes à la main pendant dix manches.</p></div>
+          <div class="fiche-block"><span class="label">Le défi</span><p>Construire, sans framework ni équipe, une application complète : pas un prototype, un produit qu'on utilise vraiment autour d'une table, plusieurs fois par semaine.</p></div>
+          <div class="fiche-block"><span class="label">Ma démarche avec l'IA</span><p>Développée de bout en bout avec Claude : intégralité des règles codée, navigation animée d'un bateau pirate entre les manches, artwork personnalisé, interface pensée pour un téléphone posé au milieu de la table.</p></div>
+          <div class="fiche-block"><span class="label">Le résultat</span><p>Une application autonome de 670 Ko, sans backend ni installation — la preuve que je peux livrer un produit fini, pas seulement un support de cours.</p></div>
+        </div>
+        <div class="fiche-foot">
+          <div class="fiche-tools"><span class="pill">Claude</span><span class="pill">HTML/JS</span><span class="pill">Design UI</span></div>
+          <div class="fiche-actions">
+            <button class="btn btn-outline btn-sm" data-app-url="apps/skull-king.html" data-app-title="Skull King — application">Lancer l'application →</button>
+          </div>
+        </div>
+      </article>
+
+    </div>
+
+    <div class="secondary-head reveal">
+      <h3>Autres réalisations</h3>
+      <span class="secondary-count" id="secondary-count"></span>
+    </div>
+    <div class="projects-grid reveal" id="projects-container"></div>
+  </div>
+</section>
+
+<!-- ===== COMPÉTENCES ===== -->
+<section id="competences">
+  <div class="section-inner">
+    <div class="section-head reveal">
+      <p class="eyebrow">Ce que je maîtrise</p>
+      <h2 class="section-title">Compétences &amp; outils IA</h2>
+      <p class="section-desc">Les outils et approches que j'utilise concrètement, projet après projet.</p>
+    </div>
+    <div class="skills-grid reveal">
+      <div class="skill-category">
+        <h4>LLMs &amp; assistants</h4>
+        <ul class="skill-list">
+          <li>Claude (Anthropic)</li>
+          <li>ChatGPT (OpenAI)</li>
+          <li>Prompt engineering</li>
+          <li>Génération de documents</li>
+        </ul>
+      </div>
+      <div class="skill-category">
+        <h4>Vidéo &amp; avatars IA</h4>
+        <ul class="skill-list">
+          <li>HeyGen (avatars IA)</li>
+          <li>Pippit (vidéos agents)</li>
+          <li>Scripts pour avatar</li>
+          <li>Contenu pédagogique vidéo</li>
+        </ul>
+      </div>
+      <div class="skill-category">
+        <h4>Images &amp; design IA</h4>
+        <ul class="skill-list">
+          <li>DALL·E / Copilot Image</li>
+          <li>Génération d'illustrations</li>
+          <li>Prompts visuels</li>
+        </ul>
+      </div>
+      <div class="skill-category">
+        <h4>Documents &amp; productivité</h4>
+        <ul class="skill-list">
+          <li>Word &amp; PowerPoint IA</li>
+          <li>Excel assisté IA</li>
+          <li>Synthèse &amp; rédaction</li>
+          <li>Cowork (Claude Desktop)</li>
+        </ul>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ===== IMPACT ===== -->
+<section id="impact">
+  <div class="section-inner">
+    <div class="section-head reveal">
+      <p class="eyebrow">Ce que ça donne concrètement</p>
+      <h2 class="section-title">Chiffres &amp; impact</h2>
+      <p class="section-desc">Des résultats mesurables issus de mes projets d'auto-formation.</p>
+    </div>
+    <div class="stats-row reveal">
+      <div class="stat-card"><div class="stat-number">13</div><div class="stat-label">Projets réalisés</div></div>
+      <div class="stat-card"><div class="stat-number">7</div><div class="stat-label">Vidéos IA créées</div></div>
+      <div class="stat-card"><div class="stat-number">2</div><div class="stat-label">Avatars IA (Judy + Peter)</div></div>
+      <div class="stat-card"><div class="stat-number">30+</div><div class="stat-label">Documents générés</div></div>
+      <div class="stat-card"><div class="stat-number">6+</div><div class="stat-label">Outils IA maîtrisés</div></div>
+    </div>
+
+    <h3 class="apport-title reveal">Ce que je peux apporter à une équipe</h3>
+    <div class="apport-grid reveal">
+      <div class="apport-card">
+        <div class="apport-icon">⚡</div>
+        <div><h4>Accélérer la production de contenus</h4><p>Créer des documents, présentations, communications en une fraction du temps habituel grâce aux LLMs.</p></div>
+      </div>
+      <div class="apport-card">
+        <div class="apport-icon">🎬</div>
+        <div><h4>Produire des vidéos sans équipe</h4><p>Concevoir des vidéos avec avatars IA, scripts et montage — sans caméra ni réalisateur.</p></div>
+      </div>
+      <div class="apport-card">
+        <div class="apport-icon">🔍</div>
+        <div><h4>Explorer et identifier les bons outils</h4><p>Tester, comparer et recommander les outils IA adaptés aux besoins de l'équipe.</p></div>
+      </div>
+      <div class="apport-card">
+        <div class="apport-icon">📐</div>
+        <div><h4>Personnaliser à grande échelle</h4><p>Générer des contenus sur mesure pour chaque situation — par exemple des PPRE individuels pour cinq élèves.</p></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ===== APPRENDRE ===== -->
+<section id="apprendre">
+  <div class="section-inner">
+    <div class="section-head reveal">
+      <p class="eyebrow">Ma feuille de route</p>
+      <h2 class="section-title">Prochaines étapes IA</h2>
+      <p class="section-desc">Les compétences que j'explore ou que je prévois d'acquérir prochainement.</p>
+    </div>
+    <div class="learn-grid reveal">
+      <div class="learn-card">
+        <span class="learn-level level-dispo">✓ En cours</span>
+        <h4>Faire vivre ce portfolio</h4>
+        <p>Le garder à jour, l'héberger en ligne et le partager en entretien.</p>
+        <div class="learn-tools"><span class="learn-tool">Claude Cowork</span><span class="learn-tool">HTML/CSS</span></div>
+      </div>
+      <div class="learn-card">
+        <span class="learn-level level-prochain">→ Prochain</span>
+        <h4>Publier le site en ligne</h4>
+        <p>Héberger ce portfolio gratuitement pour qu'il soit accessible depuis n'importe où.</p>
+        <div class="learn-tools"><span class="learn-tool">GitHub Pages</span><span class="learn-tool">Netlify</span></div>
+      </div>
+      <div class="learn-card">
+        <span class="learn-level level-prochain">→ Prochain</span>
+        <h4>Automatisation avec Make / Zapier</h4>
+        <p>Créer des workflows automatisés qui connectent des apps entre elles sans coder.</p>
+        <div class="learn-tools"><span class="learn-tool">Make</span><span class="learn-tool">Zapier</span><span class="learn-tool">N8N</span></div>
+      </div>
+      <div class="learn-card">
+        <span class="learn-level level-prochain">→ Prochain</span>
+        <h4>Génération d'images avancée</h4>
+        <p>Maîtriser Midjourney ou Flux pour des visuels de qualité studio, sur prompts précis.</p>
+        <div class="learn-tools"><span class="learn-tool">Midjourney</span><span class="learn-tool">Flux</span><span class="learn-tool">Ideogram</span></div>
+      </div>
+      <div class="learn-card">
+        <span class="learn-level level-avance">◆ Avancé</span>
+        <h4>Créer un chatbot personnalisé</h4>
+        <p>Entraîner un assistant IA sur des données spécifiques via des outils no-code.</p>
+        <div class="learn-tools"><span class="learn-tool">Botpress</span><span class="learn-tool">Voiceflow</span><span class="learn-tool">Poe</span></div>
+      </div>
+      <div class="learn-card">
+        <span class="learn-level level-avance">◆ Avancé</span>
+        <h4>Analyse de données avec IA</h4>
+        <p>Analyser des fichiers Excel complexes, détecter des tendances, générer des rapports automatiques.</p>
+        <div class="learn-tools"><span class="learn-tool">ChatGPT Data</span><span class="learn-tool">NotebookLM</span><span class="learn-tool">Julius AI</span></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ===== CV ===== -->
+<section id="cv">
+  <div class="section-inner">
+    <div class="section-head reveal">
+      <p class="eyebrow">Mon profil</p>
+      <h2 class="section-title">Curriculum vitae</h2>
+    </div>
+    <div class="cv-wrap reveal">
+      <div class="cv-photo"><img src="photo_cv.jpg" alt="Photo de Dylan Collery"/></div>
+      <div>
+        <span class="cv-tag">À jour</span>
+        <h3>Dylan Collery — Ingénieur pédagogique</h3>
+        <p>Professeur des écoles titularisé, spécialisé en sciences de l'éducation et en intégration de l'IA dans l'enseignement. Master MEEF 2, CRPE 2024.</p>
+        <div class="cv-actions">
+          <a href="cv/CV_Dylan_Collery.pdf" target="_blank" rel="noopener" class="btn btn-primary btn-sm">Voir en plein écran</a>
+          <a href="cv/CV_Dylan_Collery.pdf" download class="btn btn-outline btn-sm">Télécharger le PDF</a>
+        </div>
+      </div>
+    </div>
+    <a href="cv/CV_Dylan_Collery.pdf" target="_blank" rel="noopener" class="cv-preview reveal">
+      <img src="cv/CV_Dylan_Collery.png" alt="Aperçu du CV de Dylan Collery — cliquer pour ouvrir le PDF"/>
+    </a>
+  </div>
+</section>
+
+<!-- ===== CONTACT ===== -->
+<section id="contact">
+  <div class="section-inner">
+    <div class="contact-box reveal">
+      <h3>Discutons de vos besoins</h3>
+      <p>Vous cherchez quelqu'un de motivé, curieux et à l'aise avec les outils IA ? N'hésitez pas à me contacter directement.</p>
+      <a href="mailto:dylan.collery@gmail.com" class="contact-email">✉ dylan.collery@gmail.com</a>
+    </div>
+  </div>
+</section>
+
+<footer>
+  <p>Conçu et développé seul par <strong>Dylan Collery</strong>, avec l'IA comme partenaire de fabrication.</p>
+  <p style="margin-top:.35rem">Portfolio 2026</p>
+</footer>
+
+<!-- ===== VIDEO / IMAGE MODAL ===== -->
+<div class="modal-overlay" id="video-modal">
+  <div class="modal-box">
+    <div class="modal-header">
+      <span class="modal-title" id="modal-project-title">Vidéos du projet</span>
+      <button class="modal-close" id="modal-close-btn">✕</button>
+    </div>
+    <div class="modal-video-wrap">
+      <video id="modal-video" controls preload="metadata"></video>
+    </div>
+    <div class="video-list" id="video-list"></div>
+  </div>
+</div>
+
+<!-- ===== VISIONNEUSE DE PROJET (in-page) ===== -->
+<div class="modal-overlay app-modal" id="app-modal">
+  <div class="modal-box">
+    <div class="modal-header">
+      <span class="modal-title" id="app-modal-title">Projet</span>
+      <div class="app-modal-header-actions">
+        <a id="app-modal-newtab" href="#" target="_blank" rel="noopener" class="btn-mini">Ouvrir dans un onglet ↗</a>
+        <button class="modal-close" id="app-modal-close">✕</button>
+      </div>
+    </div>
+    <div class="app-modal-frame-wrap"><iframe id="app-modal-iframe" src="" title="Aperçu du projet"></iframe></div>
+  </div>
+</div>
+
+<!-- ===== ADMIN ===== -->
+<button id="admin-btn" title="Gérer les autres réalisations">⚙️</button>
+<div class="admin-overlay" id="admin-overlay"></div>
+<div class="admin-panel" id="admin-panel">
+  <div class="admin-header">
+    <h2>Gérer « Autres réalisations »</h2>
+    <button class="admin-close" id="admin-close-btn">✕</button>
+  </div>
+  <div class="admin-body" id="admin-project-list"></div>
+  <div class="admin-footer">
+    <button class="btn-add-project" id="btn-add-project">+ Ajouter un nouveau projet</button>
+  </div>
+</div>
+
+<div class="form-overlay" id="form-overlay">
+  <div class="form-box">
+    <div class="form-header">
+      <h3 id="form-title">Nouveau projet</h3>
+      <button class="modal-close" id="form-close-btn">✕</button>
+    </div>
+    <div class="form-body">
+      <input type="hidden" id="f-id"/>
+      <div class="form-group"><label>Emoji / Icône</label><input type="text" id="f-icon" placeholder="Ex: 🎬" maxlength="4"/></div>
+      <div class="form-group">
+        <label>Couleur du tag</label>
+        <select id="f-tag-color">
+          <option value="tag-blue">Bleu clair</option>
+          <option value="tag-purple">Mauve</option>
+          <option value="tag-green">Or (mise en avant)</option>
+          <option value="tag-orange">Rouge</option>
+        </select>
+      </div>
+      <div class="form-group"><label>Catégorie (tag)</label><input type="text" id="f-tag" placeholder="Ex: Éducation & IA"/></div>
+      <div class="form-group"><label>Titre du projet</label><input type="text" id="f-title" placeholder="Ex: Séquence Jumanji CM2"/></div>
+      <div class="form-group"><label>Description</label><textarea id="f-description" placeholder="Décris ce que tu as fait, comment, et ce que ça apporte..."></textarea></div>
+      <div class="form-group"><label>Outils utilisés</label><input type="text" id="f-tools" placeholder="Claude, HeyGen, DALL·E (séparés par des virgules)"/><span class="form-hint">Sépare les outils par des virgules</span></div>
+      <div class="form-group"><label>Vidéos (nom du fichier dans medias/videos/)</label><textarea id="f-videos" placeholder="Titre|medias/videos/fichier.mp4" style="min-height:80px;font-family:monospace;font-size:.8rem"></textarea><span class="form-hint">Une vidéo par ligne : Titre|chemin_du_fichier.mp4</span></div>
+      <div class="form-group"><label>Lien externe (optionnel)</label><input type="text" id="f-link" placeholder="apps/monprojet.html"/></div>
+    </div>
+    <div class="form-footer">
+      <button class="btn-cancel" id="form-cancel-btn">Annuler</button>
+      <button class="btn-save" id="form-save-btn">Enregistrer</button>
+    </div>
+  </div>
+</div>
+
+<script>
+// ========== DONNÉES : AUTRES RÉALISATIONS ==========
+const DATA_VERSION = '7';
+
+const DEFAULT_PROJECTS = [
+  { id:'gram-attack', icon:'🃏', tag:'Éducation & IA', tagColor:'tag-blue', title:'GRAM ATTACK — Jeu de cartes grammaire CM2',
+    description:"Jeu de cartes pédagogique complet pour apprendre la grammaire en CM2 de manière ludique. Règles, cartes, design et contenu entièrement générés avec l'IA.",
+    tools:['Claude'], videos:[], images:['medias/images/gram_attack_01.jpg','medias/images/gram_attack_02.jpg','medias/images/gram_attack_03.jpg','medias/images/gram_attack_04.jpg'], link:null },
+  { id:'cahier-journal', icon:'📓', tag:'Éducation & IA', tagColor:'tag-blue', title:'Cahier Journal Français P5 — CM2',
+    description:"Cahier journal pédagogique complet pour la période 5 en Français. Structure détaillée séance par séance, objectifs, déroulés, différenciations.",
+    tools:['Claude'], videos:[], images:['medias/images/cahier_journal_01.jpg','medias/images/cahier_journal_02.jpg','medias/images/cahier_journal_03.jpg'], link:null },
+  { id:'ppre', icon:'📋', tag:'Éducation & IA', tagColor:'tag-blue', title:'PPRE personnalisés par IA',
+    description:"Génération de 5 Programmes Personnalisés de Réussite Éducative sur mesure pour des élèves de CM2, adaptés aux besoins de chacun à partir d'un modèle standardisé.",
+    tools:['Claude'], videos:[], link:null },
+  { id:'bilan', icon:'🎯', tag:'Développement personnel', tagColor:'tag-green', title:'Bilan de compétences — 5 versions avec l’IA',
+    description:"Bilan de compétences complet itéré en 5 versions avec l'IA : analyse de 3 pistes professionnelles, tableau comparatif, carnets de travail et présentations successivement améliorées.",
+    tools:['Claude'], videos:[], link:null },
+  { id:'cod-constructeur', icon:'🔍', tag:'Éducation & IA', tagColor:'tag-blue', title:'COD Constructeur de phrases — Séquence CM2',
+    description:"Outil pédagogique 3 phases en un seul fichier : construction collective de phrases avec validation automatique, rappel de cours, tri de 15 phrases par drag & drop.",
+    tools:['Claude','HTML/JS','Drag & Drop'], videos:[], link:null },
+  { id:'cahier-journal-semaines', icon:'📅', tag:'Éducation & IA', tagColor:'tag-blue', title:'Cahier Journal interactif — Semaines 18–29 mai',
+    description:"Cahier journal HTML complet couvrant 2 semaines de classe. Liens cliquables vers chaque ressource, navigation responsive par semaine.",
+    tools:['Claude','HTML/CSS'], videos:[], link:null },
+  { id:'smartphones', icon:'📱', tag:'Analyse & IA', tagColor:'tag-orange', title:'Comparatif Smartphones 2026',
+    description:"Tableau Excel de comparaison de smartphones généré et structuré avec l'IA — critères techniques, prix, scores, recommandations.",
+    tools:['Claude'], videos:[], link:null },
+  { id:'canicule', icon:'☀️', tag:'Éducation & IA', tagColor:'tag-blue', title:'Journée « Défis Canicule » — CM2',
+    description:"Portail d'accès et 4 mini-jeux interactifs conçus dans l'urgence pour occuper la classe un jour de forte chaleur, sans salle de sport disponible.",
+    tools:['Claude','HTML/JS'], videos:[], link:'apps/canicule/index.html' },
+  { id:'grand-tournoi', icon:'🏆', tag:'Éducation & IA', tagColor:'tag-blue', title:'Journée « Grand Tournoi » — CM2',
+    description:"Organisation complète d'une journée événementielle en classe : guide enseignant, défis papier et parcours interactif.",
+    tools:['Claude','HTML/JS'], videos:[], link:'apps/journee-grand-tournoi.html' },
+  { id:'escape-games', icon:'🔐', tag:'Éducation & IA', tagColor:'tag-blue', title:'Escape Games pédagogiques — CM2',
+    description:"Deux escape games narratifs : « Station Polaire » (enquête scientifique) et « Formule Secrète » (énigmes de logique et français).",
+    tools:['Claude','HTML/JS'], videos:[], link:'apps/escape-station-polaire.html' }
+];
+
+function loadProjects(){
+  try{
+    const savedVersion = localStorage.getItem('portfolio_version');
+    if(savedVersion !== DATA_VERSION){
+      localStorage.setItem('portfolio_version', DATA_VERSION);
+      localStorage.removeItem('portfolio_projects');
+      return [...DEFAULT_PROJECTS];
+    }
+    const saved = localStorage.getItem('portfolio_projects');
+    return saved ? JSON.parse(saved) : [...DEFAULT_PROJECTS];
+  }catch{ return [...DEFAULT_PROJECTS]; }
+}
+function saveProjects(list){
+  localStorage.setItem('portfolio_projects', JSON.stringify(list));
+  localStorage.setItem('portfolio_version', DATA_VERSION);
+}
+let projects = loadProjects();
+
+const JUMANJI_VIDEOS = {
+  title: 'Séquence Jumanji — vidéos avec Judy & Peter',
+  videos: [
+    { title:'🎭 Judy — Séance 1 : Découverte', src:'medias/videos/Judy_Jumanji_séance_1.mp4' },
+    { title:'🎭 Judy — Séance 2 : Questionnaire', src:'medias/videos/Judy_Jumanji_séance_2.mp4' },
+    { title:'🎭 Judy — Séance 6 : Débat', src:'medias/videos/Judy_Jumanji_séance_6.mp4' },
+    { title:'🎭 Peter — Séance 3 : Cause/Effet', src:'medias/videos/Peter_Jumanji_séance_3.mp4' },
+    { title:'🎭 Peter — Séance 4 : Frise chronologique', src:'medias/videos/Peter_Jumanji_séance_4.mp4' },
+    { title:'🎭 Peter — Séance 5 : Schéma narratif', src:'medias/videos/Peter_Jumanji_séance_5.mp4' },
+    { title:'🤖 Agent Pippit', src:'medias/videos/Agent_video_Pippit_20260420233407.mp4' }
+  ]
+};
+
+// ========== RENDER ==========
+function renderProjects(){
+  const container = document.getElementById('projects-container');
+  container.innerHTML = '';
+  document.getElementById('secondary-count').textContent = projects.length + ' projet' + (projects.length>1?'s':'');
+
+  projects.forEach(p => {
+    const card = document.createElement('div');
+    card.className = 'project-card';
+    const toolsHTML = (p.tools||[]).map(t => `<span class="tool-badge">${t}</span>`).join('');
+    const hasVideos = p.videos && p.videos.length > 0;
+    const hasImages = p.images && p.images.length > 0;
+    const previewHTML = (!hasVideos && hasImages)
+      ? `<div class="project-preview"><img src="${p.images[0]}" alt="Aperçu ${p.title}" loading="lazy"/></div>` : '';
+    card.innerHTML = `
+      <div class="project-icon">${p.icon || '📁'}</div>
+      <span class="project-tag ${p.tagColor || 'tag-blue'}">${p.tag || ''}</span>
+      <h4>${p.title || ''}</h4>
+      <p>${p.description || ''}</p>
+      ${previewHTML}
+      <div class="project-tools">${toolsHTML}</div>
+      <div class="project-actions">
+        ${hasVideos ? `<button class="btn-mini" data-id="${p.id}" data-act="video">▶ Vidéos (${p.videos.length})</button>` : ''}
+        ${hasImages ? `<button class="btn-mini" data-id="${p.id}" data-act="images">🖼 Aperçu (${p.images.length})</button>` : ''}
+        ${p.link ? `<button class="btn-mini accent" data-app-url="${p.link}" data-app-title="${p.title}">Visiter →</button>` : ''}
+      </div>`;
+    container.appendChild(card);
+  });
+
+  const addCard = document.createElement('div');
+  addCard.className = 'project-card add-project-card';
+  addCard.innerHTML = `<span>＋</span><span>Ajouter un projet</span>`;
+  addCard.onclick = () => openForm(null);
+  container.appendChild(addCard);
+
+  container.querySelectorAll('.btn-mini[data-act="video"]').forEach(btn => {
+    btn.onclick = () => { const p = projects.find(x => x.id === btn.dataset.id); if (p) openVideoModal(p); };
+  });
+  container.querySelectorAll('.btn-mini[data-act="images"]').forEach(btn => {
+    btn.onclick = () => { const p = projects.find(x => x.id === btn.dataset.id); if (p) openImageModal(p); };
+  });
+  wireAppLinks(container);
+}
+
+// ========== MODALS ==========
+function openVideoModal(project){
+  const modal = document.getElementById('video-modal');
+  const video = document.getElementById('modal-video');
+  const list = document.getElementById('video-list');
+  document.getElementById('modal-project-title').textContent = project.title;
+  const wrap = document.querySelector('.modal-video-wrap');
+  if(!wrap.querySelector('video')) wrap.innerHTML = `<video id="modal-video" controls preload="metadata"></video>`;
+  const v = document.getElementById('modal-video');
+  list.innerHTML = '';
+  project.videos.forEach((vid,i) => {
+    const btn = document.createElement('button');
+    btn.className = `video-thumb${i===0?' active':''}`;
+    btn.textContent = vid.title;
+    btn.onclick = () => {
+      v.src = vid.src; v.play();
+      list.querySelectorAll('.video-thumb').forEach(b => b.classList.remove('active'));
+      btn.classList.add('active');
+    };
+    list.appendChild(btn);
+  });
+  if(project.videos.length>0) v.src = project.videos[0].src;
+  modal.classList.add('open');
+}
+function openImageModal(project){
+  const modal = document.getElementById('video-modal');
+  const videoWrap = document.querySelector('.modal-video-wrap');
+  const list = document.getElementById('video-list');
+  document.getElementById('modal-project-title').textContent = project.title;
+  videoWrap.innerHTML = `<img id="modal-main-img" src="${project.images[0]}" alt="" style="width:100%;height:100%;object-fit:contain;background:#000;display:block;max-height:420px;"/>`;
+  list.innerHTML = '';
+  project.images.forEach((src,i) => {
+    const btn = document.createElement('button');
+    btn.className = `video-thumb${i===0?' active':''}`;
+    btn.textContent = `Image ${i+1}`;
+    btn.onclick = () => {
+      document.getElementById('modal-main-img').src = src;
+      list.querySelectorAll('.video-thumb').forEach(b => b.classList.remove('active'));
+      btn.classList.add('active');
+    };
+    list.appendChild(btn);
+  });
+  modal.classList.add('open');
+}
+function closeVideoModal(){
+  const modal = document.getElementById('video-modal');
+  const videoWrap = document.querySelector('.modal-video-wrap');
+  if(!videoWrap.querySelector('video')) videoWrap.innerHTML = `<video id="modal-video" controls preload="metadata"></video>`;
+  else { const v = document.getElementById('modal-video'); if(v){ v.pause(); v.src=''; } }
+  modal.classList.remove('open');
+}
+document.getElementById('modal-close-btn').onclick = closeVideoModal;
+document.getElementById('video-modal').onclick = (e) => { if(e.target === document.getElementById('video-modal')) closeVideoModal(); };
+document.getElementById('btn-jumanji-videos').onclick = () => openVideoModal(JUMANJI_VIDEOS);
+
+// ========== VISIONNEUSE DE PROJET (in-page) ==========
+// Chrome bloque le chargement d'un fichier local dans une iframe quand la page
+// parente est elle-même ouverte en local (file://) — restriction de sécurité du
+// navigateur, pas contournable en JS. Dans ce cas on ouvre directement un nouvel
+// onglet plutôt que de montrer une iframe cassée. Une fois le site hébergé en
+// ligne (http/https), la visionneuse intégrée prend automatiquement le relais.
+const CAN_EMBED_APPS = window.location.protocol !== 'file:';
+
+function openAppModal(url, title){
+  if(!CAN_EMBED_APPS){ window.open(url, '_blank', 'noopener'); return; }
+  document.getElementById('app-modal-title').textContent = title || 'Projet';
+  document.getElementById('app-modal-iframe').src = url;
+  document.getElementById('app-modal-newtab').href = url;
+  document.getElementById('app-modal').classList.add('open');
+}
+function closeAppModal(){
+  document.getElementById('app-modal').classList.remove('open');
+  document.getElementById('app-modal-iframe').src = '';
+}
+document.getElementById('app-modal-close').onclick = closeAppModal;
+document.getElementById('app-modal').addEventListener('click', (e) => { if(e.target.id === 'app-modal') closeAppModal(); });
+function wireAppLinks(scope){
+  (scope || document).querySelectorAll('[data-app-url]').forEach(btn => {
+    btn.onclick = () => openAppModal(btn.dataset.appUrl, btn.dataset.appTitle || btn.textContent.trim());
+    if(!CAN_EMBED_APPS) btn.title = 'Ouvre dans un nouvel onglet';
+  });
+}
+wireAppLinks(document);
+
+// ========== ADMIN ==========
+function openAdmin(){ renderAdminList(); document.getElementById('admin-panel').classList.add('open'); document.getElementById('admin-overlay').classList.add('open'); }
+function closeAdmin(){ document.getElementById('admin-panel').classList.remove('open'); document.getElementById('admin-overlay').classList.remove('open'); }
+function renderAdminList(){
+  const list = document.getElementById('admin-project-list');
+  list.innerHTML = '';
+  projects.forEach(p => {
+    const item = document.createElement('div');
+    item.className = 'admin-project-item';
+    item.innerHTML = `
+      <div class="proj-icon">${p.icon||'📁'}</div>
+      <div class="proj-info"><strong>${p.title}</strong><span>${p.tag}${p.videos&&p.videos.length?` · ${p.videos.length} vidéo(s)`:''}</span></div>
+      <div class="proj-actions"><button class="btn-edit" data-id="${p.id}">✏️</button><button class="btn-del" data-id="${p.id}">🗑️</button></div>`;
+    list.appendChild(item);
+  });
+  list.querySelectorAll('.btn-edit').forEach(btn => { btn.onclick = () => { closeAdmin(); openForm(btn.dataset.id); }; });
+  list.querySelectorAll('.btn-del').forEach(btn => {
+    btn.onclick = () => {
+      if(confirm('Supprimer ce projet ?')){
+        projects = projects.filter(p => p.id !== btn.dataset.id);
+        saveProjects(projects); renderProjects(); renderAdminList();
+      }
+    };
+  });
+}
+document.getElementById('admin-btn').onclick = openAdmin;
+document.getElementById('admin-close-btn').onclick = closeAdmin;
+document.getElementById('admin-overlay').onclick = closeAdmin;
+document.getElementById('btn-add-project').onclick = () => { closeAdmin(); openForm(null); };
+
+// ========== FORM ==========
+function openForm(projectId){
+  const overlay = document.getElementById('form-overlay');
+  document.getElementById('form-title').textContent = projectId ? 'Modifier le projet' : 'Nouveau projet';
+  if(projectId){
+    const p = projects.find(x => x.id === projectId);
+    if(p){
+      document.getElementById('f-id').value = p.id;
+      document.getElementById('f-icon').value = p.icon || '';
+      document.getElementById('f-tag').value = p.tag || '';
+      document.getElementById('f-tag-color').value = p.tagColor || 'tag-blue';
+      document.getElementById('f-title').value = p.title || '';
+      document.getElementById('f-description').value = p.description || '';
+      document.getElementById('f-tools').value = (p.tools||[]).join(', ');
+      document.getElementById('f-videos').value = (p.videos||[]).map(v => `${v.title}|${v.src}`).join('\n');
+      document.getElementById('f-link').value = p.link || '';
+    }
+  } else {
+    ['f-id','f-icon','f-tag','f-title','f-description','f-tools','f-videos','f-link'].forEach(id => document.getElementById(id).value = '');
+    document.getElementById('f-tag-color').value = 'tag-blue';
+  }
+  overlay.classList.add('open');
+}
+function closeForm(){ document.getElementById('form-overlay').classList.remove('open'); }
+function saveForm(){
+  const id = document.getElementById('f-id').value || 'proj_' + Date.now();
+  const title = document.getElementById('f-title').value.trim();
+  if(!title){ alert('Le titre est obligatoire.'); return; }
+  const videosRaw = document.getElementById('f-videos').value.trim();
+  const videos = videosRaw ? videosRaw.split('\n').map(line => { const [t,s] = line.split('|'); return { title:(t||'').trim(), src:(s||'').trim() }; }).filter(v => v.src) : [];
+  const project = {
+    id, icon: document.getElementById('f-icon').value.trim() || '📁',
+    tag: document.getElementById('f-tag').value.trim(),
+    tagColor: document.getElementById('f-tag-color').value,
+    title, description: document.getElementById('f-description').value.trim(),
+    tools: document.getElementById('f-tools').value.split(',').map(t => t.trim()).filter(Boolean),
+    videos, link: document.getElementById('f-link').value.trim() || null
+  };
+  const idx = projects.findIndex(p => p.id === id);
+  if(idx >= 0) projects[idx] = project; else projects.push(project);
+  saveProjects(projects); renderProjects(); closeForm();
+}
+document.getElementById('form-close-btn').onclick = closeForm;
+document.getElementById('form-cancel-btn').onclick = closeForm;
+document.getElementById('form-save-btn').onclick = saveForm;
+document.getElementById('form-overlay').onclick = (e) => { if(e.target === document.getElementById('form-overlay')) closeForm(); };
+
+// ========== HERO : EFFET MACHINE À ÉCRIRE ==========
+function initHero(){
+  const el = document.getElementById('hero-role');
+  if(!el) return;
+  if(window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
+  const text = el.dataset.text || el.textContent;
+  el.textContent = '';
+  el.classList.add('typing');
+  let i = 0;
+  const step = () => {
+    el.textContent = text.slice(0, i);
+    i++;
+    if(i <= text.length) setTimeout(step, 42);
+  };
+  setTimeout(step, 500);
+  // Filet de sécurité : le texte complet est garanti même si l'animation est interrompue.
+  setTimeout(() => { if(el.textContent !== text){ el.textContent = text; } }, 4500);
+}
+
+// ========== SCROLL REVEAL ==========
+function initReveal(){
+  const els = document.querySelectorAll('.reveal');
+  const showAll = () => els.forEach(el => el.classList.add('in'));
+  if(!('IntersectionObserver' in window)){ showAll(); return; }
+  const io = new IntersectionObserver((entries) => {
+    entries.forEach(entry => { if(entry.isIntersecting){ entry.target.classList.add('in'); io.unobserve(entry.target); } });
+  }, { threshold: 0.12, rootMargin: '0px 0px -40px 0px' });
+  els.forEach(el => io.observe(el));
+  // Filet de sécurité : si l'observation échoue pour une raison quelconque, tout redevient visible.
+  setTimeout(showAll, 4000);
+}
+
+// ========== NAV ACTIVE AU DÉFILEMENT ==========
+function initScrollSpy(){
+  const sections = document.querySelectorAll('section[id]');
+  const navLinks = document.querySelectorAll('.nav-links a[href^="#"]');
+  if(!('IntersectionObserver' in window) || !sections.length || !navLinks.length) return;
+  const linkFor = {};
+  navLinks.forEach(a => { linkFor[a.getAttribute('href').slice(1)] = a; });
+  const io = new IntersectionObserver((entries) => {
+    entries.forEach(entry => {
+      if(!entry.isIntersecting) return;
+      const link = linkFor[entry.target.id];
+      if(!link) return;
+      navLinks.forEach(a => a.classList.remove('active'));
+      link.classList.add('active');
+    });
+  }, { rootMargin: '-42% 0px -50% 0px', threshold: 0 });
+  sections.forEach(s => io.observe(s));
+}
+
+// ========== INIT ==========
+renderProjects();
+initHero();
+initReveal();
+initScrollSpy();
+</script>
+
+</body>
+</html>

@@ -1,0 +1,474 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<title>Fatale erreur — Dossier d'enquête LPàP CM2</title>
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+html,body{height:100%;overflow:hidden}
+body{font-family:'Georgia',serif;background:#111213;color:#E8DCC8;display:flex;flex-direction:column}
+.page{display:none;flex-direction:column;flex:1;overflow:hidden}
+.page.active{display:flex}
+/* PAGE 0 */
+#p0{background:radial-gradient(ellipse at 50% 40%,#1c1306 0%,#080604 100%);align-items:center;justify-content:center;padding:32px 30px;gap:20px;overflow-y:auto}
+.p0-dos{font-family:'Courier New',monospace;font-size:11px;letter-spacing:4px;text-transform:uppercase;color:#444;text-align:center}
+.p0-titre{font-size:clamp(40px,7vw,90px);font-style:italic;font-weight:700;color:#F5E6CA;text-shadow:0 0 40px rgba(198,40,40,.2);text-align:center;line-height:1.1}
+.p0-auteur{font-family:'Courier New',monospace;font-size:15px;color:#555;letter-spacing:3px;text-align:center}
+.p0-vocab{background:rgba(255,255,255,.03);border:1px solid #242220;border-left:4px solid #C62828;border-radius:3px;padding:16px 20px;max-width:960px;width:100%}
+.p0-vocab-t{font-family:'Courier New',monospace;font-size:11px;letter-spacing:3px;text-transform:uppercase;color:#C62828;margin-bottom:12px;display:block}
+.p0-vocab-g{display:flex;flex-wrap:wrap;gap:10px}
+.vcard{background:#0e0c0a;border:1px solid #282420;border-radius:2px;padding:10px 14px;flex:1;min-width:180px}
+.vcard-mot{font-family:'Courier New',monospace;font-size:14px;font-weight:700;color:#FFD54F;display:block;margin-bottom:4px}
+.vcard-def{font-size:14px;color:#777;line-height:1.5}
+.p0-hypo{background:rgba(255,255,255,.025);border:1px dashed #2a2a2a;border-radius:3px;padding:14px 22px;max-width:960px;width:100%;text-align:center}
+.p0-hypo-l{font-family:'Courier New',monospace;font-size:11px;letter-spacing:3px;text-transform:uppercase;color:#666;margin-bottom:8px;display:block}
+.p0-hypo-q{font-size:clamp(16px,1.8vw,24px);font-style:italic;color:#90A4AE;line-height:1.6}
+.btn-open{background:transparent;border:2px solid #C62828;color:#C62828;font-family:'Courier New',monospace;font-size:14px;letter-spacing:3px;padding:13px 36px;cursor:pointer;text-transform:uppercase;transition:all .2s;margin-top:6px}
+.btn-open:hover{background:#C62828;color:#fff}
+.btn-resume{background:transparent;border:2px solid #FFD54F;color:#FFD54F;font-family:'Courier New',monospace;font-size:13px;letter-spacing:2px;padding:11px 30px;cursor:pointer;text-transform:uppercase;transition:all .2s;display:none}
+.btn-resume:hover{background:rgba(255,213,79,.12)}
+/* HEADER */
+.hdr{background:#0d0e0f;padding:6px 14px;display:flex;align-items:center;justify-content:space-between;border-bottom:2px solid #C62828;flex-shrink:0;gap:10px}
+.hdr-l{display:flex;flex-direction:column;gap:1px;flex-shrink:0}
+.hdr-dos{font-family:'Courier New',monospace;font-size:8px;letter-spacing:3px;text-transform:uppercase;color:#444}
+.hdr-titre{font-size:13px;font-style:italic;font-weight:700;color:#F5E6CA}
+.hdr-r{display:flex;align-items:center;gap:8px;flex-wrap:wrap}
+.btn-hdr{background:transparent;border:1px solid #2a2a2a;color:#555;padding:4px 9px;cursor:pointer;border-radius:3px;transition:all .15s;font-family:'Courier New',monospace;font-size:10px;line-height:1}
+.btn-hdr:hover{border-color:#C62828;color:#FFD54F}
+.btn-next-frag{background:#C62828;color:#fff;border:none;padding:5px 12px;font-family:'Courier New',monospace;font-size:10px;letter-spacing:1px;cursor:pointer;border-radius:2px;transition:all .15s;white-space:nowrap}
+.btn-next-frag:hover{background:#B71C1C}
+.btn-next-frag:disabled{background:#3a1a1a;color:#555;cursor:default}
+/* PROGRESS */
+.progress-bar{height:3px;background:#1a1a1a;flex-shrink:0}
+.progress-fill{height:100%;background:#C62828;transition:width .5s ease}
+/* FRAGMENT PILLS */
+.fstrip{display:flex;align-items:center;justify-content:center;gap:6px;padding:6px 14px;background:#0c0d0e;border-bottom:1px solid #1c1c1c;flex-shrink:0}
+.fpill{display:flex;align-items:center;gap:5px;padding:4px 10px;border-radius:20px;border:1.5px solid #2a2520;background:#14110e;cursor:pointer;transition:all .2s;font-family:'Courier New',monospace;font-size:10px;font-weight:700;color:#5a4a3a;user-select:none}
+.fpill .fp-dot{width:7px;height:7px;border-radius:50%;background:#3a2a1a;flex-shrink:0;transition:background .2s}
+.fpill.fdone{border-color:#2E7D32;color:#66BB6A;background:#0a160b}
+.fpill.fdone .fp-dot{background:#388E3C}
+.fpill.factive{border-color:#C62828;color:#FF8A65;background:#1a0a06}
+.fpill.factive .fp-dot{background:#C62828;box-shadow:0 0 6px rgba(198,40,40,.7)}
+.fpill.flocked{opacity:.35;cursor:default}
+/* MAIN TABS */
+.main-tabs{display:flex;background:#0a0b0c;border-bottom:2px solid #1c1c1c;flex-shrink:0}
+.mtab{flex:1;padding:10px 0;font-size:13px;font-weight:700;color:#5a5a5a;cursor:pointer;text-align:center;border:none;background:transparent;border-bottom:3px solid transparent;font-family:'Courier New',monospace;letter-spacing:1px;transition:all .2s}
+.mtab.on{color:#FFD54F;border-bottom-color:#C62828;background:rgba(198,40,40,.06)}
+.mtab:hover:not(.on){color:#aaa}
+/* VIEWS */
+.view{display:none;flex:1;overflow:hidden;flex-direction:column}
+.view.active{display:flex}
+/* VIEW TEXTE */
+.view-texte{background:#111213;align-items:center;justify-content:flex-start}
+.texte-scroll{flex:1;overflow-y:auto;width:100%;display:flex;justify-content:center;padding:30px 40px 40px}
+.texte-inner{max-width:900px;width:100%;display:flex;flex-direction:column;gap:24px}
+.f-ev{display:flex;align-items:center;gap:12px}
+.f-badge{background:#C62828;color:#fff;font-family:'Courier New',monospace;font-size:11px;font-weight:700;padding:4px 13px;letter-spacing:1px;display:inline-block;border-radius:2px}
+.f-tag{font-family:'Courier New',monospace;font-size:10px;letter-spacing:2px;text-transform:uppercase;color:#3a3a3a}
+.f-text{font-size:clamp(20px,2.2vw,32px);line-height:1.9;color:#E8DCC8;text-align:justify}
+.f-text em{font-style:normal;color:#FFD54F;border-bottom:1px solid rgba(255,213,79,.35)}
+.f-text strong{color:#FF8A65}
+.qbox{background:rgba(198,40,40,.07);border:1px solid rgba(198,40,40,.25);border-left:4px solid #C62828;border-radius:3px;padding:16px 20px}
+.qlbl{font-family:'Courier New',monospace;font-size:9px;font-weight:700;color:#C62828;text-transform:uppercase;letter-spacing:3px;margin-bottom:8px;display:block}
+.qtxt{font-size:clamp(17px,1.9vw,26px);color:#90A4AE;font-style:italic;line-height:1.6}
+@keyframes fadeUp{from{opacity:0;transform:translateY(12px)}to{opacity:1;transform:translateY(0)}}
+.f-ev,.f-text,.qbox{animation:fadeUp .35s ease}
+/* VIEW POST-ITS */
+.view-postits{background:#6D4729;flex-direction:column}
+.cork-bg{flex:1;overflow-y:auto;padding:14px;position:relative}
+.posits-wrap{display:flex;flex-wrap:wrap;gap:12px;padding:4px}
+.postit{width:130px;min-height:100px;padding:10px;font-size:13px;line-height:1.5;position:relative;cursor:default;box-shadow:3px 4px 8px rgba(0,0,0,.45);border-radius:2px;word-break:break-word;color:#1a1a1a}
+.postit::before{content:'';position:absolute;top:-7px;left:50%;transform:translateX(-50%);width:13px;height:13px;background:#C62828;border-radius:50%;border:2px solid #8B0000;box-shadow:0 1px 4px rgba(0,0,0,.6)}
+.postit.py{background:#FFF59D}.postit.pp{background:#F8BBD9}
+.postit.pb{background:#BBDEFB}.postit.pg{background:#C8E6C9}
+.postit.pr{background:#FFCDD2;text-decoration:line-through;opacity:.65}
+.postit.r0{transform:rotate(-2deg)}.postit.r1{transform:rotate(1.5deg)}
+.postit.r2{transform:rotate(-1deg)}.postit.r3{transform:rotate(3deg)}
+.postit.r4{transform:rotate(-2.5deg)}.postit.r5{transform:rotate(1deg)}
+.postit-fn{font-size:8px;font-weight:700;color:#777;display:block;margin-bottom:4px;font-family:'Courier New',monospace}
+.postit-btns{display:flex;gap:4px;margin-top:6px;justify-content:flex-end}
+.pb2{font-size:11px;border:none;cursor:pointer;border-radius:2px;padding:2px 5px;background:rgba(0,0,0,.12);color:#222}
+.pb2:hover{background:rgba(0,0,0,.25)}
+.hypo-wrap{display:flex;gap:8px;padding:8px 12px;background:rgba(0,0,0,.3);flex-shrink:0;border-top:1px solid rgba(0,0,0,.3)}
+.hypo-in{flex:1;background:#1a1007;border:1px solid #3a2610;color:#E8DCC8;padding:8px 12px;font-size:14px;border-radius:3px;font-family:Georgia,serif}
+.hypo-in:focus{outline:none;border-color:#C62828}
+.btn-add{background:#C62828;color:#fff;border:none;padding:8px 14px;cursor:pointer;font-size:13px;border-radius:3px;font-family:'Courier New',monospace;letter-spacing:1px;white-space:nowrap}
+.btn-add:hover{background:#B71C1C}
+/* VIEW IA */
+.view-ia{background:#0e0c0a;flex-direction:column}
+.ia-panel{flex:1;padding:20px;display:flex;flex-direction:column;gap:12px;overflow-y:auto}
+.ia-label{font-family:'Courier New',monospace;font-size:10px;letter-spacing:2px;text-transform:uppercase;color:#A1887F}
+.ia-prompt{flex:1;background:#1a1208;border:1px solid #3a2900;border-radius:4px;color:#FFE082;font-size:13px;line-height:1.6;padding:12px 14px;font-family:Georgia,serif;resize:none;width:100%;min-height:120px}
+.ia-prompt:focus{outline:none;border-color:#C62828}
+.ia-btns{display:flex;gap:10px;flex-wrap:wrap}
+.btn-ia{padding:10px 16px;border-radius:3px;font-size:12px;font-weight:700;cursor:pointer;font-family:'Courier New',monospace;letter-spacing:.5px;border:none;transition:all .15s;text-align:center;text-decoration:none}
+.btn-ia-copy{background:#2a2a2a;color:#FFD54F;border:1px solid #3a3a3a}
+.btn-ia-copy:hover{background:#3a3a3a}
+.btn-ia-copy.copied{background:#1B5E20;color:#A5D6A7;border-color:#2E7D32}
+.btn-ia-bing{background:#0078d4;color:#fff}
+.btn-ia-bing:hover{background:#006cbd}
+.btn-ia-ideogram{background:#6B21A8;color:#fff}
+.btn-ia-ideogram:hover{background:#5B1A90}
+.ia-hint{font-size:10px;color:#5D4037;font-family:'Courier New',monospace;font-style:italic;line-height:1.5}
+/* PAGE 2 */
+#p2{background:#0a0806;align-items:center;justify-content:center;padding:40px 30px;gap:18px;overflow-y:auto}
+.syn-t{border:2.5px solid #C62828;color:#C62828;font-family:'Courier New',monospace;font-weight:700;font-size:13px;letter-spacing:5px;padding:7px 18px;transform:rotate(-3deg);display:inline-block;opacity:.85}
+.syn-titre{font-size:clamp(22px,3.5vw,36px);font-style:italic;color:#F5E6CA;text-align:center}
+.syn-sous{font-family:'Courier New',monospace;font-size:9px;letter-spacing:3px;text-transform:uppercase;color:#444;text-align:center}
+.syn-qs{max-width:700px;width:100%;display:flex;flex-direction:column;gap:12px}
+.syn-q{background:rgba(255,255,255,.03);border:1px solid #222;border-left:3px solid #C62828;border-radius:2px;padding:13px 16px;font-size:15px;color:#90A4AE;font-style:italic;line-height:1.6}
+.btn-ret{background:transparent;border:1.5px solid #2a2a2a;color:#555;font-family:'Courier New',monospace;font-size:9px;letter-spacing:2px;padding:7px 18px;cursor:pointer;text-transform:uppercase;transition:all .2s;margin-top:8px}
+.btn-ret:hover{border-color:#666;color:#999}
+@media print{
+  *{-webkit-print-color-adjust:exact!important;print-color-adjust:exact!important}
+  html,body{height:auto;overflow:visible;background:#fff}
+  #p0,#p2,.hdr,.progress-bar,.fstrip,.main-tabs,.view-postits,.view-ia{display:none!important}
+  .view-texte{display:block!important;height:auto!important;overflow:visible!important}
+  .texte-scroll{overflow:visible!important;padding:18mm 16mm 12mm!important}
+  .f-text{font-size:13pt!important;color:#111!important;line-height:2.05!important}
+  .f-text em{color:#111!important;border-bottom:2px solid #C62828!important}
+  .f-text strong{color:#111!important;font-weight:bold!important}
+  .f-badge{background:#C62828!important;color:#fff!important;font-size:9pt!important}
+  .f-tag{color:#666!important;font-size:8pt!important}
+  .qbox{border-color:#C62828!important;background:#fff5f5!important}
+  .qlbl{color:#C62828!important;font-size:7.5pt!important}
+  .qtxt{color:#333!important;font-size:11pt!important}
+}
+</style>
+</head>
+<body>
+
+<!-- PAGE 0 -->
+<div class="page active" id="p0">
+  <div class="p0-dos">Dossier n° FE-001  •  Lecture pas à Pas  •  CM2</div>
+  <h1 class="p0-titre">« Fatale erreur »</h1>
+  <div class="p0-auteur">Fredric Brown</div>
+  <div class="p0-vocab">
+    <span class="p0-vocab-t">📖 Pièces lexicales — à déchiffrer avant d’ouvrir le dossier</span>
+    <div class="p0-vocab-g">
+      <div class="vcard"><span class="vcard-mot">modus operandi</span><span class="vcard-def">Façon d’agir habituelle d’un criminel</span></div>
+      <div class="vcard"><span class="vcard-mot">manigancer</span><span class="vcard-def">Préparer secrètement quelque chose de mauvais</span></div>
+      <div class="vcard"><span class="vcard-mot">pince-monseigneur</span><span class="vcard-def">Outil de cambrioleur pour forcer les serrures</span></div>
+      <div class="vcard"><span class="vcard-mot">funeste</span><span class="vcard-def">Qui cause la mort ou une catastrophe</span></div>
+    </div>
+  </div>
+  <div class="p0-hypo">
+    <span class="p0-hypo-l">Hypothèse initiale</span>
+    <div class="p0-hypo-q">D’après le titre « Fatale erreur » — quelle sorte d’histoire allons-nous lire ?</div>
+  </div>
+  <button class="btn-open" onclick="startReading()">▶  Ouvrir le dossier</button>
+  <button class="btn-resume" id="btn-resume" onclick="resumeReading()">↩  Reprendre — Fragment <span id="resume-num">1</span></button>
+</div>
+
+<!-- PAGE 1 -->
+<div class="page" id="p1">
+  <div class="hdr">
+    <div class="hdr-l">
+      <span class="hdr-dos">Dossier FE-001  •  LPàP  •  CM2</span>
+      <span class="hdr-titre">« Fatale erreur » — Fredric Brown</span>
+    </div>
+    <div class="hdr-r">
+      <button class="btn-next-frag" id="btn-next" onclick="nextFrag()">Fragment suivant →</button>
+      <button class="btn-hdr" onclick="window.print()" title="Imprimer">🖨️</button>
+      <button class="btn-hdr" onclick="resetAll()">✕ reset</button>
+    </div>
+  </div>
+  <div class="progress-bar"><div class="progress-fill" id="prog" style="width:20%"></div></div>
+  <div class="fstrip" id="fstrip"></div>
+  <div class="main-tabs">
+    <button class="mtab on" id="mtab-tx" onclick="switchView('tx')">📖  Texte</button>
+    <button class="mtab" id="mtab-po" onclick="switchView('po')">📌  Post-its</button>
+    <button class="mtab" id="mtab-ia" onclick="switchView('ia')">🎨  Image IA</button>
+  </div>
+  <div class="view view-texte active" id="view-tx">
+    <div class="texte-scroll">
+      <div class="texte-inner" id="fpanel"></div>
+    </div>
+  </div>
+  <div class="view view-postits" id="view-po">
+    <div class="cork-bg" id="cork-bg">
+      <div class="posits-wrap" id="posits-wrap"></div>
+    </div>
+    <div class="hypo-wrap">
+      <input class="hypo-in" id="hypo-in" type="text" placeholder="Hypothèse d’un élève…" onkeydown="if(event.key==='Enter')addHypo()">
+      <button class="btn-add" onclick="addHypo()">+ Ajouter</button>
+    </div>
+  </div>
+  <div class="view view-ia" id="view-ia">
+    <div class="ia-panel">
+      <span class="ia-label">🎨 Prompt illustration — Fragment <span id="ia-fnum">1</span></span>
+      <textarea class="ia-prompt" id="ia-prompt" rows="6"></textarea>
+      <div class="ia-btns">
+        <button class="btn-ia btn-ia-copy" id="btn-copy" onclick="copyPrompt()">📋 Copier le prompt</button>
+        <a class="btn-ia btn-ia-bing" href="#" target="_blank" onclick="openBing(event)">🌐 Bing Image Creator</a>
+        <a class="btn-ia btn-ia-ideogram" href="https://ideogram.ai/" target="_blank">🎨 Ideogram</a>
+      </div>
+      <div class="ia-hint">💡 Le prompt mélange la scène du fragment et les mots-clés des hypothèses des élèves. Modifiez-le librement avant de générer.</div>
+    </div>
+  </div>
+</div>
+
+<!-- PAGE 2 -->
+<div class="page" id="p2">
+  <div class="syn-t">Dossier clos</div>
+  <h2 class="syn-titre">« Fatale erreur » — Après la lecture</h2>
+  <div class="syn-sous">Débat interprétatif final</div>
+  <div class="syn-qs">
+    <div class="syn-q">1. Quelle est la vraie « fatale erreur » de Walter Baxter ? Était-ce inévitable ?</div>
+    <div class="syn-q">2. L’auteur nous cache-t-il des informations ? À quel moment avez-vous compris ce qui allait se passer ?</div>
+    <div class="syn-q">3. Walter mérite-t-il d’être puni ? Justifiez avec des éléments du texte.</div>
+    <div class="syn-q">4. Comment appelle-t-on ce type de fin inattendue ? Connaissez-vous d’autres histoires construites ainsi ?</div>
+  </div>
+  <button class="btn-ret" onclick="goP(1)">← Retour au dossier</button>
+</div>
+
+<script>
+var FRAGS=[
+  {num:1,label:"N°1",tag:"Mise en place",cap:"Présentation",
+   text:"M. Walter Baxter était un grand lecteur de romans policiers depuis de longues années. Le jour où il décida d’assassiner son oncle, il savait donc qu’il ne devrait pas commettre le moindre <em>impair</em>. Il savait aussi que pour éviter toute possibilité d’erreur, le <em>mot d’ordre</em> devait être <strong>la simplicité</strong>. Une rigoureuse simplicité. Pas d’alibi préparé à l’avance. Pas de <em>modus operandi</em> compliqué. Pas de fausses pistes <em>manigancées</em>.<br><br>Si, quand même, une fausse piste, mais petite. Toute simple. Il faudrait qu’il cambriole la maison de son oncle, et qu’il emporte tout l’argent liquide qu’il y trouverait, de telle manière que le meurtre apparaîsse comme un cambriolage ayant mal tourné.",
+   q:"Pourquoi Walter choisit-il de « simuler un cambriolage » ? Qu’est-ce que cela révèle sur lui ?",
+   prompt:"Illustration style roman policier années 1950, homme élégant seul dans une bibliothèque sombre à la lueur d’une lampe de bureau dorée, entouré de romans noirs empilés, regard calculateur et froid, ombres dramatiques, ambiance film noir américain, aquarelle sombre et raffinée, palette bleu nuit et or"},
+  {num:2,label:"N°2",tag:"La préparation",cap:"Préparation",
+   text:"Sans cela, <em>unique héritier</em> de son oncle, il se désignerait trop comme suspect numéro un.<br><br>Il prit tout son temps pour faire l’emplette d’une <em>pince-monseigneur</em> dans des conditions rendant impossible l’identification de l’acquéreur. La pince-monseigneur lui servirait à la fois d’<strong>outil</strong> et d’<strong>arme</strong>.<br><br>Il mit soigneusement au point les moindres détails, car il savait que la moindre erreur lui serait <em>funeste</em>. Avec grand soin, il fixa la nuit et l’heure de l’opération.<br><br>La pince-monseigneur ouvrit la fenêtre sans difficulté et sans bruit.",
+   q:"La pince-monseigneur « servirait à la fois d’outil et d’arme ». À quoi sert-elle exactement dans son plan ?",
+   prompt:"Illustration film noir années 1940, silhouette d’un homme en manteau sombre dans une quincaillerie vide et peu éclairée, tenant un outil métallique brillant, regard furtif vers la porte, vitrine poussiéreuse, lumière jaune basse, ambiance oppressante, gravure dramatique noir et sépia"},
+  {num:3,label:"N°3",tag:"La nuit du crime",cap:"La nuit",
+   text:"Il entra dans le salon. La porte donnant sur la chambre à coucher était grande ouverte, mais comme <em>aucun bruit n’en venait</em>, il décida d’en finir avec la partie <em>cambriolage</em> de l’opération.<br><br>Il savait où son oncle gardait son argent liquide, mais il tenait à donner l’impression que le cambrioleur l’avait longuement cherché. Le beau clair de lune lui permettait de bien voir ; il travailla sans bruit…<br><br>Deux heures plus tard, une fois rentré chez lui, il se déshabilla vite et se mit au lit.",
+   q:"Walter décide de faire le cambriolage « d’abord ». Remarquez-vous quelque chose d’étrange dans ses actions ?",
+   prompt:"Illustration roman noir, silhouette sombre se faufilant dans un salon éclairé par la lune pleine, meubles renversés, porte entrouverte sur l’obscurité, clair de lune bleué sur le parquet, tension et silence, style expressionniste allemand, encre de chine et lavis bleu-nuit"},
+  {num:4,label:"N°4",tag:"Le lendemain",cap:"Le retour",
+   text:"La police n’avait aucune possibilité d’être alertée avant le lendemain, mais il était prêt à recevoir les policiers si par hasard ils se présentaient avant. Il s’était débarrassé de l’argent et de la pince-monseigneur. Certes, cela lui avait fait mal au cœur de détruire quelques centaines de dollars, mais quelques centaines de dollars étaient peu de chose à côté des <em>cinquante mille dollars</em> qu’allait représenter l’héritage.<br><br><strong>On frappa à la porte. Déjà ?</strong><br><br>Il se força au calme, alla ouvrir.",
+   q:"« On frappa à la porte. Déjà ? » — Que ressent Walter à ce moment ? Pourquoi est-il surpris ?",
+   prompt:"Illustration thriller psychologique, homme en pyjama au milieu d’un salon sombre à l’aube, visage figé de stupeur tourné vers une porte fermée, lumière bleuée matinale filtrant sous la porte, ombres angoissantes, style aquarelle expressionniste, tension extrême"},
+  {num:5,label:"N°5",tag:"La chute",cap:"La chute",
+   text:"Le shérif et son adjoint entrèrent en le bousculant :<br><br>« <strong>Walter Baxter ? Voici le mandat d’amener. Habillez-vous et suivez-nous.</strong><br>— Vous m’arrêtez ? Mais pourquoi ?<br>— Vol avec effraction. Votre oncle vous a vu et reconnu ; il est resté sans faire de bruit à la porte de sa chambre ; dès que vous êtes parti il est venu au poste et a fait sa déposition sous serment. »<br><br>La mâchoire de Walter Baxter s’affaissa. Il avait, malgré tout, commis une erreur. Il avait conçu le <em>meurtre parfait</em>, mais le cambriolage l’avait tellement obnubilé qu’il avait <strong>oublié de le commettre</strong>.",
+   q:"Quelle est la « fatale erreur » de Walter ? Expliquez ce qui s’est vraiment passé cette nuit-là.",
+   prompt:"Illustration roman policier américain classique, shérif et adjoint en uniforme arrêtant un homme en pyjama sur le seuil de sa maison, visage du suspect effondéré de stupeur, matin gris, contraste dramatique clair-obscur, style affiche polière vintage années 1950, couleurs froides"}
+];
+
+var cur=0, hypos=[[],[],[],[],[]], viewMode="tx";
+var PCLS=["py","pp","pb","py","pp"];
+var RCLS=["r0","r1","r2","r3","r4","r5"];
+var LS_KEY="fe_visibleo_v3";
+var STOP_WORDS=["le","la","les","un","une","des","de","du","en","et","est","il","elle","ils","elles","je","tu","nous","vous","que","qui","dans","sur","par","pour","avec","sans","pas","mais","ou","si","au","aux","se","sa","son","ses","ce","cet","cette","ces","tout","tous","comme","leur","dont","on","y","a","ne","ca","cest","avait","etait","avoir","etre","fait","peut","va","plus","tres","bien","aussi","encore","moins","trop","dit","donc","alors","quand","lors"];
+
+function saveState(){
+  try{
+    var pg=document.querySelector(".page.active");
+    localStorage.setItem(LS_KEY,JSON.stringify({cur:cur,hypos:hypos,page:pg?pg.id:"p0",view:viewMode}));
+  }catch(e){}
+}
+
+function loadState(){
+  try{
+    var raw=localStorage.getItem(LS_KEY);
+    if(!raw)return false;
+    var st=JSON.parse(raw);
+    if(Array.isArray(st.hypos))hypos=st.hypos;
+    if(typeof st.cur==="number")cur=st.cur;
+    if(st.page==="p1"||st.page==="p2"){
+      var btn=document.getElementById("btn-resume");
+      var num=document.getElementById("resume-num");
+      if(btn)btn.style.display="";
+      if(num)num.textContent=cur+1;
+      window._savedView=st.view||"tx";
+    }
+    return true;
+  }catch(e){}
+  return false;
+}
+
+function goP(n){
+  document.querySelectorAll(".page").forEach(function(p){p.classList.remove("active");});
+  document.getElementById("p"+n).classList.add("active");
+}
+
+function startReading(){
+  cur=0; hypos=[[],[],[],[],[]];
+  localStorage.removeItem(LS_KEY);
+  goP(1); buildFstrip(); renderFrag(0); switchView("tx");
+}
+
+function resumeReading(){
+  goP(1); buildFstrip(); renderFrag(cur);
+  switchView(window._savedView||"tx");
+}
+
+function buildFstrip(){
+  var strip=document.getElementById("fstrip");
+  strip.innerHTML="";
+  FRAGS.forEach(function(f,i){
+    var d=document.createElement("div");
+    d.className="fpill flocked";
+    d.id="fp"+i;
+    d.innerHTML='<span class="fp-dot"></span>'+f.label;
+    d.setAttribute("data-idx",i);
+    strip.appendChild(d);
+  });
+  strip.addEventListener("click",function(e){
+    var pill=e.target.closest(".fpill");
+    if(!pill)return;
+    var idx=parseInt(pill.getAttribute("data-idx"));
+    if(!isNaN(idx)&&idx<=cur)renderFrag(idx);
+  });
+  updateFstrip();
+}
+
+function updateFstrip(){
+  FRAGS.forEach(function(f,i){
+    var el=document.getElementById("fp"+i);
+    if(!el)return;
+    el.className="fpill";
+    if(i<cur)el.classList.add("fdone");
+    else if(i===cur)el.classList.add("factive");
+    else el.classList.add("flocked");
+  });
+  var btn=document.getElementById("btn-next");
+  if(btn)btn.disabled=(cur>=FRAGS.length-1);
+}
+
+function renderFrag(idx){
+  cur=idx;
+  var f=FRAGS[idx];
+  var panel=document.getElementById("fpanel");
+  var html='<div class="f-ev"><span class="f-badge">Pièce '+f.label+' / 5</span><span class="f-tag">'+f.tag+'</span></div>';
+  html+='<div class="f-text">'+f.text+'</div>';
+  html+='<div class="qbox"><div class="qlbl">🔍 Question inférentielle</div><div class="qtxt">'+f.q+'</div></div>';
+  if(idx===4){
+    html+='<button class="btn-open" style="align-self:flex-start;font-size:10px;padding:8px 20px;margin-top:4px" onclick="goP(2)">Synthèse finale →</button>';
+  }
+  panel.innerHTML=html;
+  document.getElementById("prog").style.width=((idx+1)/5*100)+"%";
+  updateFstrip();
+  renderPostits();
+  if(viewMode==="ia")buildIApanel();
+  saveState();
+}
+
+function nextFrag(){
+  if(cur<FRAGS.length-1)renderFrag(cur+1);
+}
+
+function switchView(mode){
+  viewMode=mode;
+  ["tx","po","ia"].forEach(function(v){
+    document.getElementById("mtab-"+v).classList.toggle("on",v===mode);
+    document.getElementById("view-"+v).classList.toggle("active",v===mode);
+  });
+  if(mode==="ia")buildIApanel();
+  saveState();
+}
+
+function renderPostits(){
+  var wrap=document.getElementById("posits-wrap");
+  if(!wrap)return;
+  var html="";
+  var total=0;
+  hypos.forEach(function(arr,fi){
+    arr.forEach(function(h,hi){
+      total++;
+      var cls=h.s==="ok"?"pg":h.s==="no"?"pr":PCLS[fi];
+      var rot=RCLS[(fi*3+hi)%6];
+      html+='<div class="postit '+cls+' '+rot+'">'
+        +'<span class="postit-fn">Fragment '+(fi+1)+'</span>'
+        +escHtml(h.text)
+        +'<div class="postit-btns">'
+        +'<button class="pb2" onclick="doSetS('+fi+','+hi+',\'ok\')" title="Confirmer">✓</button>'
+        +'<button class="pb2" onclick="doSetS('+fi+','+hi+',\'no\')" title="Infirmer">✗</button>'
+        +'<button class="pb2" onclick="doDelH('+fi+','+hi+')" title="Supprimer">🗑</button>'
+        +'</div></div>';
+    });
+  });
+  if(!total)html='<div style="color:#8D6E63;font-size:13px;padding:20px;font-style:italic;font-family:Georgia,serif;opacity:.8">Aucune hypoth\u00e8se pour l\'instant…<br><br>Bascule sur l\'onglet « Texte », lis le fragment avec les élèves, puis reviens ici pour saisir leurs hypothèses.</div>';
+  wrap.innerHTML=html;
+}
+
+function escHtml(s){
+  return s.replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/>/g,"&gt;");
+}
+
+function doSetS(fi,hi,s){
+  if(hypos[fi]&&hypos[fi][hi]){hypos[fi][hi].s=s;renderPostits();saveState();}
+}
+function doDelH(fi,hi){
+  if(hypos[fi]){hypos[fi].splice(hi,1);renderPostits();saveState();}
+}
+
+function addHypo(){
+  var inp=document.getElementById("hypo-in");
+  if(!inp)return;
+  var val=inp.value.trim();
+  if(!val)return;
+  if(!hypos[cur])hypos[cur]=[];
+  hypos[cur].push({text:val,s:"?"});
+  inp.value="";
+  renderPostits();
+  saveState();
+}
+
+function getHypoKeywords(){
+  var freq={};
+  hypos.forEach(function(arr){
+    arr.forEach(function(h){
+      h.text.toLowerCase()
+        .replace(/[.,!?;:«»"()-]/g," ")
+        .split(/\s+/)
+        .forEach(function(w){
+          w=w.replace(/['']/g,"").replace(/[^a-zéèêëàâùûüîïôçœæ]/gi,"");
+          if(w.length>3&&STOP_WORDS.indexOf(w)<0){
+            freq[w]=(freq[w]||0)+1;
+          }
+        });
+    });
+  });
+  return Object.keys(freq).sort(function(a,b){return freq[b]-freq[a];}).slice(0,6);
+}
+
+function buildIApanel(){
+  var el=document.getElementById("ia-fnum");
+  if(el)el.textContent=cur+1;
+  var base=FRAGS[cur].prompt;
+  var kw=getHypoKeywords();
+  var prompt=base;
+  if(kw.length>0)prompt+=". Éléments des élèves : "+kw.join(", ")+".";
+  var ta=document.getElementById("ia-prompt");
+  if(ta)ta.value=prompt;
+  var btn=document.getElementById("btn-copy");
+  if(btn){btn.textContent="📋 Copier le prompt";btn.className="btn-ia btn-ia-copy";}
+}
+
+function copyPrompt(){
+  var ta=document.getElementById("ia-prompt");
+  if(!ta)return;
+  if(navigator.clipboard){
+    navigator.clipboard.writeText(ta.value).then(function(){
+      var btn=document.getElementById("btn-copy");
+      if(btn){btn.textContent="✓ Copié !";btn.className="btn-ia btn-ia-copy copied";}
+      setTimeout(function(){
+        var b=document.getElementById("btn-copy");
+        if(b){b.textContent="📋 Copier le prompt";b.className="btn-ia btn-ia-copy";}
+      },2000);
+    });
+  } else {
+    ta.select();document.execCommand("copy");
+  }
+}
+
+function openBing(e){
+  e.preventDefault();
+  var ta=document.getElementById("ia-prompt");
+  if(!ta)return;
+  window.open("https://www.bing.com/images/create?q="+encodeURIComponent(ta.value),"_blank");
+}
+
+function resetAll(){
+  if(!confirm("Effacer toutes les hypothèses et recommencer ?"))return;
+  hypos=[[],[],[],[],[]]; cur=0;
+  localStorage.removeItem(LS_KEY);
+  buildFstrip(); renderFrag(0); switchView("tx");
+}
+
+loadState();
+</script>
+</body>
+</html>

@@ -1,0 +1,841 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<title>Séquence Dictées — Jumanji CM2</title>
+<style>
+/* ===== GENERAL ===== */
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+body { font-family: 'Georgia', serif; background: white; color: #1a1a2e; font-size: 11pt; line-height: 1.5; }
+
+/* ===== PRINT ===== */
+@media print {
+  body { font-size: 10pt; }
+  .page { page-break-after: always; padding: 15mm 15mm 10mm 15mm; }
+  .page:last-child { page-break-after: auto; }
+  .no-print { display: none !important; }
+}
+@media screen {
+  body { background: #e8e8e8; }
+  .page { background: white; max-width: 210mm; margin: 12px auto; padding: 15mm 15mm 10mm 15mm; box-shadow: 0 2px 8px rgba(0,0,0,0.18); }
+}
+
+/* ===== COULEURS TYPES ===== */
+:root {
+  --flash:    #7b1fa2;
+  --trous:    #1565c0;
+  --coeur:    #00695c;
+  --negocie:  #e65100;
+  --seq:      #1a1a2e;
+}
+
+/* ===== HEADERS ===== */
+.page-header { border-bottom: 3px solid var(--seq); padding-bottom: 8px; margin-bottom: 14px; display: flex; justify-content: space-between; align-items: flex-end; }
+.header-title { font-size: 15pt; font-weight: bold; color: var(--seq); }
+.header-subtitle { font-size: 10pt; color: #555; }
+.header-logo { font-size: 22pt; }
+
+.student-header { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 6px; margin-bottom: 12px; }
+.student-field { border-bottom: 1.5px solid #333; padding: 2px 0; font-size: 10pt; }
+.student-label { font-size: 8pt; color: #888; display: block; }
+
+/* ===== TYPE BADGE ===== */
+.type-badge { display: inline-block; color: white; font-weight: bold; font-size: 9pt; border-radius: 4px; padding: 2px 10px; margin-bottom: 10px; letter-spacing: 0.5px; }
+.flash-badge  { background: var(--flash); }
+.trous-badge  { background: var(--trous); }
+.coeur-badge  { background: var(--coeur); }
+.negocie-badge { background: var(--negocie); }
+.seq-badge    { background: var(--seq); }
+
+/* ===== SECTION TITLES ===== */
+.section-title { font-size: 10pt; font-weight: bold; color: var(--seq); border-left: 4px solid; padding-left: 8px; margin: 12px 0 6px 0; text-transform: uppercase; letter-spacing: 0.3px; }
+.flash-sec  { border-color: var(--flash); }
+.trous-sec  { border-color: var(--trous); }
+.coeur-sec  { border-color: var(--coeur); }
+.negocie-sec { border-color: var(--negocie); }
+.seq-sec    { border-color: var(--seq); }
+
+/* ===== LINES ===== */
+.write-lines { margin: 4px 0; }
+.write-line  { border-bottom: 1px solid #bbb; height: 22px; margin: 2px 0; width: 100%; }
+.write-line-lg { border-bottom: 1px solid #bbb; height: 26px; margin: 2px 0; width: 100%; }
+.write-line-sm { border-bottom: 1px solid #ddd; height: 18px; margin: 2px 0; width: 100%; }
+.correction-line { border-bottom: 1.5px dashed #e74c3c; height: 22px; margin: 2px 0; width: 100%; }
+
+/* ===== TEXT BOXES ===== */
+.trous-text { background: #f8f9ff; border: 1px solid #c5cae9; border-radius: 6px; padding: 12px 14px; margin: 8px 0; font-size: 11pt; line-height: 2; }
+.blank { display: inline-block; border-bottom: 2px solid #1565c0; min-width: 80px; height: 18px; vertical-align: bottom; margin: 0 2px; }
+.blank-sm { min-width: 50px; }
+.blank-lg { min-width: 120px; }
+
+.mot-bank { background: #e8eaf6; border-radius: 5px; padding: 8px 12px; margin: 8px 0; font-size: 10pt; }
+.mot-bank strong { font-size: 9pt; color: #3949ab; display: block; margin-bottom: 4px; }
+
+.coeur-box { background: #e0f2f1; border: 1.5px solid var(--coeur); border-radius: 6px; padding: 12px 14px; margin: 8px 0; font-size: 11pt; line-height: 1.9; }
+.coeur-box .verse-num { font-size: 8pt; color: #888; margin-right: 6px; }
+
+.tip-box { background: #fff8e1; border-left: 4px solid #ffa000; padding: 6px 10px; font-size: 9pt; margin: 8px 0; border-radius: 0 4px 4px 0; }
+.tip-box strong { color: #e65100; }
+
+/* ===== TABLE (fiche séquence) ===== */
+table { width: 100%; border-collapse: collapse; font-size: 9pt; margin: 8px 0; }
+th { background: var(--seq); color: white; padding: 5px 7px; text-align: left; font-size: 9pt; }
+td { padding: 4px 7px; border-bottom: 1px solid #ddd; vertical-align: top; }
+tr:nth-child(even) td { background: #f5f5f5; }
+.td-flash { border-left: 4px solid var(--flash); }
+.td-trous { border-left: 4px solid var(--trous); }
+.td-coeur { border-left: 4px solid var(--coeur); }
+.td-negocie { border-left: 4px solid var(--negocie); }
+
+/* ===== BO BOX ===== */
+.bo-box { background: #f3f4f8; border: 1px solid #c5cae9; border-radius: 6px; padding: 8px 12px; margin: 8px 0; font-size: 9pt; }
+.bo-box strong { color: var(--seq); }
+
+/* ===== DECOUPER ===== */
+.cut-line { border-top: 2px dashed #999; margin: 12px 0; padding-top: 10px; text-align: center; font-size: 9pt; color: #888; }
+.scissors { font-size: 12pt; margin-right: 6px; }
+
+/* ===== NEGOCIE ===== */
+.negocie-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin: 6px 0; }
+.negocie-col { border: 1px solid #ddd; border-radius: 5px; padding: 8px; }
+.negocie-col-title { font-size: 9pt; font-weight: bold; color: #555; margin-bottom: 5px; text-align: center; }
+
+/* ===== DIFF ===== */
+.diff-badge { display: inline-block; font-size: 8pt; font-weight: bold; border-radius: 3px; padding: 1px 6px; margin-left: 5px; vertical-align: middle; }
+.diff-aide  { background: #fff3e0; color: #e65100; border: 1px solid #ffa000; }
+.diff-appro { background: #e8f5e9; color: #2e7d32; border: 1px solid #4caf50; }
+
+/* ===== BONUS ===== */
+.bonus-box { background: #fce4ec; border: 1px solid #f48fb1; border-radius: 5px; padding: 7px 10px; margin: 8px 0; font-size: 9.5pt; }
+.bonus-box strong { color: #b71c1c; }
+
+/* ===== PROF ONLY ===== */
+.prof-note { background: #fffde7; border: 1px dashed #fbc02d; border-radius: 5px; padding: 7px 10px; margin: 6px 0; font-size: 9pt; }
+.prof-note strong { color: #f57f17; }
+
+/* ===== REPONSE CORR ===== */
+.correction-answer { color: #c62828; font-style: italic; font-size: 10pt; margin-left: 8px; }
+</style>
+</head>
+<body>
+
+<!-- ============================================================ -->
+<!-- PAGE 1-2 : FICHE SÉQUENCE PROFESSEUR -->
+<!-- ============================================================ -->
+<div class="page">
+  <div class="page-header">
+    <div>
+      <div class="header-title">SÉQUENCE DICTÉES — JUMANJI</div>
+      <div class="header-subtitle">Chris Van Allsburg · Lecture suivie CM2 · Période 5 · 2025-2026</div>
+    </div>
+    <div class="header-logo">📗</div>
+  </div>
+
+  <span class="type-badge seq-badge">FICHE SÉQUENCE PROFESSEUR</span>
+
+  <div class="bo-box">
+    <strong>Compétences visées — Bulletins Officiels Cycle 3 (2020)</strong><br>
+    <strong>Langage écrit :</strong> Écrire sous la dictée un texte d'une dizaine de lignes en mobilisant ses connaissances en orthographe lexicale et grammaticale.<br>
+    <strong>Étude de la langue :</strong> Maîtriser les relations entre l'oral et l'écrit / Orthographier les formes verbales / Accorder dans le groupe nominal.<br>
+    <strong>Compétences transversales :</strong> Développer l'autonomie orthographique / Adopter une posture de relecteur / Justifier ses choix à l'oral.
+  </div>
+
+  <div class="section-title seq-sec">Présentation de la séquence</div>
+  <p style="font-size:10pt; margin-bottom:8px;">10 dictées réparties sur <strong>4 semaines</strong> (Semaines 1 à 4 de la P5), intégrées à la lecture suivie de l'album <em>Jumanji</em> de Chris Van Allsburg. Chaque dictée est <strong>thématique</strong> (textes originaux inspirés de l'album) et <strong>liée à la notion de grammaire travaillée</strong> en parallèle. 4 types de dictées alternent pour varier les postures d'élèves.</p>
+
+  <div class="section-title seq-sec">Les 4 types de dictées utilisés</div>
+  <table>
+    <tr>
+      <th>Type</th><th>Description</th><th>Durée</th><th>Posture élève</th><th>Séances</th>
+    </tr>
+    <tr>
+      <td class="td-flash"><strong style="color:var(--flash)">FLASH</strong></td>
+      <td>2–4 phrases courtes lues 2 fois par l'enseignant. Auto-correction immédiate collective au tableau.</td>
+      <td>10 min</td>
+      <td>Écoute active, transcription</td>
+      <td>J·1, J·3, J·9</td>
+    </tr>
+    <tr>
+      <td class="td-trous"><strong style="color:var(--trous)">À TROUS</strong></td>
+      <td>Texte imprimé avec des mots manquants. L'enseignant lit tout le texte, les élèves complètent les blancs. Lié à la notion de grammaire de la semaine.</td>
+      <td>12–15 min</td>
+      <td>Écoute fine, discrimination orthographique</td>
+      <td>J·2, J·4, J·7</td>
+    </tr>
+    <tr>
+      <td class="td-coeur"><strong style="color:var(--coeur)">PAR CŒUR</strong></td>
+      <td>Texte distribué à mémoriser à la maison (3–4 lignes). Restitution individuelle en classe. Focus sur ponctuation et majuscules.</td>
+      <td>10–15 min</td>
+      <td>Mémorisation, restitution</td>
+      <td>J·6, J·8</td>
+    </tr>
+    <tr>
+      <td class="td-negocie"><strong style="color:var(--negocie)">NÉGOCIÉE</strong></td>
+      <td>Chaque élève écrit seul, puis compare avec son binôme. Le binôme choisit la bonne orthographe et la justifie à l'oral.</td>
+      <td>15 min</td>
+      <td>Coopération, argumentation orthographique</td>
+      <td>J·5, J·10</td>
+    </tr>
+  </table>
+
+  <div class="section-title seq-sec">Programmation semaine par semaine</div>
+  <table>
+    <tr>
+      <th>N°</th><th>Sem.</th><th>Jour</th><th>Type</th><th>Titre / Extrait</th><th>Objectif orthographique</th><th>Lien grammaire</th>
+    </tr>
+    <tr>
+      <td><strong>J·1</strong></td><td>Sem. 1</td><td>Mardi 5 mai</td>
+      <td class="td-flash"><span style="color:var(--flash);font-weight:bold">FLASH</span></td>
+      <td>La boîte abandonnée</td>
+      <td>Majuscules, ponctuation fin de phrase, guillemets</td>
+      <td>GR·1 Types de phrases</td>
+    </tr>
+    <tr>
+      <td><strong>J·2</strong></td><td>Sem. 1</td><td>Jeudi 7 mai</td>
+      <td class="td-trous"><span style="color:var(--trous);font-weight:bold">À TROUS</span></td>
+      <td>La découverte du jeu</td>
+      <td>Déterminants, accord nom-adjectif dans le GN</td>
+      <td>GR·1 Types de phrases</td>
+    </tr>
+    <tr>
+      <td><strong>J·3</strong></td><td>Sem. 2</td><td>Lundi 11 mai</td>
+      <td class="td-flash"><span style="color:var(--flash);font-weight:bold">FLASH</span></td>
+      <td>Le lion dans le salon</td>
+      <td>Accord COD, terminaisons passé simple, virgule CC</td>
+      <td>GR·2 Constituants du GN</td>
+    </tr>
+    <tr>
+      <td><strong>J·4</strong></td><td>Sem. 2</td><td>Mardi 12 mai</td>
+      <td class="td-trous"><span style="color:var(--trous);font-weight:bold">À TROUS</span></td>
+      <td>Le salon dévasté</td>
+      <td>Constituants complets du GN (det + nom + adj)</td>
+      <td>GR·2 Constituants du GN ★ lien direct</td>
+    </tr>
+    <tr>
+      <td><strong>J·5</strong></td><td>Sem. 2</td><td>Vendredi 15 mai</td>
+      <td class="td-negocie"><span style="color:var(--negocie);font-weight:bold">NÉGOCIÉE</span></td>
+      <td>Les singes du plafond</td>
+      <td>Passé simple, accord adjectifs attributs, adverbes</td>
+      <td>Révision générale semaine 2</td>
+    </tr>
+    <tr>
+      <td><strong>J·6</strong></td><td>Sem. 3</td><td>Lundi 18 mai</td>
+      <td class="td-coeur"><span style="color:var(--coeur);font-weight:bold">PAR CŒUR</span></td>
+      <td>La fin du jeu</td>
+      <td>Ponctuation discours indirect, accord adjectifs épithètes</td>
+      <td>J·S5 Schéma narratif</td>
+    </tr>
+    <tr>
+      <td><strong>J·7</strong></td><td>Sem. 3</td><td>Mardi 19 mai</td>
+      <td class="td-trous"><span style="color:var(--trous);font-weight:bold">À TROUS</span></td>
+      <td>Judy lance les dés</td>
+      <td>Identifier et orthographier les COD et COI</td>
+      <td>GR·3 COD / COI ★ lien direct</td>
+    </tr>
+    <tr>
+      <td><strong>J·8</strong></td><td>Sem. 4</td><td>Lundi 25 mai</td>
+      <td class="td-coeur"><span style="color:var(--coeur);font-weight:bold">PAR CŒUR</span></td>
+      <td>La chute de l'histoire</td>
+      <td>Dialogue (guillemets, tirets, ponctuation), majuscules</td>
+      <td>J·S6 Débat — la chute</td>
+    </tr>
+    <tr>
+      <td><strong>J·9</strong></td><td>Sem. 4</td><td>Mardi 26 mai</td>
+      <td class="td-flash"><span style="color:var(--flash);font-weight:bold">FLASH</span></td>
+      <td>Le rhinocéros surgit</td>
+      <td>CC de lieu, temps, manière — virgule de détachement</td>
+      <td>GR·4 CC + attribut ★ lien direct</td>
+    </tr>
+    <tr>
+      <td><strong>J·10</strong></td><td>Sem. 4</td><td>Vendredi 29 mai</td>
+      <td class="td-negocie"><span style="color:var(--negocie);font-weight:bold">NÉGOCIÉE</span></td>
+      <td>Le jeu terminé</td>
+      <td>Accord du participe passé avec avoir (COD antéposé)</td>
+      <td>Révision générale semaine 4</td>
+    </tr>
+  </table>
+
+  <div class="section-title seq-sec">Différenciation</div>
+  <p style="font-size:10pt;"><span class="diff-badge diff-aide">AIDE</span> Pour les élèves en difficulté : banque de mots fournie pour les dictées à trous / texte à mémoriser réduit à 2 lignes pour les par cœur / binôme guidant pour les dictées négociées.</p>
+  <p style="font-size:10pt; margin-top:4px;"><span class="diff-badge diff-appro">APPROFONDISSEMENT</span> Identifier la fonction des mots dictés / Analyser la ponctuation / Rédiger une phrase supplémentaire dans le même style.</p>
+</div>
+
+<!-- ============================================================ -->
+<!-- PAGE 3 : J·1 FLASH — La boîte abandonnée -->
+<!-- ============================================================ -->
+<div class="page">
+  <div class="page-header">
+    <div>
+      <div class="header-title">JUMANJI — Chris Van Allsburg</div>
+      <div class="header-subtitle">Dictée n°1 · Semaine 1 · Mardi 5 mai</div>
+    </div>
+    <div class="header-logo">✏</div>
+  </div>
+
+  <div class="student-header">
+    <div class="student-field">Nom : ______________________ <span class="student-label">Nom de famille</span></div>
+    <div class="student-field">Prénom : ____________________ <span class="student-label">Prénom</span></div>
+    <div class="student-field">Date : _____________________ <span class="student-label">Date</span></div>
+  </div>
+
+  <span class="type-badge flash-badge">✏ DICTÉE FLASH</span>
+
+  <div class="tip-box"><strong>Comment ça marche ?</strong> L'enseignant(e) lit chaque phrase 2 fois. Tu écris. À la fin, la correction est faite collectivement au tableau. Tu corriges en rouge.</div>
+
+  <div class="section-title flash-sec">J'écris la dictée</div>
+  <div class="write-lines">
+    <div class="write-line-lg"></div>
+    <div class="write-line-lg"></div>
+    <div class="write-line-lg"></div>
+    <div class="write-line-lg"></div>
+    <div class="write-line-lg"></div>
+    <div class="write-line-lg"></div>
+    <div class="write-line-lg"></div>
+    <div class="write-line-lg"></div>
+  </div>
+
+  <div class="section-title flash-sec" style="margin-top:12px;">Je me relis (avant la correction)</div>
+  <p style="font-size:9.5pt; margin-bottom:6px;">Coche chaque case :</p>
+  <table style="font-size:9.5pt; width:auto;">
+    <tr><td style="padding:3px 6px;">□ J'ai mis une majuscule au début de chaque phrase</td></tr>
+    <tr><td style="padding:3px 6px;">□ J'ai mis un signe de ponctuation à la fin de chaque phrase (. ? ! :)</td></tr>
+    <tr><td style="padding:3px 6px;">□ J'ai vérifié les accords des noms (masculin/féminin, singulier/pluriel)</td></tr>
+    <tr><td style="padding:3px 6px;">□ J'ai vérifié les terminaisons des verbes</td></tr>
+  </table>
+
+  <div class="section-title flash-sec" style="margin-top:10px;">Je corrige <span style="font-weight:normal;font-size:9pt;color:#888;">(en rouge, je recopie les mots mal écrits en-dessous)</span></div>
+  <div class="write-lines">
+    <div class="correction-line"></div>
+    <div class="correction-line"></div>
+    <div class="correction-line"></div>
+    <div class="correction-line"></div>
+  </div>
+
+  <div class="bonus-box" style="margin-top:10px;">
+    <strong>⭐ Question bonus :</strong> Repère les 4 types de phrases dans la dictée. Note le type sous chaque phrase (déclarative / interrogative / injonctive / exclamative).
+    <span class="diff-badge diff-appro">APPROFONDISSEMENT</span>
+  </div>
+</div>
+
+<!-- ============================================================ -->
+<!-- PAGE 4 : J·2 À TROUS — La découverte du jeu -->
+<!-- ============================================================ -->
+<div class="page">
+  <div class="page-header">
+    <div>
+      <div class="header-title">JUMANJI — Chris Van Allsburg</div>
+      <div class="header-subtitle">Dictée n°2 · Semaine 1 · Jeudi 7 mai</div>
+    </div>
+    <div class="header-logo">✏</div>
+  </div>
+
+  <div class="student-header">
+    <div class="student-field">Nom : ______________________</div>
+    <div class="student-field">Prénom : ____________________</div>
+    <div class="student-field">Date : _____________________</div>
+  </div>
+
+  <span class="type-badge trous-badge">📄 DICTÉE À TROUS</span>
+
+  <div class="tip-box"><strong>Comment ça marche ?</strong> L'enseignant(e) lit le texte complet 1 fois. Ensuite, il/elle le relit phrase par phrase. Tu complètes les blancs avec les mots que tu entends. <span class="diff-badge diff-aide">AIDE</span> : utilise la banque de mots ci-dessous.</div>
+
+  <div class="mot-bank">
+    <strong>🗝 Banque de mots (aide) :</strong>
+    une mystérieuse · le grand · un vieux · les deux · le sombre · des dorées · Une étrange · le
+  </div>
+
+  <div class="section-title trous-sec">Je complète le texte</div>
+  <div class="trous-text">
+    Judy et Peter découvrirent <span class="blank blank-lg"></span> boîte dans <span class="blank"></span> parc de leur quartier. À l'intérieur, <span class="blank blank-lg"></span> jeu de plateau attendait <span class="blank blank-sm"></span> enfants. Sur <span class="blank blank-lg"></span> couvercle, <span class="blank blank-lg"></span> lettres formaient un titre inconnu : <strong>JUMANJI</strong>. <span class="blank blank-lg"></span> règle avertissait les joueurs que <span class="blank blank-sm"></span> jeu ne devait jamais être abandonné.
+  </div>
+
+  <div class="section-title trous-sec">Je me relis</div>
+  <table style="font-size:9.5pt; width:auto; margin-bottom:8px;">
+    <tr><td style="padding:3px 6px;">□ Chaque déterminant s'accorde avec son nom (masculin/féminin, singulier/pluriel)</td></tr>
+    <tr><td style="padding:3px 6px;">□ Chaque adjectif s'accorde avec le nom qu'il accompagne</td></tr>
+    <tr><td style="padding:3px 6px;">□ J'ai bien formé chaque groupe nominal (det + nom ou det + adj + nom)</td></tr>
+  </table>
+
+  <div class="section-title trous-sec">Je montre ce que j'ai appris</div>
+  <p style="font-size:10pt; margin-bottom:5px;">Souligne les 3 groupes nominaux que tu préfères dans le texte. Explique l'accord du premier :</p>
+  <p style="font-size:9.5pt; margin-bottom:4px;">Dans « <span class="blank blank-lg"></span> », le déterminant est <span class="blank"></span> parce que le nom est <span class="blank"></span> (masc./fém.) et <span class="blank"></span> (sing./plur.).</p>
+
+  <div class="bonus-box">
+    <strong>⭐ Question bonus :</strong> Récris la dernière phrase en la transformant en phrase interrogative. <span class="diff-badge diff-appro">APPROFONDISSEMENT</span>
+    <div class="write-line" style="margin-top:6px;"></div>
+  </div>
+</div>
+
+<!-- ============================================================ -->
+<!-- PAGE 5 : J·3 FLASH — Le lion dans le salon -->
+<!-- ============================================================ -->
+<div class="page">
+  <div class="page-header">
+    <div>
+      <div class="header-title">JUMANJI — Chris Van Allsburg</div>
+      <div class="header-subtitle">Dictée n°3 · Semaine 2 · Lundi 11 mai</div>
+    </div>
+    <div class="header-logo">✏</div>
+  </div>
+
+  <div class="student-header">
+    <div class="student-field">Nom : ______________________</div>
+    <div class="student-field">Prénom : ____________________</div>
+    <div class="student-field">Date : _____________________</div>
+  </div>
+
+  <span class="type-badge flash-badge">✏ DICTÉE FLASH</span>
+
+  <div class="tip-box"><strong>Comment ça marche ?</strong> L'enseignant(e) lit chaque phrase 2 fois. Tu écris. Correction collective au tableau. Tu corriges en rouge. <strong>Attention :</strong> cette dictée contient beaucoup de COD — relire les accords !</div>
+
+  <div class="section-title flash-sec">J'écris la dictée</div>
+  <div class="write-lines">
+    <div class="write-line-lg"></div>
+    <div class="write-line-lg"></div>
+    <div class="write-line-lg"></div>
+    <div class="write-line-lg"></div>
+    <div class="write-line-lg"></div>
+    <div class="write-line-lg"></div>
+    <div class="write-line-lg"></div>
+    <div class="write-line-lg"></div>
+  </div>
+
+  <div class="section-title flash-sec">Je me relis</div>
+  <table style="font-size:9.5pt; width:auto; margin-bottom:8px;">
+    <tr><td style="padding:3px 6px;">□ J'ai vérifié la ponctuation (virgule après le CC de lieu en début de phrase)</td></tr>
+    <tr><td style="padding:3px 6px;">□ J'ai vérifié les terminaisons du passé simple (3ème personne)</td></tr>
+    <tr><td style="padding:3px 6px;">□ J'ai vérifié les accords dans les GN (adjectifs épithètes)</td></tr>
+  </table>
+
+  <div class="section-title flash-sec">Je corrige <span style="font-weight:normal;font-size:9pt;color:#888;">(en rouge)</span></div>
+  <div class="write-lines">
+    <div class="correction-line"></div>
+    <div class="correction-line"></div>
+    <div class="correction-line"></div>
+    <div class="correction-line"></div>
+  </div>
+
+  <div class="section-title flash-sec" style="margin-top:8px;">Je repère les COD</div>
+  <p style="font-size:9.5pt; margin-bottom:5px;">Après la correction, encadre les COD dans tes phrases. Combien en as-tu trouvé ?</p>
+  <p style="font-size:9.5pt;">J'ai trouvé <span class="blank blank-sm"></span> COD dans cette dictée.</p>
+  <p style="font-size:9.5pt; margin-top:5px;">Écris-en un ci-dessous et indique le verbe dont il dépend :</p>
+  <p style="font-size:9.5pt;">COD : <span class="blank blank-lg"></span> → dépend du verbe : <span class="blank"></span></p>
+
+  <div class="bonus-box">
+    <strong>⭐ Question bonus :</strong> Transforme la 3ème phrase en remplaçant le COD par un pronom (le, la, les, l'). <span class="diff-badge diff-appro">APPROFONDISSEMENT</span>
+    <div class="write-line" style="margin-top:6px;"></div>
+  </div>
+</div>
+
+<!-- ============================================================ -->
+<!-- PAGE 6 : J·4 À TROUS — Le salon dévasté (GN complets) -->
+<!-- ============================================================ -->
+<div class="page">
+  <div class="page-header">
+    <div>
+      <div class="header-title">JUMANJI — Chris Van Allsburg</div>
+      <div class="header-subtitle">Dictée n°4 · Semaine 2 · Mardi 12 mai</div>
+    </div>
+    <div class="header-logo">✏</div>
+  </div>
+
+  <div class="student-header">
+    <div class="student-field">Nom : ______________________</div>
+    <div class="student-field">Prénom : ____________________</div>
+    <div class="student-field">Date : _____________________</div>
+  </div>
+
+  <span class="type-badge trous-badge">📄 DICTÉE À TROUS</span>
+  <div class="tip-box"><strong>🌟 Cette dictée est directement liée à la séance de grammaire GN d'aujourd'hui !</strong> Les mots manquants sont tous des constituants du groupe nominal (déterminant, nom, adjectif). <span class="diff-badge diff-aide">AIDE</span> : banque de mots ci-dessous.</div>
+
+  <div class="mot-bank">
+    <strong>🗝 Banque de mots (aide) :</strong>
+    le salon dévasté · un lion affamé · Le grand félin · l'animal sauvage · sa petite pièce · le plateau coloré
+  </div>
+
+  <div class="section-title trous-sec">Je complète le texte</div>
+  <div class="trous-text">
+    Dans <span class="blank blank-lg"></span>, <span class="blank blank-lg"></span> cherchait sa proie. <span class="blank blank-lg"></span> avait bondi d'une case mystérieuse du jeu. Peter observait <span class="blank blank-lg"></span> sans bouger. Judy comprit qu'elle devait avancer <span class="blank blank-lg"></span> sur <span class="blank blank-lg"></span> pour que le danger disparaisse enfin.
+  </div>
+
+  <div class="section-title trous-sec">J'analyse les GN</div>
+  <p style="font-size:10pt; margin-bottom:6px;">Choisis 3 groupes nominaux dans le texte et analyse-les dans le tableau :</p>
+  <table style="font-size:9.5pt;">
+    <tr>
+      <th>Groupe nominal</th><th>Déterminant</th><th>Nom</th><th>Adjectif (si présent)</th>
+    </tr>
+    <tr><td style="height:22px;"></td><td></td><td></td><td></td></tr>
+    <tr><td style="height:22px;"></td><td></td><td></td><td></td></tr>
+    <tr><td style="height:22px;"></td><td></td><td></td><td></td></tr>
+  </table>
+
+  <div class="section-title trous-sec" style="margin-top:10px;">Je me relis</div>
+  <table style="font-size:9.5pt; width:auto;">
+    <tr><td style="padding:3px 6px;">□ Chaque adjectif s'accorde en genre et en nombre avec son nom</td></tr>
+    <tr><td style="padding:3px 6px;">□ J'ai vérifié que les déterminants correspondent au genre du nom</td></tr>
+  </table>
+
+  <div class="bonus-box" style="margin-top:8px;">
+    <strong>⭐ Question bonus :</strong> Enrichis ce GN avec un adjectif de ton choix : « une case du jeu » → « <span class="blank blank-lg"></span> case <span class="blank blank-lg"></span> du jeu ». <span class="diff-badge diff-appro">APPROFONDISSEMENT</span>
+  </div>
+</div>
+
+<!-- ============================================================ -->
+<!-- PAGE 7 : J·5 NÉGOCIÉE — Les singes du plafond -->
+<!-- ============================================================ -->
+<div class="page">
+  <div class="page-header">
+    <div>
+      <div class="header-title">JUMANJI — Chris Van Allsburg</div>
+      <div class="header-subtitle">Dictée n°5 · Semaine 2 · Vendredi 15 mai</div>
+    </div>
+    <div class="header-logo">✏</div>
+  </div>
+
+  <div class="student-header">
+    <div class="student-field">Nom : ______________________</div>
+    <div class="student-field">Prénom : ____________________</div>
+    <div class="student-field">Binôme : ___________________</div>
+  </div>
+
+  <span class="type-badge negocie-badge">🤝 DICTÉE NÉGOCIÉE</span>
+
+  <div class="tip-box"><strong>Comment ça marche ?</strong> 1. Tu écoutes et tu écris seul(e). 2. Tu compares avec ton/ta binôme. 3. Vous vous mettez d'accord sur la bonne orthographe et vous justifiez vos choix. 4. Correction collective.</div>
+
+  <div class="section-title negocie-sec">ÉTAPE 1 — J'écris seul(e)</div>
+  <div class="write-lines">
+    <div class="write-line-lg"></div>
+    <div class="write-line-lg"></div>
+    <div class="write-line-lg"></div>
+    <div class="write-line-lg"></div>
+    <div class="write-line-lg"></div>
+    <div class="write-line-lg"></div>
+    <div class="write-line-lg"></div>
+  </div>
+
+  <div class="section-title negocie-sec">ÉTAPE 2 — Je compare avec mon/ma binôme</div>
+  <p style="font-size:9.5pt; margin-bottom:6px;">Surligne en jaune les mots sur lesquels vous n'êtes pas d'accord. Pour chaque mot différent, remplis le tableau :</p>
+  <table style="font-size:9.5pt;">
+    <tr>
+      <th>Mot en désaccord</th><th>Ma version</th><th>La version de mon/ma binôme</th><th>On choisit…</th><th>Parce que…</th>
+    </tr>
+    <tr><td style="height:22px;"></td><td></td><td></td><td></td><td></td></tr>
+    <tr><td style="height:22px;"></td><td></td><td></td><td></td><td></td></tr>
+    <tr><td style="height:22px;"></td><td></td><td></td><td></td><td></td></tr>
+  </table>
+
+  <div class="section-title negocie-sec" style="margin-top:8px;">ÉTAPE 3 — Notre version commune</div>
+  <div class="write-lines">
+    <div class="write-line-lg"></div>
+    <div class="write-line-lg"></div>
+    <div class="write-line-lg"></div>
+    <div class="write-line-lg"></div>
+  </div>
+
+  <div class="section-title negocie-sec" style="margin-top:8px;">ÉTAPE 4 — Ce que j'ai appris</div>
+  <p style="font-size:9.5pt; margin-bottom:5px;">Complète :</p>
+  <p style="font-size:9.5pt;">J'avais mal écrit : <span class="blank blank-lg"></span> → La bonne orthographe est : <span class="blank blank-lg"></span></p>
+  <p style="font-size:9.5pt; margin-top:5px;">Je l'ai corrigé parce que : <span class="blank blank-lg" style="min-width:200px;"></span></p>
+</div>
+
+<!-- ============================================================ -->
+<!-- PAGE 8 : J·6 PAR CŒUR — La fin du jeu (feuille à découper) -->
+<!-- ============================================================ -->
+<div class="page">
+  <div class="page-header">
+    <div>
+      <div class="header-title">JUMANJI — Chris Van Allsburg</div>
+      <div class="header-subtitle">Dictée n°6 · Semaine 3 · Lundi 18 mai</div>
+    </div>
+    <div class="header-logo">✏</div>
+  </div>
+
+  <div class="student-header">
+    <div class="student-field">Nom : ______________________</div>
+    <div class="student-field">Prénom : ____________________</div>
+    <div class="student-field">Date : _____________________</div>
+  </div>
+
+  <span class="type-badge coeur-badge">🧠 DICTÉE PAR CŒUR</span>
+
+  <!-- Texte à apprendre -->
+  <div class="section-title coeur-sec">📌 À apprendre à la maison (jeudi ou vendredi soir)</div>
+  <div class="tip-box"><strong>Ta mission :</strong> Mémorise ce passage de 4 lignes. En classe lundi, tu l'écriras de mémoire sans regarder. Entraîne-toi à le réciter à voix haute, puis à l'écrire plusieurs fois.</div>
+
+  <div class="coeur-box">
+    <span class="verse-num">1</span>Enfin, Judy cria le mot qu'elle attendait depuis si longtemps : « Jumanji ! »<br>
+    <span class="verse-num">2</span>En un instant, tout disparut. Le lion, le rhinocéros et les singes s'évaporèrent comme par magie.<br>
+    <span class="verse-num">3</span>La maison retrouva son calme habituel.<br>
+    <span class="verse-num">4</span>Les deux enfants se regardèrent en silence, épuisés mais soulagés.
+  </div>
+
+  <div class="tip-box" style="margin-top:6px;"><strong>Points d'attention :</strong> Les guillemets « » · Le point d'exclamation après « Jumanji ! » · Les adjectifs <em>épuisés</em> et <em>soulagés</em> (accord avec « Les deux enfants »)</div>
+
+  <!-- Ligne de découpe -->
+  <div class="cut-line"><span class="scissors">✂</span> Découpe ici — garde la partie basse pour la classe · garde le texte à la maison pour apprendre</div>
+
+  <!-- Feuille en classe -->
+  <div style="margin-top:10px;">
+    <span class="type-badge coeur-badge">🧠 EN CLASSE — J'écris de mémoire</span>
+    <div class="write-lines" style="margin-top:8px;">
+      <div class="write-line-lg"></div>
+      <div class="write-line-lg"></div>
+      <div class="write-line-lg"></div>
+      <div class="write-line-lg"></div>
+      <div class="write-line-lg"></div>
+      <div class="write-line-lg"></div>
+      <div class="write-line-lg"></div>
+      <div class="write-line-lg"></div>
+    </div>
+    <div class="section-title coeur-sec" style="margin-top:8px;">Je compare avec le texte et je corrige <span style="font-weight:normal;font-size:9pt;color:#888;">(en rouge)</span></div>
+    <div class="write-lines">
+      <div class="correction-line"></div>
+      <div class="correction-line"></div>
+      <div class="correction-line"></div>
+    </div>
+    <div class="bonus-box" style="margin-top:8px;">
+      <strong>⭐ Question bonus :</strong> Quelle est la nature de « épuisés » et « soulagés » dans la dernière phrase ? Explique leur accord. <span class="diff-badge diff-appro">APPROFONDISSEMENT</span>
+      <div class="write-line" style="margin-top:5px;"></div>
+    </div>
+  </div>
+</div>
+
+<!-- ============================================================ -->
+<!-- PAGE 9 : J·7 À TROUS — Judy lance les dés (COD/COI) -->
+<!-- ============================================================ -->
+<div class="page">
+  <div class="page-header">
+    <div>
+      <div class="header-title">JUMANJI — Chris Van Allsburg</div>
+      <div class="header-subtitle">Dictée n°7 · Semaine 3 · Mardi 19 mai</div>
+    </div>
+    <div class="header-logo">✏</div>
+  </div>
+
+  <div class="student-header">
+    <div class="student-field">Nom : ______________________</div>
+    <div class="student-field">Prénom : ____________________</div>
+    <div class="student-field">Date : _____________________</div>
+  </div>
+
+  <span class="type-badge trous-badge">📄 DICTÉE À TROUS</span>
+  <div class="tip-box"><strong>🌟 Cette dictée est liée à la séance GR·3 (COD / COI) !</strong> Les blancs correspondent aux compléments du verbe. Écoute bien pour identifier si c'est un COD ou un COI.</div>
+
+  <div class="mot-bank">
+    <strong>🗝 Banque de mots (aide) :</strong>
+    les dés · aux règles · la fin de la partie · un sourire courageux
+  </div>
+
+  <div class="section-title trous-sec">Je complète le texte</div>
+  <div class="trous-text">
+    Judy prit <span class="blank blank-lg"></span> et les lança de toutes ses forces. Peter obéissait <span class="blank blank-lg"></span> sans jamais les questionner. Les enfants attendaient <span class="blank blank-lg"></span> avec impatience. Judy adressa <span class="blank blank-lg"></span> à son frère pour lui redonner de l'espoir.
+  </div>
+
+  <div class="section-title trous-sec">J'identifie la nature des compléments</div>
+  <p style="font-size:9.5pt; margin-bottom:5px;">Pour chaque blanc que tu viens de compléter, indique s'il s'agit d'un COD ou d'un COI :</p>
+  <table style="font-size:9.5pt;">
+    <tr>
+      <th>Complément que j'ai écrit</th><th>Verbe dont il dépend</th><th>COD ou COI ?</th><th>Comment je le sais</th>
+    </tr>
+    <tr><td style="height:22px;"></td><td></td><td></td><td></td></tr>
+    <tr><td style="height:22px;"></td><td></td><td></td><td></td></tr>
+    <tr><td style="height:22px;"></td><td></td><td></td><td></td></tr>
+    <tr><td style="height:22px;"></td><td></td><td></td><td></td></tr>
+  </table>
+
+  <div class="section-title trous-sec" style="margin-top:8px;">Je me relis</div>
+  <table style="font-size:9.5pt; width:auto;">
+    <tr><td style="padding:3px 6px;">□ J'ai vérifié que les COD s'accordent si nécessaire</td></tr>
+    <tr><td style="padding:3px 6px;">□ J'ai vérifié la ponctuation entre les propositions</td></tr>
+  </table>
+
+  <div class="bonus-box" style="margin-top:8px;">
+    <strong>⭐ Question bonus :</strong> Remplace le COD de la 4ème phrase par un pronom. Récris la phrase complète. <span class="diff-badge diff-appro">APPROFONDISSEMENT</span>
+    <div class="write-line" style="margin-top:5px;"></div>
+  </div>
+</div>
+
+<!-- ============================================================ -->
+<!-- PAGE 10 : J·8 PAR CŒUR — La chute (avec dialogue) -->
+<!-- ============================================================ -->
+<div class="page">
+  <div class="page-header">
+    <div>
+      <div class="header-title">JUMANJI — Chris Van Allsburg</div>
+      <div class="header-subtitle">Dictée n°8 · Semaine 4 · Lundi 25 mai</div>
+    </div>
+    <div class="header-logo">✏</div>
+  </div>
+
+  <div class="student-header">
+    <div class="student-field">Nom : ______________________</div>
+    <div class="student-field">Prénom : ____________________</div>
+    <div class="student-field">Date : _____________________</div>
+  </div>
+
+  <span class="type-badge coeur-badge">🧠 DICTÉE PAR CŒUR</span>
+
+  <div class="section-title coeur-sec">📌 À apprendre à la maison (jeudi ou vendredi soir)</div>
+  <div class="tip-box"><strong>Ta mission :</strong> Mémorise les 4 lignes ci-dessous. Attention à la ponctuation du dialogue : guillemets « », tiret —, point d'exclamation ! et point à la fin.</div>
+
+  <div class="coeur-box">
+    <span class="verse-num">1</span>Après la partie, Judy et Peter remirent le jeu dans sa boîte.<br>
+    <span class="verse-num">2</span>Par la fenêtre, ils aperçurent deux garçons qui ramassaient la boîte abandonnée dans le parc.<br>
+    <span class="verse-num">3</span>— Connaissez-vous la règle ? cria Judy depuis la fenêtre.<br>
+    <span class="verse-num">4</span>Mais il était trop tard. Une nouvelle partie venait de commencer.
+  </div>
+
+  <div class="tip-box"><strong>Points d'attention :</strong> Le tiret — au début du dialogue (pas un trait d'union) · La virgule après « la règle ? » avant le verbe introducteur · <em>abandonnée</em> (accord avec « boîte »)</div>
+
+  <div class="cut-line"><span class="scissors">✂</span> Découpe ici — garde le texte à la maison · apporte la partie basse en classe</div>
+
+  <div style="margin-top:10px;">
+    <span class="type-badge coeur-badge">🧠 EN CLASSE — J'écris de mémoire</span>
+    <div class="write-lines" style="margin-top:8px;">
+      <div class="write-line-lg"></div>
+      <div class="write-line-lg"></div>
+      <div class="write-line-lg"></div>
+      <div class="write-line-lg"></div>
+      <div class="write-line-lg"></div>
+      <div class="write-line-lg"></div>
+      <div class="write-line-lg"></div>
+      <div class="write-line-lg"></div>
+    </div>
+    <div class="section-title coeur-sec" style="margin-top:8px;">Je compare avec le texte et je corrige <span style="font-weight:normal;font-size:9pt;color:#888;">(en rouge)</span></div>
+    <div class="write-lines">
+      <div class="correction-line"></div>
+      <div class="correction-line"></div>
+      <div class="correction-line"></div>
+    </div>
+    <div class="bonus-box" style="margin-top:8px;">
+      <strong>⭐ Question bonus :</strong> Réécris la ligne 3 en remplaçant le tiret — par des guillemets « ». Quels autres changements dois-tu faire ? <span class="diff-badge diff-appro">APPROFONDISSEMENT</span>
+      <div class="write-line" style="margin-top:5px;"></div>
+    </div>
+  </div>
+</div>
+
+<!-- ============================================================ -->
+<!-- PAGE 11 : J·9 FLASH — Le rhinocéros surgit (CC) -->
+<!-- ============================================================ -->
+<div class="page">
+  <div class="page-header">
+    <div>
+      <div class="header-title">JUMANJI — Chris Van Allsburg</div>
+      <div class="header-subtitle">Dictée n°9 · Semaine 4 · Mardi 26 mai</div>
+    </div>
+    <div class="header-logo">✏</div>
+  </div>
+
+  <div class="student-header">
+    <div class="student-field">Nom : ______________________</div>
+    <div class="student-field">Prénom : ____________________</div>
+    <div class="student-field">Date : _____________________</div>
+  </div>
+
+  <span class="type-badge flash-badge">✏ DICTÉE FLASH</span>
+  <div class="tip-box"><strong>🌟 Lié à GR·4 (CC) !</strong> Cette dictée contient beaucoup de compléments circonstanciels. Attention à la <strong>virgule</strong> quand le CC est placé en début de phrase.</div>
+
+  <div class="section-title flash-sec">J'écris la dictée</div>
+  <div class="write-lines">
+    <div class="write-line-lg"></div>
+    <div class="write-line-lg"></div>
+    <div class="write-line-lg"></div>
+    <div class="write-line-lg"></div>
+    <div class="write-line-lg"></div>
+    <div class="write-line-lg"></div>
+    <div class="write-line-lg"></div>
+    <div class="write-line-lg"></div>
+  </div>
+
+  <div class="section-title flash-sec">Je me relis</div>
+  <table style="font-size:9.5pt; width:auto; margin-bottom:8px;">
+    <tr><td style="padding:3px 6px;">□ J'ai mis une virgule après chaque CC placé en début de phrase</td></tr>
+    <tr><td style="padding:3px 6px;">□ J'ai vérifié les adverbes de manière (terminaison en -ment)</td></tr>
+    <tr><td style="padding:3px 6px;">□ J'ai vérifié les terminaisons des verbes au passé simple</td></tr>
+  </table>
+
+  <div class="section-title flash-sec">Je corrige <span style="font-weight:normal;font-size:9pt;color:#888;">(en rouge)</span></div>
+  <div class="write-lines">
+    <div class="correction-line"></div>
+    <div class="correction-line"></div>
+    <div class="correction-line"></div>
+  </div>
+
+  <div class="section-title flash-sec" style="margin-top:8px;">Je repère les CC</div>
+  <p style="font-size:9.5pt; margin-bottom:5px;">Souligne tous les CC dans ta dictée. Classe-les :</p>
+  <table style="font-size:9.5pt;">
+    <tr><th>CC de lieu</th><th>CC de temps</th><th>CC de manière</th></tr>
+    <tr><td style="height:22px;"></td><td></td><td></td></tr>
+    <tr><td style="height:22px;"></td><td></td><td></td></tr>
+  </table>
+
+  <div class="bonus-box" style="margin-top:8px;">
+    <strong>⭐ Question bonus :</strong> Ajoute un CC de ton choix à la 2ème phrase. Recopie la phrase modifiée. <span class="diff-badge diff-appro">APPROFONDISSEMENT</span>
+    <div class="write-line" style="margin-top:5px;"></div>
+  </div>
+</div>
+
+<!-- ============================================================ -->
+<!-- PAGE 12 : J·10 NÉGOCIÉE — Le jeu terminé (participes passés) -->
+<!-- ============================================================ -->
+<div class="page">
+  <div class="page-header">
+    <div>
+      <div class="header-title">JUMANJI — Chris Van Allsburg</div>
+      <div class="header-subtitle">Dictée n°10 · Semaine 4 · Vendredi 29 mai</div>
+    </div>
+    <div class="header-logo">✏</div>
+  </div>
+
+  <div class="student-header">
+    <div class="student-field">Nom : ______________________</div>
+    <div class="student-field">Prénom : ____________________</div>
+    <div class="student-field">Binôme : ___________________</div>
+  </div>
+
+  <span class="type-badge negocie-badge">🤝 DICTÉE NÉGOCIÉE</span>
+  <div class="tip-box"><strong>Point clé :</strong> Cette dictée contient des participes passés utilisés avec l'auxiliaire <em>avoir</em>. Ils s'accordent avec le COD quand celui-ci est placé <strong>avant</strong> le verbe. C'est souvent difficile — c'est parfait pour négocier !</div>
+
+  <div class="section-title negocie-sec">ÉTAPE 1 — J'écris seul(e)</div>
+  <div class="write-lines">
+    <div class="write-line-lg"></div>
+    <div class="write-line-lg"></div>
+    <div class="write-line-lg"></div>
+    <div class="write-line-lg"></div>
+    <div class="write-line-lg"></div>
+    <div class="write-line-lg"></div>
+    <div class="write-line-lg"></div>
+  </div>
+
+  <div class="section-title negocie-sec">ÉTAPE 2 — Je compare avec mon/ma binôme</div>
+  <p style="font-size:9.5pt; margin-bottom:5px;">Surligne les désaccords. Remplis le tableau :</p>
+  <table style="font-size:9.5pt;">
+    <tr>
+      <th>Mot en désaccord</th><th>Ma version</th><th>Version binôme</th><th>On choisit…</th><th>Justification</th>
+    </tr>
+    <tr><td style="height:22px;"></td><td></td><td></td><td></td><td></td></tr>
+    <tr><td style="height:22px;"></td><td></td><td></td><td></td><td></td></tr>
+    <tr><td style="height:22px;"></td><td></td><td></td><td></td><td></td></tr>
+  </table>
+
+  <div class="section-title negocie-sec" style="margin-top:8px;">ÉTAPE 3 — Notre version commune</div>
+  <div class="write-lines">
+    <div class="write-line-lg"></div>
+    <div class="write-line-lg"></div>
+    <div class="write-line-lg"></div>
+    <div class="write-line-lg"></div>
+  </div>
+
+  <div class="section-title negocie-sec" style="margin-top:6px;">ÉTAPE 4 — Je comprends la règle</div>
+  <p style="font-size:9.5pt; margin-bottom:4px;">Dans le texte, il y a des participes passés avec <em>avoir</em>. Explique avec tes mots pourquoi ils s'accordent :</p>
+  <div class="write-line" style="margin-bottom:4px;"></div>
+  <div class="write-line"></div>
+
+  <div class="bonus-box" style="margin-top:8px;">
+    <strong>⭐ Question bonus :</strong> Récris la 2ème phrase en remplaçant « qu'elle n'avait pas imaginées » par un groupe nominal. <span class="diff-badge diff-appro">APPROFONDISSEMENT</span>
+    <div class="write-line" style="margin-top:5px;"></div>
+  </div>
+</div>
+
+</body>
+</html>
