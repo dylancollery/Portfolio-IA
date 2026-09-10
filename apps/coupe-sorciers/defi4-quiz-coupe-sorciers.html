@@ -1,0 +1,596 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>🏆 Coupe des Sorciers — Quiz Ardoise HP</title>
+<style>
+@import url('https://fonts.googleapis.com/css2?family=Cinzel:wght@400;700;900&family=Cinzel+Decorative:wght@700&family=IM+Fell+English:ital@0;1&display=swap');
+
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:'IM Fell English',Georgia,serif;overflow:hidden;height:100vh;background:#07071A}
+
+/* ── ÉTOILES ── */
+#stars-bg{position:fixed;top:0;left:0;width:100%;height:100%;pointer-events:none;z-index:0}
+.star{position:absolute;background:#fff;border-radius:50%;animation:tw var(--d,3s) infinite var(--dl,0s) alternate}
+@keyframes tw{0%{opacity:.05}100%{opacity:.8}}
+
+.screen{display:none;width:100%;height:100vh;flex-direction:column;position:relative;z-index:1}
+.screen.on{display:flex}
+
+/* ══════════════ LANDING HP ══════════════ */
+#s-land{align-items:center;justify-content:center;text-align:center;gap:1.2rem}
+.hp-hat{font-size:clamp(4rem,10vw,8rem);animation:hatFloat 3s ease-in-out infinite}
+@keyframes hatFloat{0%,100%{transform:translateY(0) rotate(-3deg)}50%{transform:translateY(-12px) rotate(3deg)}}
+.hp-title{
+  font-family:'Cinzel Decorative',serif;
+  font-size:clamp(1.8rem,4vw,3.2rem);
+  color:#EEBA30;
+  text-shadow:0 0 40px rgba(238,186,48,.8);
+  animation:glow 2s infinite alternate;
+  line-height:1.3;
+}
+@keyframes glow{0%{text-shadow:0 0 20px rgba(238,186,48,.5)}100%{text-shadow:0 0 60px rgba(238,186,48,1),0 0 100px rgba(238,186,48,.4)}}
+.hp-sub{font-family:'Cinzel',serif;font-size:clamp(.85rem,2vw,1.1rem);color:#AAAACC;letter-spacing:3px;margin-top:.3rem}
+.hp-btn{
+  margin-top:.8rem;padding:1rem 2.8rem;
+  background:linear-gradient(135deg,#EEBA30,#C8A000);
+  color:#07071A;border:none;border-radius:8px;
+  font-family:'Cinzel',serif;font-size:1.1rem;font-weight:700;
+  cursor:pointer;letter-spacing:2px;
+  box-shadow:0 0 30px rgba(238,186,48,.4);
+  transition:all .3s;
+}
+.hp-btn:hover{transform:scale(1.05);box-shadow:0 0 50px rgba(238,186,48,.7)}
+.house-dots{display:flex;gap:14px;justify-content:center;margin-top:.4rem}
+.house-dot{width:14px;height:14px;border-radius:50%}
+
+/* ══════════════ CATÉGORIES ══════════════ */
+#s-cat{align-items:center;justify-content:center;gap:2rem;color:white}
+.cat-title{font-family:'Cinzel',serif;font-size:.85rem;color:#888;letter-spacing:3px;text-transform:uppercase}
+.cat-grid{display:flex;gap:1.2rem;flex-wrap:wrap;justify-content:center}
+.cat-card{
+  width:200px;padding:1.8rem 1.2rem;border-radius:14px;cursor:pointer;
+  border:2px solid rgba(255,255,255,.12);transition:all .25s;text-align:center;
+  display:flex;flex-direction:column;align-items:center;gap:.7rem;
+}
+.cat-card:hover{transform:translateY(-5px);border-color:rgba(238,186,48,.5);box-shadow:0 0 25px rgba(238,186,48,.3)}
+.cat-icon{font-size:2.8rem;line-height:1}
+.cat-name{font-family:'Cinzel',serif;font-size:1.1rem;font-weight:700;color:white}
+.cat-count{font-size:.78rem;color:rgba(255,255,255,.55)}
+
+/* ══════════════ LISTE QUIZ ══════════════ */
+#s-quiz{align-items:center;justify-content:center;gap:1.4rem;color:white;padding:2rem;position:relative}
+.quiz-grid{display:flex;gap:1rem;flex-wrap:wrap;justify-content:center;max-width:900px}
+.quiz-card{
+  width:210px;border-radius:12px;padding:1.4rem 1.2rem;cursor:pointer;
+  border:2px solid transparent;transition:all .22s;
+  display:flex;flex-direction:column;gap:.5rem;
+}
+.quiz-card:hover{transform:translateY(-4px);border-color:rgba(238,186,48,.5)}
+.quiz-icon{font-size:1.8rem}
+.quiz-name{font-family:'Cinzel',serif;font-size:1rem;font-weight:700;color:white;line-height:1.2}
+.quiz-desc{font-size:.75rem;color:rgba(255,255,255,.6);line-height:1.4}
+.quiz-meta{font-size:.7rem;font-weight:700;color:rgba(255,255,255,.4);margin-top:.2rem}
+
+/* ══════════════ VUE ÉLÈVE HP ══════════════ */
+#s-student{color:white;padding:1rem 1.5rem}
+#sv-header{display:flex;justify-content:space-between;align-items:center;margin-bottom:1rem}
+#sv-badge{
+  padding:.4rem 1.2rem;border-radius:6px;
+  font-family:'Cinzel',serif;font-size:.9rem;font-weight:700;letter-spacing:1px;
+  color:#EEBA30;border:2px solid #EEBA30;background:rgba(238,186,48,.1);
+}
+#sv-qnum{font-family:'Cinzel',serif;font-size:.9rem;color:#888}
+#sv-body{flex:1;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:1.8rem}
+#sv-cat-label{
+  font-family:'Cinzel',serif;font-size:.8rem;letter-spacing:3px;
+  color:#EEBA30;text-transform:uppercase;opacity:.7;
+}
+#sv-question{
+  font-family:'Cinzel',serif;
+  font-size:clamp(1.4rem,3.5vw,2.6rem);
+  text-align:center;line-height:1.5;max-width:850px;
+  white-space:pre-line;font-weight:700;color:#fff;
+  text-shadow:0 0 20px rgba(255,255,255,.2);
+}
+#sv-timer-wrap{position:relative;width:110px;height:110px;flex-shrink:0}
+#sv-timer-svg{transform:rotate(-90deg)}
+#sv-arc{stroke:#EEBA30;stroke-dasharray:295.3;stroke-dashoffset:0;transition:stroke-dashoffset .9s linear,stroke .3s}
+#sv-timer-num{position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);font-size:2.2rem;font-weight:800;color:#EEBA30;font-family:'Cinzel',serif}
+#sv-answer{
+  border-radius:10px;padding:1rem 2rem;text-align:center;max-width:760px;width:100%;
+  transition:opacity .5s,transform .5s;
+  background:rgba(238,186,48,.08);border:2px solid rgba(238,186,48,.3);
+}
+#sv-answer.hidden{opacity:0;transform:translateY(10px);pointer-events:none}
+#sv-ans-label{font-family:'Cinzel',serif;font-size:.7rem;text-transform:uppercase;letter-spacing:2px;color:#EEBA30;margin-bottom:.4rem}
+#sv-ans-text{font-size:1.4rem;font-weight:700;color:#EEBA30;white-space:pre-line;line-height:1.4;font-family:'Cinzel',serif}
+#sv-footer{margin-top:.8rem}
+#sv-pbar{height:4px;background:rgba(255,255,255,.1);border-radius:3px;overflow:hidden}
+#sv-pfill{height:100%;border-radius:3px;background:linear-gradient(90deg,#EEBA30,#C8A000);transition:width .4s}
+#sv-watermark{position:absolute;bottom:.8rem;right:1.2rem;font-size:.65rem;color:rgba(255,255,255,.15);font-family:'Cinzel',serif}
+
+/* Étoile décorative en fond de la question */
+#sv-bg-star{position:absolute;font-size:30vw;opacity:.025;pointer-events:none;top:50%;left:50%;transform:translate(-50%,-50%);user-select:none}
+
+/* ══════════════ VUE PROF ══════════════ */
+#s-teacher{background:#0D0D25;color:#fff}
+#tv-header{
+  background:linear-gradient(90deg,#1A1A3A,#0D0D25);
+  border-bottom:2px solid rgba(238,186,48,.3);
+  color:white;padding:.7rem 1.4rem;
+  display:flex;justify-content:space-between;align-items:center;flex-shrink:0;
+}
+#tv-header h1{font-family:'Cinzel',serif;font-size:.95rem;font-weight:700;color:#EEBA30;letter-spacing:1px}
+#tv-meta{display:flex;gap:.6rem;align-items:center}
+#tv-qpill{background:rgba(238,186,48,.15);border:1px solid rgba(238,186,48,.3);padding:.25rem .8rem;border-radius:999px;font-family:'Cinzel',serif;font-size:.82rem;font-weight:700;color:#EEBA30}
+#tv-body{flex:1;display:grid;grid-template-columns:3fr 2fr;overflow:hidden}
+#tv-cur{padding:1.2rem 1.4rem;border-right:1px solid rgba(238,186,48,.2);overflow-y:auto;background:#0A0A1E}
+#tv-nxt{padding:1.2rem;overflow-y:auto;background:#0D0D25}
+.tv-lbl{font-family:'Cinzel',serif;font-size:.7rem;font-weight:700;text-transform:uppercase;letter-spacing:2px;color:#888;margin-bottom:.7rem}
+.tv-badge{display:inline-block;padding:.28rem .8rem;border-radius:6px;font-family:'Cinzel',serif;font-size:.78rem;font-weight:700;margin-bottom:.6rem;border:1px solid rgba(238,186,48,.4);color:#EEBA30;background:rgba(238,186,48,.1)}
+.tv-qtext{font-family:'Cinzel',serif;font-size:1rem;line-height:1.55;white-space:pre-line;margin-bottom:.9rem;font-weight:700;color:#fff}
+.tv-ans-box{background:rgba(238,186,48,.08);border-left:4px solid #EEBA30;padding:.7rem 1rem;border-radius:0 8px 8px 0;margin-bottom:.8rem}
+.tv-ans-lbl{font-family:'Cinzel',serif;font-size:.68rem;font-weight:700;color:#EEBA30;text-transform:uppercase;letter-spacing:1px;margin-bottom:.3rem}
+.tv-ans-txt{font-family:'Cinzel',serif;font-size:.95rem;color:#EEBA30;white-space:pre-line;line-height:1.4}
+.tv-tip{background:rgba(255,255,255,.04);border-left:4px solid #888;padding:.6rem .9rem;border-radius:0 6px 6px 0;font-size:.82rem;color:#AAA;line-height:1.4;font-style:italic}
+#tv-timer{font-family:'Cinzel',serif;font-size:2.4rem;font-weight:800;margin-top:.9rem;letter-spacing:-.02em;color:#EEBA30}
+.tv-nxt-q{font-family:'Cinzel',serif;font-size:.95rem;line-height:1.5;white-space:pre-line;color:#888}
+#tv-ctrl{background:#070715;border-top:1px solid rgba(238,186,48,.2);padding:.8rem 1.2rem;display:flex;gap:.7rem;justify-content:center;align-items:center;flex-shrink:0}
+.btn{padding:.55rem 1.3rem;border:none;border-radius:6px;font-size:.95rem;font-family:'Cinzel',serif;font-weight:700;cursor:pointer;transition:all .15s;letter-spacing:.5px}
+.btn:hover{opacity:.85;transform:translateY(-1px)}
+.btn-gold{background:linear-gradient(135deg,#EEBA30,#C8A000);color:#07071A}
+.btn-red{background:#7F1D1D;color:#FCA5A5;border:1px solid #DC2626}
+.btn-blue{background:#1E3A8A;color:#93C5FD;border:1px solid #3B82F6}
+.btn-slate{background:#1E293B;color:#94A3B8;border:1px solid #334155}
+
+.back-btn{position:absolute;top:1rem;left:1.2rem;background:rgba(238,186,48,.1);border:1px solid rgba(238,186,48,.3);color:#EEBA30;padding:.4rem .9rem;border-radius:6px;font-family:'Cinzel',serif;font-size:.82rem;cursor:pointer;transition:all .2s}
+.back-btn:hover{background:rgba(238,186,48,.2)}
+</style>
+</head>
+<body>
+
+<div id="stars-bg"></div>
+
+<!-- ══ LANDING ══ -->
+<div id="s-land" class="screen on">
+  <div class="hp-hat">🎩</div>
+  <div class="hp-title">🏆 La Coupe des Sorciers</div>
+  <div class="hp-sub">Quiz Ardoise · CM2 C · Poudlard</div>
+  <div class="house-dots">
+    <div class="house-dot" style="background:#AE0001"></div>
+    <div class="house-dot" style="background:#1A472A"></div>
+    <div class="house-dot" style="background:#F0C700"></div>
+    <div class="house-dot" style="background:#0E1A40"></div>
+  </div>
+  <button class="hp-btn" onclick="goTo('cat')">✨ Commencer le Quiz ✨</button>
+  <div style="font-family:'Cinzel',serif;font-size:.75rem;color:#333;margin-top:.5rem">Ardoise Interactive · Dylan Collery</div>
+</div>
+
+<!-- ══ CATÉGORIES ══ -->
+<div id="s-cat" class="screen" style="position:relative">
+  <button class="back-btn" onclick="goTo('land')">← Retour</button>
+  <div class="cat-title">⚡ Choisir une catégorie</div>
+  <div class="cat-grid">
+    <div class="cat-card" style="background:linear-gradient(135deg,#4A0000,#AE0001)" onclick="goTo('quiz','hp')">
+      <div class="cat-icon">⚡</div>
+      <div class="cat-name">Harry Potter</div>
+      <div class="cat-count">Culture & Univers HP</div>
+    </div>
+    <div class="cat-card" style="background:linear-gradient(135deg,#1A1A3A,#2563EB)" onclick="goTo('quiz','fr')">
+      <div class="cat-icon">📚</div>
+      <div class="cat-name">Français</div>
+      <div class="cat-count">GN, Conjugaison, Orthographe</div>
+    </div>
+    <div class="cat-card" style="background:linear-gradient(135deg,#063720,#059669)" onclick="goTo('quiz','math')">
+      <div class="cat-icon">⚗️</div>
+      <div class="cat-name">Maths Magiques</div>
+      <div class="cat-count">Calcul, Fractions, Problèmes</div>
+    </div>
+    <div class="cat-card" style="background:linear-gradient(135deg,#3A1A00,#C8A000)" onclick="goTo('quiz','mix')">
+      <div class="cat-icon">🏆</div>
+      <div class="cat-name">Grand Final</div>
+      <div class="cat-count">Tout mélangé !</div>
+    </div>
+  </div>
+</div>
+
+<!-- ══ LISTE QUIZ ══ -->
+<div id="s-quiz" class="screen" style="position:relative">
+  <button class="back-btn" onclick="goTo('cat')">← Retour</button>
+  <div style="font-family:'Cinzel',serif;font-size:.8rem;color:#888;letter-spacing:3px;text-transform:uppercase;margin-bottom:.5rem" id="quiz-cat-lbl">Catégorie</div>
+  <div id="quiz-grid" class="quiz-grid"></div>
+</div>
+
+<!-- ══ VUE ÉLÈVE ══ -->
+<div id="s-student" class="screen">
+  <div id="sv-bg-star">⚡</div>
+  <div id="sv-header">
+    <span id="sv-badge">HP</span>
+    <div style="display:flex;align-items:center;gap:1rem">
+      <span id="sv-qnum" style="font-family:'Cinzel',serif;font-size:.9rem;color:#888">Q.1 / 20</span>
+    </div>
+  </div>
+  <div id="sv-body">
+    <div id="sv-cat-label">Culture Harry Potter</div>
+    <div id="sv-question">Chargement…</div>
+    <div id="sv-timer-wrap">
+      <svg id="sv-timer-svg" width="110" height="110" viewBox="0 0 110 110">
+        <circle cx="55" cy="55" r="47" fill="none" stroke="rgba(255,255,255,.08)" stroke-width="8"/>
+        <circle id="sv-arc" cx="55" cy="55" r="47" fill="none" stroke-width="8" stroke-linecap="round" stroke-dasharray="295.3" stroke-dashoffset="0"/>
+      </svg>
+      <div id="sv-timer-num">–</div>
+    </div>
+    <div id="sv-answer" class="hidden">
+      <div id="sv-ans-label">✅ Réponse du Choixpeau</div>
+      <div id="sv-ans-text"></div>
+    </div>
+  </div>
+  <div id="sv-footer">
+    <div id="sv-pbar"><div id="sv-pfill" style="width:0%"></div></div>
+  </div>
+  <div id="sv-watermark">Coupe des Sorciers · CM2 C</div>
+</div>
+
+<!-- ══ VUE PROF ══ -->
+<div id="s-teacher" class="screen">
+  <div id="tv-header">
+    <h1>🎩 Vue Enseignant · <span id="tv-quiz-name">Quiz</span></h1>
+    <div id="tv-meta">
+      <span id="tv-qpill">Q.1 / –</span>
+      <span style="font-family:'Cinzel',serif;font-size:.72rem;color:#EEBA3088">CM2 C · Poudlard</span>
+    </div>
+  </div>
+  <div id="tv-body">
+    <div id="tv-cur">
+      <div class="tv-lbl">📌 Question en cours</div>
+      <div id="tv-cur-badge" class="tv-badge">–</div>
+      <div id="tv-cur-q" class="tv-qtext">…</div>
+      <div class="tv-ans-box">
+        <div class="tv-ans-lbl">✅ Réponse</div>
+        <div id="tv-cur-ans" class="tv-ans-txt">…</div>
+      </div>
+      <div id="tv-cur-tip" class="tv-tip">💡 …</div>
+      <div id="tv-timer">⏱ --</div>
+    </div>
+    <div id="tv-nxt">
+      <div class="tv-lbl">⏭ Question suivante</div>
+      <div id="tv-nxt-badge" class="tv-badge" style="border-color:#555;color:#888;background:transparent">–</div>
+      <div id="tv-nxt-q" class="tv-nxt-q">…</div>
+    </div>
+  </div>
+  <div id="tv-ctrl">
+    <button class="btn btn-slate" onclick="ctrl('prev')">◀ Précédent</button>
+    <button class="btn btn-red"   id="btn-pause" onclick="ctrl('pause')">▶ Lancer</button>
+    <button class="btn btn-gold"  onclick="ctrl('reveal')">👁 Révéler</button>
+    <button class="btn btn-blue"  onclick="ctrl('next')">Suivant ▶</button>
+    <button class="btn btn-slate" onclick="openTeacher()">🪟 Fenêtre prof</button>
+  </div>
+</div>
+
+<script>
+// ════════════════════════════════════════════════════════════
+//  DONNÉES DES QUIZ
+// ════════════════════════════════════════════════════════════
+const QUIZ_DATA = {
+
+  // ── HARRY POTTER CULTURE ─────────────────────────────────
+  hp_culture:{
+    id:'hp_culture', cat:'hp',
+    name:'Culture de Poudlard', icon:'⚡',
+    desc:'Personnages, maisons, sortilèges, lieux…',
+    color:'#AE0001',
+    questions:[
+      {type:'Poudlard',      color:'#AE0001', timer:20, q:'Comment s\'appelle l\'école de sorcellerie où va Harry Potter ?', a:'Poudlard', tip:'En anglais : Hogwarts School of Witchcraft and Wizardry'},
+      {type:'Maisons',       color:'#1A472A', timer:15, q:'Dans quelle maison est Harry Potter ?', a:'Gryffondor', tip:'Le Choixpeau a aussi envisagé Serpentard !'},
+      {type:'Professeurs',   color:'#0E1A40', timer:20, q:'Comment s\'appelle le professeur de Potions\nau début de la série ?', a:'Professeur Rogue\n(Severus Snape)', tip:'Il est aussi directeur de la maison Serpentard'},
+      {type:'Animaux',       color:'#2B2B2B', timer:15, q:'Quel est l\'animal de compagnie d\'Harry Potter ?', a:'Une chouette blanche\nnommée Hedwige', tip:'Hermione a un chat : Pattenrond. Ron a un rat : Croûtard.'},
+      {type:'Sortilèges',    color:'#6A1B9A', timer:20, q:'Quel est le sortilège de désarmement\nqu\'Harry utilise souvent ?', a:'Expelliarmus !', tip:'C\'est la "signature" magique d\'Harry tout au long de la saga'},
+      {type:'Méchants',      color:'#7F1D1D', timer:15, q:'Comment s\'appelle l\'ennemi principal d\'Harry Potter ?\n(Son vrai nom)',  a:'Voldemort\n(Tom Jedusor)', tip:'Les sorciers l\'appellent "Celui-Dont-On-Ne-Doit-Pas-Prononcer-Le-Nom"'},
+      {type:'Transport',     color:'#1A472A', timer:20, q:'Sur quel numéro de quai (et fraction !)\npart le Poudlard Express ?', a:'Quai 9 ¾', tip:'À la Gare de King\'s Cross à Londres — il faut traverser le mur !'},
+      {type:'Sport',         color:'#0E1A40', timer:15, q:'Quel sport se pratique sur des balais volants\nà Poudlard ?', a:'Le Quidditch', tip:'Harry est Attrapeur (Seeker) pour Gryffondor'},
+      {type:'Lieux',         color:'#2B2B2B', timer:20, q:'Comment s\'appelle la forêt dangereuse\nnear de Poudlard ?', a:'La Forêt Interdite', tip:'Des créatures magiques y vivent, dont des centaures et des araignées géantes'},
+      {type:'Objets',        color:'#AE0001', timer:15, q:'Quel objet magique rend invisible\ncelui qui le porte ?', a:'La cape d\'invisibilité', tip:'C\'est un des trois objets des Reliques de la Mort'},
+      {type:'Maisons',       color:'#1A472A', timer:20, q:'Quelles sont les 4 maisons de Poudlard ?\n(Toutes les 4 !)', a:'Gryffondor · Serpentard\nPoufsouffle · Serdaigle', tip:'Gryffondor=bravoure, Serpentard=ambition, Poufsouffle=loyauté, Serdaigle=sagesse'},
+      {type:'Sortilèges',    color:'#6A1B9A', timer:15, q:'Quel sortilège permet de faire voler un objet ?', a:'Wingardium Leviosa !', tip:'Hermione corrige toujours Ron sur la prononciation : Levi-O-sa !'},
+      {type:'Professeurs',   color:'#0E1A40', timer:20, q:'Qui est le directeur de Poudlard\ndans les premiers livres ?', a:'Albus Dumbledore', tip:'Son prénom complet : Albus Perceval Wulfric Brian Dumbledore'},
+      {type:'Animaux',       color:'#AE0001', timer:15, q:'Quel est l\'animal emblématique de Gryffondor ?', a:'Le Lion', tip:'Serpentard=Serpent, Poufsouffle=Blaireau, Serdaigle=Aigle (ou Corbeau)'},
+      {type:'Amis',          color:'#1A472A', timer:15, q:'Comment s\'appellent les deux meilleurs amis\nd\'Harry Potter ?', a:'Hermione Granger\net Ron Weasley', tip:'Les trois forment le "Trio d\'Or" de Gryffondor'},
+    ]
+  },
+
+  // ── FRANÇAIS HP ──────────────────────────────────────────
+  hp_fr:{
+    id:'hp_fr', cat:'fr',
+    name:'Sortilèges de Français', icon:'📚',
+    desc:'GN, Conjugaison, Orthographe · Thème HP',
+    color:'#1565C0',
+    questions:[
+      {type:'GN',           color:'#1565C0', timer:20, q:'Identifie : déterminant, nom et adjectif :\n« une baguette magique brillante »', a:'Dét : une  |  Nom : baguette\nAdj : magique, brillante', tip:'Il peut y avoir plusieurs adjectifs épithètes dans un même GN !'},
+      {type:'GN',           color:'#1565C0', timer:20, q:'Enrichis ce GN avec un adjectif épithète :\n« un sortilège »', a:'Plusieurs réponses possibles :\nun sortilège puissant / dangereux / mystérieux…', tip:'L\'adjectif s\'accorde en genre et en nombre avec le nom'},
+      {type:'Conjugaison',  color:'#059669', timer:25, q:'Conjugue le verbe LANCER au présent :\nje — tu — il/elle — nous — vous — ils/elles', a:'je lance · tu lances · il lance\nnous lançons · vous lancez · ils lancent', tip:'Attention à la cédille : nous lanÇons (pour garder le son [s])'},
+      {type:'Conjugaison',  color:'#059669', timer:20, q:'Quel est l\'infinitif du verbe dans cette phrase ?\n« Harry a attrapé le Vif d\'Or. »', a:'Attraper\n(passé composé : a attrapé)', tip:'a attrapé = auxiliaire AVOIR + participe passé d\'attraper'},
+      {type:'Orthographe',  color:'#7C3AED', timer:20, q:'Écris correctement :\ns_rtilège  —  b_guette  —  enc_antement', a:'sortilège — baguette — enchantement', tip:'Pas de faute = 10 points pour ta maison !'},
+      {type:'Types',        color:'#0E1A40', timer:20, q:'Transforme en phrase interrogative :\n« Harry Potter attrape le Vif d\'Or. »', a:'Harry Potter attrape-t-il le Vif d\'Or ?\nou : Est-ce qu\'Harry Potter attrape le Vif d\'Or ?', tip:'Inversion sujet-verbe OU « Est-ce que… »'},
+      {type:'Types',        color:'#0E1A40', timer:20, q:'Quelle est la nature du mot « magique »\ndans « un sortilège magique » ?', a:'Un adjectif épithète\n(il qualifie le nom « sortilège »)', tip:'Épithète = directement lié au nom, sans verbe entre eux'},
+      {type:'GN',           color:'#1565C0', timer:25, q:'Compose un GN riche avec :\n→ dét. + nom + adj. + adj.\npour décrire le château de Poudlard', a:'Exemple : l\'immense château enchanté\nou : un vieux château mystérieux et imposant', tip:'N\'oublie pas l\'accord des adjectifs !'},
+    ]
+  },
+
+  // ── MATHS HP ─────────────────────────────────────────────
+  hp_math:{
+    id:'hp_math', cat:'math',
+    name:'Calcul des Potions', icon:'⚗️',
+    desc:'Fractions, Opérations, Problèmes · Thème HP',
+    color:'#059669',
+    questions:[
+      {type:'Fractions',    color:'#059669', timer:30, q:'Harry a bu 3/4 de sa potion de guérison.\nQuelle fraction reste-t-il dans le flacon ?', a:'1/4 du flacon', tip:'3/4 + 1/4 = 4/4 = 1 flacon entier'},
+      {type:'Multiplication',color:'#1565C0',timer:20, q:'Pour fabriquer 1 potion, il faut 8 racines de mandragore.\nCombien pour 9 potions ?', a:'72 racines\n(8 × 9 = 72)', tip:'Table de 8 : 8×9 = 72'},
+      {type:'Problème',     color:'#7C3AED', timer:30, q:'Une baguette coûte 7 Gallions.\nHarry en achète 6. Il paie avec 50 Gallions.\nCombien lui rend-on ?', a:'50 − (7 × 6) = 50 − 42 = 8 Gallions', tip:'D\'abord : 7 × 6 = 42. Ensuite : 50 − 42 = 8'},
+      {type:'Division',     color:'#059669', timer:25, q:'Les 25 élèves partagent 350 graines de Longbottom.\nCombien chaque élève en reçoit-il ?', a:'350 ÷ 25 = 14 graines chacun\n(reste : 0)', tip:'25 × 14 = 350 — vérification !'},
+      {type:'Géométrie',    color:'#1565C0', timer:30, q:'Le terrain de Quidditch mesure 180 m de long\net 55 m de large.\nQuel est son périmètre ?', a:'(180 + 55) × 2 = 235 × 2 = 470 m', tip:'Périmètre rectangle = (L + l) × 2'},
+      {type:'Fractions',    color:'#059669', timer:25, q:'Ron mange 2/6 d\'une tablette de Chocolats à la Grenouille,\nHarry en mange 3/6.\nQuelle fraction reste-t-il ?', a:'6/6 − 2/6 − 3/6 = 1/6', tip:'2/6 + 3/6 = 5/6 mangés → 1/6 restant'},
+      {type:'Problème',     color:'#7C3AED', timer:30, q:'Il y a 4 maisons à Poudlard.\nChaque maison compte 7 élèves dans la classe.\nCombien d\'élèves y a-t-il au total ?', a:'4 × 7 = 28 élèves', tip:'C\'est une multiplication !'},
+      {type:'Aire',         color:'#1565C0', timer:30, q:'Le chaudron de Rogue est rectangulaire :\n45 cm de long et 30 cm de large.\nCalcule son aire.', a:'Aire = 45 × 30 = 1 350 cm²', tip:'Aire = longueur × largeur'},
+    ]
+  },
+
+  // ── GRAND FINAL MIX ──────────────────────────────────────
+  grand_final:{
+    id:'grand_final', cat:'mix',
+    name:'Grand Final — Tout mélangé !', icon:'🏆',
+    desc:'HP + Maths + Français · Questions surprises',
+    color:'#EEBA30',
+    questions:[
+      {type:'HP',       color:'#AE0001', timer:15, q:'Quel est le sortilège magique\nde désarmement d\'Harry ?', a:'Expelliarmus !', tip:'Harry l\'utilise même contre Voldemort !'},
+      {type:'Maths',    color:'#059669', timer:20, q:'Table de 7 :\n7 × 8 = ?', a:'56', tip:'7 × 8 = 56 — à mémoriser !'},
+      {type:'Français', color:'#1565C0', timer:20, q:'Quel est le genre et le nombre de « baguettes » ?', a:'Féminin pluriel', tip:'Une baguette (f.s.) → des baguettes (f.pl.)'},
+      {type:'HP',       color:'#1A472A', timer:15, q:'Dans quelle maison est Hermione Granger ?', a:'Gryffondor', tip:'Le Choixpeau n\'a pas hésité longtemps !'},
+      {type:'Maths',    color:'#059669', timer:25, q:'Harry a 3/4 de litre de potion.\nIl en boit 1/4. Combien reste-t-il ?', a:'2/4 = 1/2 litre', tip:'3/4 − 1/4 = 2/4 = 1/2'},
+      {type:'Français', color:'#1565C0', timer:20, q:'Accorde l\'adjectif :\n« des baguettes (magique) »', a:'des baguettes magiques\n(féminin pluriel → +e +s)', tip:'magique → magiques (féminin pluriel)'},
+      {type:'HP',       color:'#6A1B9A', timer:15, q:'Quel sport se joue sur des balais\nà Poudlard ?', a:'Le Quidditch', tip:'Harry est Attrapeur pour Gryffondor'},
+      {type:'Maths',    color:'#059669', timer:25, q:'Périmètre d\'un carré\nde côté 12 cm ?', a:'12 × 4 = 48 cm', tip:'Carré = 4 côtés égaux'},
+      {type:'Français', color:'#1565C0', timer:20, q:'Conjugue VOLER à la 3e personne\ndu pluriel au présent.', a:'ils volent', tip:'Voler = verbe du 1er groupe : racine VOL + ENT'},
+      {type:'HP',       color:'#AE0001', timer:15, q:'Comment s\'appelle le directeur de Poudlard ?', a:'Albus Dumbledore', tip:'Il est aussi le chef de la maison Gryffondor dans sa jeunesse'},
+      {type:'Maths',    color:'#059669', timer:20, q:'350 ÷ 25 = ?', a:'14', tip:'25 × 14 = 350 — vérifie !'},
+      {type:'Français', color:'#1565C0', timer:20, q:'Dans « un château enchanté » :\nquel est l\'adjectif épithète ?', a:'enchanté\n(qualifie le nom château)', tip:'Dét : un · Nom : château · Adj : enchanté'},
+      {type:'HP',       color:'#0E1A40', timer:15, q:'Sur quel quai part le Poudlard Express ?', a:'Quai 9 ¾\n(à la Gare de King\'s Cross)', tip:'Il faut traverser le mur entre le quai 9 et le quai 10 !'},
+      {type:'Maths',    color:'#059669', timer:25, q:'7 × 6 = ?  et  42 ÷ 7 = ?', a:'7 × 6 = 42\net 42 ÷ 7 = 6', tip:'Multiplication et division sont des opérations inverses !'},
+      {type:'HP',       color:'#7C3AED', timer:20, q:'Quelles sont les 4 maisons de Poudlard ?', a:'Gryffondor · Serpentard\nPoufsouffle · Serdaigle', tip:'Fondées par Gryffondor, Serpentard, Poufsouffle et Serdaigle'},
+    ]
+  }
+};
+
+// ════════════════════════════════════════════════════════════
+//  CATALOGUE PAR CATÉGORIE
+// ════════════════════════════════════════════════════════════
+const CATS = {
+  hp:   { label:'⚡ Harry Potter',  quizzes:['hp_culture'] },
+  fr:   { label:'📚 Français',      quizzes:['hp_fr'] },
+  math: { label:'⚗️ Maths Magiques',quizzes:['hp_math'] },
+  mix:  { label:'🏆 Grand Final',   quizzes:['grand_final'] },
+};
+
+// ════════════════════════════════════════════════════════════
+//  ÉTAT
+// ════════════════════════════════════════════════════════════
+let currentQuiz = null, currentQ = -1, timerInt = null, paused = true, revealed = false;
+let teacherWin = null;
+
+// ════════════════════════════════════════════════════════════
+//  NAVIGATION
+// ════════════════════════════════════════════════════════════
+function goTo(screen, arg) {
+  document.querySelectorAll('.screen').forEach(s => s.classList.remove('on'));
+  document.getElementById('s-' + screen).classList.add('on');
+  if (screen === 'quiz') buildQuizList(arg);
+}
+
+function buildQuizList(cat) {
+  const catData = CATS[cat];
+  document.getElementById('quiz-cat-lbl').textContent = catData.label;
+  const grid = document.getElementById('quiz-grid');
+  grid.innerHTML = '';
+  catData.quizzes.forEach(qid => {
+    const q = QUIZ_DATA[qid];
+    const div = document.createElement('div');
+    div.className = 'quiz-card';
+    div.style.background = q.color + '33';
+    div.style.borderColor = q.color + '55';
+    div.innerHTML = `
+      <div class="quiz-icon">${q.icon}</div>
+      <div class="quiz-name">${q.name}</div>
+      <div class="quiz-desc">${q.desc}</div>
+      <div class="quiz-meta">⚡ ${q.questions.length} questions</div>
+    `;
+    div.onclick = () => startQuiz(qid);
+    grid.appendChild(div);
+  });
+}
+
+// ════════════════════════════════════════════════════════════
+//  QUIZ
+// ════════════════════════════════════════════════════════════
+function startQuiz(qid) {
+  currentQuiz = QUIZ_DATA[qid];
+  currentQ = 0;
+  paused = true;
+  revealed = false;
+  goTo('student');
+  renderQ();
+  // Ouvrir vue prof si déjà ouverte
+  if (teacherWin && !teacherWin.closed) syncTeacher();
+}
+
+function renderQ() {
+  stopTimer();
+  revealed = false;
+  const q = currentQuiz.questions[currentQ];
+  const total = currentQuiz.questions.length;
+
+  // Student view
+  document.getElementById('sv-cat-label').textContent = q.type;
+  document.getElementById('sv-badge').textContent = q.type;
+  document.getElementById('sv-badge').style.color = q.color;
+  document.getElementById('sv-badge').style.borderColor = q.color;
+  document.getElementById('sv-badge').style.background = q.color + '22';
+  document.getElementById('sv-question').textContent = q.q;
+  document.getElementById('sv-qnum').textContent = `Q.${currentQ+1} / ${total}`;
+  document.getElementById('sv-answer').classList.add('hidden');
+  document.getElementById('sv-ans-text').textContent = '';
+  document.getElementById('sv-pfill').style.width = ((currentQ+1)/total*100)+'%';
+  document.getElementById('sv-arc').style.stroke = q.color;
+
+  setTimerDisplay(q.timer, q.timer);
+  document.getElementById('sv-timer-num').textContent = q.timer;
+  document.getElementById('sv-arc').style.strokeDashoffset = '0';
+
+  // Teacher view
+  syncTeacher();
+}
+
+function syncTeacher() {
+  if (!currentQuiz) return;
+  const q   = currentQuiz.questions[currentQ];
+  const nxt = currentQuiz.questions[currentQ+1];
+  const total = currentQuiz.questions.length;
+  document.getElementById('tv-quiz-name').textContent = currentQuiz.name;
+  document.getElementById('tv-qpill').textContent = `Q.${currentQ+1} / ${total}`;
+  document.getElementById('tv-cur-badge').textContent = q.type;
+  document.getElementById('tv-cur-q').textContent = q.q;
+  document.getElementById('tv-cur-ans').textContent = q.a;
+  document.getElementById('tv-cur-tip').textContent = '💡 ' + q.tip;
+  document.getElementById('tv-nxt-badge').textContent = nxt ? nxt.type : '–';
+  document.getElementById('tv-nxt-q').textContent = nxt ? nxt.q : 'Fin du quiz !';
+  if (teacherWin && !teacherWin.closed) {
+    ['tv-quiz-name','tv-qpill','tv-cur-badge','tv-cur-q','tv-cur-ans','tv-cur-tip','tv-nxt-badge','tv-nxt-q'].forEach(id => {
+      const el = teacherWin.document.getElementById(id);
+      if (el) el.textContent = document.getElementById(id).textContent;
+    });
+  }
+}
+
+// ════════════════════════════════════════════════════════════
+//  TIMER
+// ════════════════════════════════════════════════════════════
+let timeLeft = 0;
+
+function setTimerDisplay(left, total) {
+  timeLeft = left;
+  document.getElementById('sv-timer-num').textContent = left;
+  const pct = left / total;
+  document.getElementById('sv-arc').style.strokeDashoffset = 295.3 * (1 - pct);
+  const num = document.getElementById('sv-timer-num');
+  if (left <= 3) { num.style.color = '#FF3333'; }
+  else if (left <= 8) { num.style.color = '#FF8800'; }
+  else { num.style.color = '#EEBA30'; }
+  document.getElementById('tv-timer').textContent = `⏱ ${left}s`;
+}
+
+function startTimer() {
+  const q = currentQuiz.questions[currentQ];
+  timeLeft = q.timer;
+  setTimerDisplay(timeLeft, q.timer);
+  timerInt = setInterval(() => {
+    timeLeft--;
+    setTimerDisplay(timeLeft, q.timer);
+    if (timeLeft <= 0) {
+      stopTimer();
+      revealAnswer();
+      beep();
+    }
+  }, 1000);
+}
+
+function stopTimer() { clearInterval(timerInt); timerInt = null; }
+
+function beep() {
+  try {
+    const ctx = new AudioContext();
+    const osc = ctx.createOscillator();
+    const g   = ctx.createGain();
+    osc.connect(g); g.connect(ctx.destination);
+    osc.frequency.value = 660;
+    g.gain.setValueAtTime(.3, ctx.currentTime);
+    g.gain.exponentialRampToValueAtTime(.001, ctx.currentTime + .4);
+    osc.start(); osc.stop(ctx.currentTime + .4);
+  } catch(e){}
+}
+
+function revealAnswer() {
+  if (revealed) return;
+  revealed = true;
+  const q = currentQuiz.questions[currentQ];
+  document.getElementById('sv-ans-text').textContent = q.a;
+  document.getElementById('sv-answer').classList.remove('hidden');
+  stopTimer();
+}
+
+// ════════════════════════════════════════════════════════════
+//  CONTRÔLES PROF
+// ════════════════════════════════════════════════════════════
+function ctrl(action) {
+  if (!currentQuiz) return;
+  if (action === 'pause') {
+    if (paused) {
+      paused = false;
+      document.getElementById('btn-pause').textContent = '⏸ Pause';
+      startTimer();
+    } else {
+      paused = true;
+      document.getElementById('btn-pause').textContent = '▶ Lancer';
+      stopTimer();
+    }
+  }
+  if (action === 'reveal') revealAnswer();
+  if (action === 'next') {
+    if (currentQ < currentQuiz.questions.length - 1) {
+      currentQ++;
+      paused = true;
+      document.getElementById('btn-pause').textContent = '▶ Lancer';
+      renderQ();
+    }
+  }
+  if (action === 'prev') {
+    if (currentQ > 0) {
+      currentQ--;
+      paused = true;
+      document.getElementById('btn-pause').textContent = '▶ Lancer';
+      renderQ();
+    }
+  }
+}
+
+function openTeacher() {
+  // Ouvre vue prof dans une nouvelle fenêtre OU bascule sur place
+  goTo('teacher');
+}
+
+// ════════════════════════════════════════════════════════════
+//  RACCOURCIS CLAVIER
+// ════════════════════════════════════════════════════════════
+document.addEventListener('keydown', e => {
+  if (!currentQuiz) return;
+  if (e.code === 'Space')      { e.preventDefault(); ctrl('pause'); }
+  if (e.code === 'ArrowRight') ctrl('next');
+  if (e.code === 'ArrowLeft')  ctrl('prev');
+  if (e.code === 'KeyR')       ctrl('reveal');
+});
+
+// ════════════════════════════════════════════════════════════
+//  ÉTOILES
+// ════════════════════════════════════════════════════════════
+function makeStars() {
+  const c = document.getElementById('stars-bg');
+  for(let i=0;i<100;i++){
+    const s = document.createElement('div'); s.className='star';
+    const sz = Math.random()*2.5+1;
+    s.style.cssText=`width:${sz}px;height:${sz}px;top:${Math.random()*100}%;left:${Math.random()*100}%;--d:${2+Math.random()*5}s;--dl:${Math.random()*4}s;`;
+    c.appendChild(s);
+  }
+}
+makeStars();
+</script>
+</body>
+</html>

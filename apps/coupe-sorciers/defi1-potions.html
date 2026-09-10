@@ -1,0 +1,415 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Défi 1 — Potions de Calcul · CM2</title>
+<link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;700&family=IM+Fell+English:ital@0;1&display=swap" rel="stylesheet">
+<style>
+@page { size: A4 portrait; margin: 13mm 15mm 13mm 15mm; }
+*{ box-sizing:border-box; margin:0; padding:0; }
+body{ font-family:'IM Fell English',Georgia,serif; font-size:10.5pt; color:#1A1A2E; background:white; line-height:1.45; }
+.page{ width:180mm; min-height:267mm; margin:0 auto; background:white; padding-bottom:6mm; }
+@media print{ body{margin:0} .page{width:100%;margin:0} .page-break{page-break-after:always} .no-print{display:none!important} }
+
+/* ── EN-TÊTE ─────────────────────────────────────────────────────────── */
+.header-band{ background:#1A1A2E; color:white; padding:5mm 6mm 4mm; border-bottom:3px solid #16A34A;
+  display:flex; justify-content:space-between; align-items:center; }
+.header-left{ display:flex; align-items:center; gap:4mm; }
+.defi-badge{ font-family:'Cinzel',serif; font-weight:700; font-size:8.5pt;
+  background:#16A34A; color:white; padding:1.5mm 3mm; border-radius:2mm; letter-spacing:.08em; white-space:nowrap; }
+.header-title{ font-family:'Cinzel',serif; font-size:14pt; font-weight:700; color:#4ADE80; letter-spacing:.04em; }
+.header-subtitle{ font-size:8pt; color:#AAAACC; margin-top:1mm; font-style:italic; font-family:Georgia,serif; }
+.header-right{ text-align:right; font-size:8pt; color:#AAAACC; line-height:1.8; font-family:Georgia,serif; }
+.student-line{ border-bottom:1px solid #4ADE8066; display:inline-block; min-width:35mm; }
+.score-box{ background:rgba(74,222,128,.15); border:1px solid #4ADE8055; border-radius:1.5mm;
+  padding:1mm 2.5mm; color:#4ADE80; font-weight:700; font-family:'Cinzel',serif; font-size:9pt;
+  margin-top:1mm; display:inline-block; }
+
+/* ── INTRO ───────────────────────────────────────────────────────────── */
+.intro-box{ background:linear-gradient(135deg,#1A1A2E08,#16A34A12);
+  border:1.5px solid #16A34A44; border-left:4px solid #16A34A;
+  border-radius:0 2mm 2mm 0; padding:2.5mm 4mm; font-size:9pt;
+  font-style:italic; color:#14532D; margin:3mm 0; line-height:1.5; }
+
+/* ── EXERCICE ────────────────────────────────────────────────────────── */
+.exercise{ margin-bottom:3.5mm; border:1px solid #E5E7EB; border-radius:2mm; overflow:hidden; }
+.ex-header{ background:#1A1A2E; color:white; padding:2mm 4mm; display:flex; align-items:center; gap:3mm; }
+.ex-number{ font-family:'Cinzel',serif; font-size:8pt; color:#4ADE80; font-weight:700; letter-spacing:.06em; white-space:nowrap; }
+.ex-title{ font-size:10pt; font-weight:700; font-family:'Cinzel',serif; color:white; flex:1; }
+.ex-points{ background:#16A34A; color:white; font-family:'Cinzel',serif; font-size:7.5pt; font-weight:700;
+  padding:0.5mm 2mm; border-radius:1.5mm; white-space:nowrap; }
+.ex-body{ padding:3mm 4.5mm; background:white; }
+.ex-instruction{ font-size:9pt; font-style:italic; color:#14532D; margin-bottom:2.5mm;
+  border-left:3px solid #16A34A66; padding-left:2.5mm; }
+
+/* ── GRILLE DE CALCULS ─────────────────────────────────────────────────── */
+.calc-grid{ display:grid; grid-template-columns:1fr 1fr; gap:2mm 6mm; margin-top:1mm; }
+.calc-grid-3{ display:grid; grid-template-columns:1fr 1fr 1fr; gap:2mm 4mm; margin-top:1mm; }
+.calc-item{ display:flex; align-items:center; gap:2mm; font-size:10pt; padding:1.5mm 0; border-bottom:1px dashed #E5E7EB; }
+.calc-num{ font-family:'Cinzel',serif; font-weight:700; font-size:8pt; color:#16A34A; min-width:4mm; }
+.calc-expr{ flex:1; font-style:italic; color:#14532D; font-size:10.5pt; }
+.calc-blank{ border-bottom:2px solid #1A1A2E; display:inline-block; min-width:20mm; height:4mm; vertical-align:bottom; }
+.calc-unit{ font-size:8.5pt; color:#666; margin-left:1mm; }
+
+/* ── PROBLÈME ────────────────────────────────────────────────────────── */
+.problem-box{ background:#F0FFF4; border:1px solid #BBF7D0; border-left:4px solid #16A34A;
+  border-radius:0 2mm 2mm 0; padding:2.5mm 3.5mm; margin-bottom:2mm; font-size:9.5pt; }
+.problem-question{ font-weight:700; color:#14532D; margin-bottom:1mm; }
+.problem-context{ font-style:italic; color:#166534; margin-bottom:1.5mm; line-height:1.5; }
+.problem-line{ border-bottom:1px solid #CCC; width:100%; height:5mm; display:block; margin-top:1.5mm; }
+.problem-calc{ background:#F9FAFB; border:1px dashed #D1FAE5;
+  border-radius:1mm; padding:1.5mm 2.5mm; margin-top:1.5mm; font-size:9pt; }
+.problem-calc strong{ color:#16A34A; }
+
+/* ── TABLEAU ────────────────────────────────────────────────────────── */
+.data-table{ width:100%; border-collapse:collapse; font-size:9.5pt; margin-top:1mm; }
+.data-table th{ background:#2D5016; color:#4ADE80; font-family:'Cinzel',serif; font-size:8pt;
+  padding:2mm 3mm; border:1px solid #4ADE8033; text-align:center; }
+.data-table td{ border:1px solid #D1FAE5; padding:2mm 3mm; vertical-align:middle; font-size:9.5pt; }
+.data-table tr:nth-child(even) td{ background:#F0FFF4; }
+.data-table .ans{ background:#FFFEF5; }
+.data-table .given{ font-style:italic; font-weight:600; color:#14532D; }
+
+/* ── BONUS ───────────────────────────────────────────────────────────── */
+.bonus-banner{ background:linear-gradient(135deg,#1A1A2E,#2D5016);
+  color:#4ADE80; font-family:'Cinzel',serif; font-size:9pt; font-weight:700;
+  padding:2mm 4mm; border-radius:1.5mm; margin-bottom:2mm; letter-spacing:.06em;
+  display:flex; align-items:center; gap:2mm; }
+.bonus-box{ background:#ECFDF5; border:1.5px solid #16A34A44; border-radius:2mm; padding:3mm 4mm; }
+.bonus-text{ font-size:9.5pt; color:#14532D; margin-bottom:2mm; line-height:1.5; }
+
+/* ── PIED DE PAGE ────────────────────────────────────────────────────── */
+.page-footer{ border-top:1.5px solid #16A34A55; padding-top:2mm; margin-top:4mm;
+  display:flex; justify-content:space-between; align-items:center;
+  font-size:7.5pt; color:#999; font-family:Georgia,serif; }
+.footer-logo{ font-family:'Cinzel',serif; color:#16A34A; font-size:8pt; font-weight:700; }
+
+.print-btn{ position:fixed; bottom:20px; right:20px; background:#1A1A2E; color:#4ADE80;
+  border:2px solid #16A34A; padding:10px 22px; border-radius:999px;
+  font-family:'Cinzel',serif; font-weight:700; font-size:12px; cursor:pointer;
+  letter-spacing:.06em; transition:all .2s; z-index:100; }
+.print-btn:hover{ background:#16A34A; color:white; }
+.page-break{ border:none; border-top:2px dashed #16A34A33; margin:8mm 0; }
+@media print{ .page-break{display:none} }
+</style>
+</head>
+<body>
+
+<button class="print-btn no-print" onclick="window.print()">⎙ Imprimer</button>
+
+<!-- ══════════════════════ PAGE 1 ══════════════════════════════════════════ -->
+<div class="page">
+
+  <div class="header-band">
+    <div class="header-left">
+      <div class="defi-badge">DÉFI 1</div>
+      <div>
+        <div class="header-title">Potions de Calcul</div>
+        <div class="header-subtitle">🧪 Harry Potter &ensp;·&ensp; Mathématiques &ensp;·&ensp; CM2 &ensp;·&ensp; Lundi 11 mai 2026</div>
+      </div>
+    </div>
+    <div class="header-right">
+      <div>Maison : <span class="student-line">&nbsp;</span></div>
+      <div>Prénom : <span class="student-line">&nbsp;</span></div>
+      <div class="score-box">Score : &ensp;&ensp;&ensp;/ 30</div>
+    </div>
+  </div>
+
+  <div class="intro-box">
+    🧪 <strong>Mission :</strong> Professeur Rogue te confie la préparation des potions de Poudlard !
+    Pour réussir chaque recette, tu dois maîtriser le calcul mental, la résolution de problèmes
+    et les opérations. Bonne chance, apprenti sorcier !
+    &ensp;<em>Durée : 45 minutes · Total : 30 points</em>
+  </div>
+
+  <!-- ── EXERCICE 1 ─────────────────────────────────────────────────────── -->
+  <div class="exercise">
+    <div class="ex-header">
+      <div class="ex-number">EXERCICE 1</div>
+      <div class="ex-title">Calcul Mental — Les ingrédients des potions !</div>
+      <div class="ex-points">8 pts</div>
+    </div>
+    <div class="ex-body">
+      <div class="ex-instruction">
+        Rogue a besoin de quantités précises. Pose et résous chaque calcul mental.
+        Écris ton résultat sur la ligne.
+      </div>
+
+      <div class="calc-grid">
+        <div class="calc-item">
+          <span class="calc-num">1.</span>
+          <span class="calc-expr">7 × 8 =</span>
+          <span class="calc-blank"></span>
+          <span class="calc-unit">g d'aconit</span>
+        </div>
+        <div class="calc-item">
+          <span class="calc-num">2.</span>
+          <span class="calc-expr">9 × 6 =</span>
+          <span class="calc-blank"></span>
+          <span class="calc-unit">feuilles de mandragore</span>
+        </div>
+        <div class="calc-item">
+          <span class="calc-num">3.</span>
+          <span class="calc-expr">144 ÷ 12 =</span>
+          <span class="calc-blank"></span>
+          <span class="calc-unit">graines de jusquiame</span>
+        </div>
+        <div class="calc-item">
+          <span class="calc-num">4.</span>
+          <span class="calc-expr">81 ÷ 9 =</span>
+          <span class="calc-blank"></span>
+          <span class="calc-unit">gouttes de rosée</span>
+        </div>
+        <div class="calc-item">
+          <span class="calc-num">5.</span>
+          <span class="calc-expr">Double de 47 =</span>
+          <span class="calc-blank"></span>
+          <span class="calc-unit">pétales séchés</span>
+        </div>
+        <div class="calc-item">
+          <span class="calc-num">6.</span>
+          <span class="calc-expr">Moitié de 136 =</span>
+          <span class="calc-blank"></span>
+          <span class="calc-unit">ml de jus magique</span>
+        </div>
+        <div class="calc-item">
+          <span class="calc-num">7.</span>
+          <span class="calc-expr">25 × 40 =</span>
+          <span class="calc-blank"></span>
+          <span class="calc-unit">cm de racine</span>
+        </div>
+        <div class="calc-item">
+          <span class="calc-num">8.</span>
+          <span class="calc-expr">3 600 ÷ 100 =</span>
+          <span class="calc-blank"></span>
+          <span class="calc-unit">g de poudre</span>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ── EXERCICE 2 ─────────────────────────────────────────────────────── -->
+  <div class="exercise">
+    <div class="ex-header">
+      <div class="ex-number">EXERCICE 2</div>
+      <div class="ex-title">Fractions Magiques</div>
+      <div class="ex-points">6 pts</div>
+    </div>
+    <div class="ex-body">
+      <div class="ex-instruction">
+        Pour doser correctement les potions, Hermione utilise des fractions. Résous chaque problème.
+      </div>
+
+      <div class="calc-grid">
+        <div class="calc-item">
+          <span class="calc-num">1.</span>
+          <span class="calc-expr">1/2 de 80 =</span>
+          <span class="calc-blank"></span>
+        </div>
+        <div class="calc-item">
+          <span class="calc-num">2.</span>
+          <span class="calc-expr">1/4 de 60 =</span>
+          <span class="calc-blank"></span>
+        </div>
+        <div class="calc-item">
+          <span class="calc-num">3.</span>
+          <span class="calc-expr">3/4 de 40 =</span>
+          <span class="calc-blank"></span>
+        </div>
+        <div class="calc-item">
+          <span class="calc-num">4.</span>
+          <span class="calc-expr">2/3 de 30 =</span>
+          <span class="calc-blank"></span>
+        </div>
+        <div class="calc-item">
+          <span class="calc-num">5.</span>
+          <span class="calc-expr">1/5 de 100 =</span>
+          <span class="calc-blank"></span>
+        </div>
+        <div class="calc-item">
+          <span class="calc-num">6.</span>
+          <span class="calc-expr">3/4 de 48 =</span>
+          <span class="calc-blank"></span>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ── EXERCICE 3 ─────────────────────────────────────────────────────── -->
+  <div class="exercise">
+    <div class="ex-header">
+      <div class="ex-number">EXERCICE 3</div>
+      <div class="ex-title">Problèmes de Potions — Lis, réfléchis, calcule !</div>
+      <div class="ex-points">12 pts</div>
+    </div>
+    <div class="ex-body">
+      <div class="ex-instruction">
+        Lis chaque situation, identifie l'opération à faire, puis calcule. Montre ta démarche.
+      </div>
+
+      <div class="problem-box">
+        <div class="problem-question">Problème 1 — Les bouteilles de potion</div>
+        <div class="problem-context">
+          Hermione prépare 9 bouteilles de Potion de Guérison. Chaque bouteille
+          nécessite 8 ingrédients différents. Combien d'ingrédients doit-elle
+          rassembler au total ?
+        </div>
+        <div class="problem-calc"><strong>Opération :</strong> &ensp;____ × ____ = ____</div>
+        <div class="problem-calc"><strong>Réponse :</strong> &ensp;Hermione doit rassembler <span style="border-bottom:1px solid #999;display:inline-block;min-width:20mm">&nbsp;</span> ingrédients.</div>
+      </div>
+
+      <div class="problem-box">
+        <div class="problem-question">Problème 2 — Répartition des Dragées</div>
+        <div class="problem-context">
+          Ron a reçu un paquet de 96 Dragées Surprises de Bertie Crochue.
+          Il veut les partager équitablement entre 8 amis (lui compris).
+          Combien de dragées chacun recevra-t-il ?
+        </div>
+        <div class="problem-calc"><strong>Opération :</strong> &ensp;____ ÷ ____ = ____</div>
+        <div class="problem-calc"><strong>Réponse :</strong> &ensp;Chacun recevra <span style="border-bottom:1px solid #999;display:inline-block;min-width:20mm">&nbsp;</span> dragées.</div>
+      </div>
+
+      <div class="problem-box">
+        <div class="problem-question">Problème 3 — L'atelier de Neville</div>
+        <div class="problem-context">
+          Neville a cueilli des herbes médicinales dans la serre. Il en a 132 en tout.
+          Il les range dans des bottes de 12. Combien de bottes peut-il constituer ?
+          Lui reste-t-il des herbes ?
+        </div>
+        <div class="problem-calc"><strong>Opération :</strong> &ensp;____ ÷ ____ = ____ reste ____</div>
+        <div class="problem-calc"><strong>Réponse :</strong> &ensp;Neville forme <span style="border-bottom:1px solid #999;display:inline-block;min-width:18mm">&nbsp;</span> bottes. Il lui reste <span style="border-bottom:1px solid #999;display:inline-block;min-width:16mm">&nbsp;</span> herbe(s).</div>
+      </div>
+
+    </div>
+  </div>
+
+  <div class="page-footer">
+    <span class="footer-logo">🧪 Salle des Potions · CM2</span>
+    <span>Dylan Collery · Défi 1 · Page 1/2</span>
+    <span>Calcul mental · Fractions · Problèmes</span>
+  </div>
+
+</div>
+
+<hr class="page-break">
+
+<!-- ══════════════════════ PAGE 2 ══════════════════════════════════════════ -->
+<div class="page">
+
+  <div style="display:flex;justify-content:space-between;align-items:center;
+              border-bottom:2px solid #16A34A;padding-bottom:2mm;margin-bottom:3mm">
+    <span style="font-family:'Cinzel',serif;font-size:9pt;color:#1A1A2E;font-weight:700">
+      🧪 DÉFI 1 — Potions de Calcul
+    </span>
+    <span style="font-size:8pt;color:#999;font-family:Georgia,serif">
+      Prénom : <span style="border-bottom:1px solid #888;display:inline-block;min-width:30mm">&nbsp;</span>
+      &ensp; Page 2/2
+    </span>
+  </div>
+
+  <!-- ── EXERCICE 4 — TABLEAU ───────────────────────────────────────────── -->
+  <div class="exercise">
+    <div class="ex-header">
+      <div class="ex-number">EXERCICE 4</div>
+      <div class="ex-title">Le Carnet de Recettes de Rogue</div>
+      <div class="ex-points">4 pts</div>
+    </div>
+    <div class="ex-body">
+      <div class="ex-instruction">
+        Complète le carnet de recettes. La 1ère ligne est donnée en exemple.
+      </div>
+
+      <table class="data-table">
+        <thead>
+          <tr>
+            <th>Potion</th>
+            <th>Nbre de bouteilles</th>
+            <th>Ingrédients / bouteille</th>
+            <th>Total ingrédients</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td class="given">Potion de Soins</td>
+            <td style="text-align:center" class="given">6</td>
+            <td style="text-align:center" class="given">7</td>
+            <td style="text-align:center" class="given">6 × 7 = <strong>42</strong></td>
+          </tr>
+          <tr>
+            <td class="given">Potion de Force</td>
+            <td style="text-align:center" class="given">8</td>
+            <td style="text-align:center" class="given">9</td>
+            <td class="ans" style="text-align:center">&nbsp;</td>
+          </tr>
+          <tr>
+            <td class="given">Potion Polyglotte</td>
+            <td style="text-align:center" class="given">5</td>
+            <td style="text-align:center" class="given">12</td>
+            <td class="ans" style="text-align:center">&nbsp;</td>
+          </tr>
+          <tr>
+            <td class="given">Potion de Ratatinage</td>
+            <td style="text-align:center" class="given">11</td>
+            <td style="text-align:center" class="given">7</td>
+            <td class="ans" style="text-align:center">&nbsp;</td>
+          </tr>
+          <tr>
+            <td class="given">Potion du Courage</td>
+            <td class="ans">&nbsp;</td>
+            <td style="text-align:center" class="given">8</td>
+            <td style="text-align:center" class="given">8 × ? = <strong>64</strong></td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+  <!-- ── EXERCICE BONUS ─────────────────────────────────────────────────── -->
+  <div class="bonus-banner">⭐ DÉFI BONUS — Pour les meilleurs apprentis sorciers !</div>
+  <div class="bonus-box">
+    <div class="problem-question" style="margin-bottom:2mm;font-size:10pt">🏆 La Grande Potion Universelle</div>
+    <div class="bonus-text">
+      Professeur Rogue prépare la Grande Potion Universelle pour toute l'école.
+      Il a besoin de 7 ingrédients différents : 15 grammes de chaque.
+      Ses assistants (Harry, Hermione et Ron) doivent chacun préparer
+      la même quantité. Il possède déjà 30 grammes de poudre de lune
+      qu'il répartit en parts égales entre ses 6 chaudrons.
+    </div>
+
+    <div style="margin:2mm 0 1mm;font-weight:700;font-size:9.5pt;color:#14532D">
+      Question A : Combien de grammes d'ingrédients en tout faut-il pour la recette complète ?
+    </div>
+    <div style="display:flex;gap:2mm;align-items:center;font-size:9.5pt;margin-bottom:2mm">
+      Calcul : <span style="border-bottom:1px solid #888;display:inline-block;min-width:50mm">&nbsp;</span>
+      &ensp; = <span style="border-bottom:1px solid #888;display:inline-block;min-width:20mm">&nbsp;</span> g
+    </div>
+
+    <div style="margin:2mm 0 1mm;font-weight:700;font-size:9.5pt;color:#14532D">
+      Question B : Combien de grammes de poudre de lune dans chaque chaudron ?
+    </div>
+    <div style="display:flex;gap:2mm;align-items:center;font-size:9.5pt;margin-bottom:2mm">
+      Calcul : <span style="border-bottom:1px solid #888;display:inline-block;min-width:50mm">&nbsp;</span>
+      &ensp; = <span style="border-bottom:1px solid #888;display:inline-block;min-width:20mm">&nbsp;</span> g
+    </div>
+
+    <div style="margin:2mm 0 1mm;font-weight:700;font-size:9.5pt;color:#14532D">
+      Question C : Chaque assistant prépare combien de grammes en tout ? (les 7 ingrédients répartis entre 3)
+    </div>
+    <div style="display:flex;gap:2mm;align-items:center;font-size:9.5pt">
+      Calcul : <span style="border-bottom:1px solid #888;display:inline-block;min-width:50mm">&nbsp;</span>
+      &ensp; = <span style="border-bottom:1px solid #888;display:inline-block;min-width:20mm">&nbsp;</span> g
+    </div>
+  </div>
+
+  <!-- PIED DE PAGE 2 -->
+  <div class="page-footer">
+    <span class="footer-logo">🧪 Salle des Potions · CM2</span>
+    <span>Dylan Collery · Défi 1 · Page 2/2</span>
+    <span>Problèmes · Tableau · Défi Bonus</span>
+  </div>
+
+</div>
+
+</body>
+</html>
