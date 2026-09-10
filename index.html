@@ -371,7 +371,7 @@ footer strong{color:var(--chalk-dim)}
 <section id="projets">
   <div class="section-inner">
     <div class="section-head reveal">
-      <p class="eyebrow">Trois projets, en détail</p>
+      <p class="eyebrow">Quatre projets, en détail</p>
       <h2 class="section-title">Ce que j'ai vraiment construit</h2>
       <p class="section-desc">Pas des maquettes : des outils utilisés en classe, sur un terrain de volley ou autour d'une table de jeu — conçus, écrits et livrés seul, avec l'IA comme partenaire de fabrication.</p>
     </div>
@@ -460,6 +460,37 @@ footer strong{color:var(--chalk-dim)}
           <div class="fiche-tools"><span class="pill">Claude</span><span class="pill">Capacitor</span><span class="pill">HTML/JS</span><span class="pill">iOS &amp; Android</span></div>
           <div class="fiche-actions">
             <button class="btn btn-outline btn-sm" data-app-url="apps/plis-et-butin.html" data-app-title="Plis et Butin — aperçu web">Essayer la version web →</button>
+          </div>
+        </div>
+      </article>
+
+      <!-- FICHE 4 : COUPE DES SORCIERS (Harry Potter) -->
+      <article class="fiche reveal">
+        <div class="fiche-top">
+          <div class="store-head">
+            <div class="store-icon" style="background:linear-gradient(155deg,#3a2e6e,#1a1240)">🎩</div>
+            <div>
+              <div class="fiche-kicker"><span class="eyebrow">Semaine à thème · CM2</span></div>
+              <h3>« Coupe des Sorciers » : transformer une semaine de classe en année à Poudlard</h3>
+            </div>
+          </div>
+          <span class="fiche-stamp">vu, approuvé ✓</span>
+        </div>
+        <div class="fiche-grid">
+          <div class="fiche-block"><span class="label">Contexte</span><p>Une semaine banalisée en CM2, sans fil conducteur imposé : l'occasion de sortir du planning habituel et de tenter quelque chose qui embarque toute la classe sur plusieurs jours d'affilée.</p></div>
+          <div class="fiche-block"><span class="label">Le défi</span><p>Faire tenir un univers entier — répartition, enjeux, progression — sur une semaine, avec de vrais apprentissages disciplinaires (maths, français, logique, culture générale) derrière chaque étape, sans que ça retombe en simple "activité récré".</p></div>
+          <div class="fiche-block"><span class="label">Ma démarche avec l'IA</span><p>Avec Claude : une cérémonie d'ouverture façon Choixpeau qui répartit la classe en quatre maisons, quatre défis disciplinaires codés un par un (potions de calcul, sortilèges de grammaire, escape game en équipe, quiz culture générale sur ardoise), et un tableau de points projeté en classe, mis à jour en direct après chaque défi pour faire vivre la compétition entre maisons toute la semaine.</p></div>
+          <div class="fiche-block"><span class="label">Le résultat</span><p>Six outils numériques interconnectés — une cérémonie, quatre défis, un tableau de bord — qui ont transformé une semaine ordinaire en évènement dont la classe a parlé bien après la dernière séance.</p></div>
+        </div>
+        <div class="store-gallery">
+          <img src="medias/images/hp-01-ceremonie.jpg" alt="Cérémonie du Choixpeau : répartition des élèves dans les quatre maisons" loading="lazy"/>
+          <img src="medias/images/hp-02-portail.jpg" alt="Portail de la semaine Coupe des Sorciers avec les 6 étapes" loading="lazy"/>
+          <img src="medias/images/hp-03-tableau.jpg" alt="Tableau de bord des points par maison, projeté en classe" loading="lazy"/>
+        </div>
+        <div class="fiche-foot">
+          <div class="fiche-tools"><span class="pill">Claude</span><span class="pill">HTML/JS</span></div>
+          <div class="fiche-actions">
+            <button class="btn btn-outline btn-sm" data-app-url="apps/coupe-sorciers/index.html" data-app-title="Coupe des Sorciers — portail">Découvrir la semaine →</button>
           </div>
         </div>
       </article>
@@ -705,9 +736,6 @@ const DEFAULT_PROJECTS = [
   { id:'canicule', icon:'☀️', tag:'Éducation & IA', tagColor:'tag-blue', title:'Journée « Défis Canicule » — CM2',
     description:"Portail d'accès et 4 mini-jeux interactifs conçus dans l'urgence pour occuper la classe un jour de forte chaleur, sans salle de sport disponible.",
     tools:['Claude','HTML/JS'], videos:[], link:'apps/canicule/index.html' },
-  { id:'coupe-sorciers', icon:'🎩', tag:'Éducation & IA', tagColor:'tag-blue', title:'Semaine « Coupe des Sorciers » — CM2',
-    description:"Semaine à thème Harry Potter : cérémonie du Choixpeau pour répartir la classe en 4 maisons, 4 défis disciplinaires (potions/calcul, sortilèges/grammaire, escape game, quiz), et un tableau de bord des points suivi en direct.",
-    tools:['Claude','HTML/JS'], videos:[], images:['medias/images/hp-choixpeau-preview.jpg'], link:'apps/coupe-sorciers/index.html' },
   { id:'grand-tournoi', icon:'🏆', tag:'Éducation & IA', tagColor:'tag-blue', title:'Journée « Grand Tournoi » — CM2',
     description:"Organisation complète d'une journée événementielle en classe : guide enseignant, défis papier et parcours interactif.",
     tools:['Claude','HTML/JS'], videos:[], link:'apps/journee-grand-tournoi.html' },
