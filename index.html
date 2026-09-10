@@ -187,6 +187,17 @@ section{padding:5.5rem 2rem}
 .pill{font-size:.72rem; background:var(--bg-3); border:1px solid var(--line); border-radius:999px; padding:.22rem .7rem; color:var(--chalk-dim)}
 .fiche-actions{display:flex; gap:.6rem; flex-wrap:wrap}
 
+/* ---- Fiche "façon store" (Skull King) ---- */
+.store-head{display:flex; gap:1.1rem; align-items:center}
+.store-icon{width:60px; height:60px; border-radius:16px; background:linear-gradient(155deg,#b23a2e,#7a1f17); display:flex; align-items:center; justify-content:center; font-size:1.7rem; flex-shrink:0; box-shadow:0 6px 18px rgba(0,0,0,.35)}
+.store-meta-row{display:flex; flex-wrap:wrap; gap:.5rem 1.3rem; margin:0 0 1.4rem; font-size:.78rem; color:var(--chalk-faint)}
+.store-meta-row strong{color:var(--chalk-dim)}
+.store-status{display:inline-flex; align-items:center; gap:.4rem; background:var(--gold-dim); color:var(--gold); border-radius:999px; padding:.25rem .8rem; font-size:.74rem; font-weight:700}
+.store-desc{font-size:.9rem; color:var(--chalk-dim); line-height:1.62; margin-bottom:1.5rem; max-width:70ch}
+.store-gallery{display:flex; gap:.9rem; overflow-x:auto; padding-bottom:.6rem; margin-bottom:1.6rem}
+.store-gallery img{height:320px; border-radius:14px; border:1px solid var(--line-strong); flex-shrink:0; box-shadow:0 10px 30px rgba(0,0,0,.35)}
+@media (max-width:640px){ .store-gallery img{height:260px} }
+
 /* ============================================================
    AUTRES RÉALISATIONS (secondary grid)
    ============================================================ */
@@ -216,9 +227,6 @@ section{padding:5.5rem 2rem}
 .btn-mini.accent:hover{background:var(--gold-dim)}
 .project-preview{margin-top:.75rem; border-radius:7px; overflow:hidden; border:1px solid var(--line); aspect-ratio:16/9; background:var(--bg-3)}
 .project-preview img{width:100%; height:100%; object-fit:cover}
-.add-project-card{border:1.5px dashed var(--line-strong); background:transparent; cursor:pointer; display:flex; flex-direction:column; align-items:center; justify-content:center; min-height:180px; gap:.6rem; color:var(--chalk-faint); font-size:.85rem}
-.add-project-card:hover{border-color:var(--gold); color:var(--gold)}
-.add-project-card span:first-child{font-size:1.7rem}
 
 /* ============================================================
    COMPÉTENCES
@@ -314,48 +322,6 @@ footer strong{color:var(--chalk-dim)}
 @media (max-width:640px){ .app-modal-frame-wrap{height:72vh} }
 
 /* ============================================================
-   ADMIN PANEL
-   ============================================================ */
-#admin-btn{position:fixed; bottom:1.5rem; right:1.5rem; z-index:300; width:44px; height:44px; border-radius:50%; background:var(--bg-3); border:1px solid var(--line-strong); color:var(--chalk-dim); font-size:1.1rem; cursor:pointer; display:flex; align-items:center; justify-content:center; box-shadow:0 4px 16px rgba(0,0,0,.4)}
-#admin-btn:hover{border-color:var(--gold); color:var(--gold); transform:rotate(25deg)}
-.admin-overlay{display:none; position:fixed; inset:0; z-index:400; background:rgba(0,0,0,.7)}
-.admin-overlay.open{display:block}
-.admin-panel{position:fixed; right:0; top:0; bottom:0; z-index:401; width:420px; max-width:100vw; background:var(--bg-2); border-left:1px solid var(--line-strong); display:flex; flex-direction:column; transform:translateX(100%); transition:transform .3s var(--ease)}
-.admin-panel.open{transform:translateX(0)}
-.admin-header{padding:1.25rem; border-bottom:1px solid var(--line); display:flex; align-items:center; justify-content:space-between}
-.admin-header h2{font-family:var(--serif); font-size:1.05rem; font-weight:600}
-.admin-close{background:none; border:none; color:var(--chalk-dim); font-size:1.2rem; cursor:pointer}
-.admin-body{flex:1; overflow-y:auto; padding:1.25rem; display:flex; flex-direction:column; gap:.7rem}
-.admin-project-item{background:var(--bg-3); border:1px solid var(--line); border-radius:10px; padding:1rem; display:flex; align-items:flex-start; gap:.7rem}
-.admin-project-item .proj-icon{font-size:1.3rem; flex-shrink:0}
-.admin-project-item .proj-info{flex:1; min-width:0}
-.admin-project-item .proj-info strong{font-size:.85rem; display:block; white-space:nowrap; overflow:hidden; text-overflow:ellipsis}
-.admin-project-item .proj-info span{font-size:.72rem; color:var(--chalk-faint)}
-.admin-project-item .proj-actions{display:flex; gap:.35rem; flex-shrink:0}
-.btn-edit,.btn-del{padding:.3rem .55rem; border-radius:6px; font-size:.72rem; cursor:pointer; border:1px solid var(--line); background:var(--bg-2); color:var(--chalk-dim)}
-.btn-edit:hover{border-color:var(--gold); color:var(--gold)}
-.btn-del:hover{border-color:var(--red); color:var(--red)}
-.admin-footer{padding:1rem 1.25rem; border-top:1px solid var(--line)}
-.btn-add-project{width:100%; padding:.7rem; border-radius:8px; background:var(--red); color:#fff; border:none; font-size:.88rem; font-weight:700; cursor:pointer; font-family:var(--sans)}
-
-/* ADMIN FORM */
-.form-overlay{display:none; position:fixed; inset:0; z-index:600; background:rgba(0,0,0,.8); align-items:center; justify-content:center; padding:1.5rem}
-.form-overlay.open{display:flex}
-.form-box{background:var(--bg-2); border:1px solid var(--line-strong); border-radius:var(--radius); width:100%; max-width:500px; max-height:90vh; overflow-y:auto}
-.form-header{padding:1.25rem; border-bottom:1px solid var(--line); display:flex; align-items:center; justify-content:space-between; position:sticky; top:0; background:var(--bg-2)}
-.form-header h3{font-family:var(--serif); font-size:.98rem; font-weight:600}
-.form-body{padding:1.25rem; display:flex; flex-direction:column; gap:1rem}
-.form-group{display:flex; flex-direction:column; gap:.4rem}
-.form-group label{font-size:.8rem; font-weight:600; color:var(--chalk-dim)}
-.form-group input,.form-group textarea,.form-group select{background:var(--bg-3); border:1px solid var(--line); border-radius:8px; padding:.6rem .75rem; color:var(--chalk); font-size:.88rem; font-family:inherit; outline:none; width:100%}
-.form-group input:focus,.form-group textarea:focus,.form-group select:focus{border-color:var(--gold)}
-.form-group textarea{resize:vertical; min-height:80px}
-.form-hint{font-size:.72rem; color:var(--chalk-faint); margin-top:.2rem}
-.form-footer{padding:1rem 1.25rem; border-top:1px solid var(--line); display:flex; gap:.75rem; justify-content:flex-end}
-.btn-cancel{padding:.6rem 1.1rem; border-radius:7px; background:transparent; border:1px solid var(--line); color:var(--chalk-dim); cursor:pointer; font-size:.88rem}
-.btn-save{padding:.6rem 1.3rem; border-radius:7px; background:var(--red); color:#fff; border:none; font-weight:700; cursor:pointer; font-size:.88rem}
-
-/* ============================================================
    RESPONSIVE
    ============================================================ */
 @media (max-width:640px){
@@ -393,7 +359,7 @@ footer strong{color:var(--chalk-dim)}
   <h1 class="hero-name">Dylan Collery</h1>
   <p class="hero-role-eyebrow">Ancien professeur des écoles · Master MEEF 2</p>
   <p class="hero-role" id="hero-role" data-text="Ingénieur pédagogique IA">Ingénieur pédagogique IA</p>
-  <p class="hero-sub">Deux ans de classe en CM2, un Master MEEF, puis un pivot : concevoir des séquences, des outils et des produits avec l'IA comme partenaire de fabrication — seul, sans équipe ni budget. Ce portfolio réunit ce que j'ai construit depuis.</p>
+  <p class="hero-sub">Deux ans de classe (CE1/CE2 puis CM2), un Master MEEF, puis un pivot : concevoir des séquences, des outils et des produits avec l'IA comme partenaire de fabrication — seul, sans équipe ni budget. Ce portfolio réunit ce que j'ai construit depuis.</p>
   <div class="hero-cta">
     <a href="#projets" class="btn btn-primary">Voir mes projets</a>
     <a href="cv/CV_Dylan_Collery.pdf" download class="btn btn-outline">Télécharger mon CV</a>
@@ -459,25 +425,41 @@ footer strong{color:var(--chalk-dim)}
         </div>
       </article>
 
-      <!-- FICHE 3 : SKULL KING -->
-      <article class="fiche reveal">
+      <!-- FICHE 3 : PLIS ET BUTIN (ex-Skull King), FICHE STORE -->
+      <article class="fiche store-fiche reveal">
         <div class="fiche-top">
-          <div>
-            <div class="fiche-kicker"><span class="fiche-icon">🏴‍☠️</span><span class="eyebrow">Application · hors cadre scolaire</span></div>
-            <h3>Sortir du cadre scolaire : une vraie application, du premier trait de code au dernier</h3>
+          <div class="store-head">
+            <div class="store-icon"><img src="medias/images/pb-icon.jpg" alt="Icône de l'application Plis et Butin" style="width:100%;height:100%;object-fit:cover;border-radius:16px"/></div>
+            <div>
+              <div class="fiche-kicker"><span class="eyebrow">Application · hors cadre scolaire</span></div>
+              <h3>« Plis et Butin » : sortir du cadre scolaire, du premier trait de code jusqu'à l'app mobile</h3>
+            </div>
           </div>
-          <span class="fiche-stamp">vu, approuvé ✓</span>
+          <span class="fiche-stamp">en préparation ⚓</span>
+        </div>
+        <div class="store-meta-row">
+          <span>📱 <strong>Catégorie</strong> Jeux de société · Cartes</span>
+          <span>🤖 <strong>Construite avec</strong> Claude + Capacitor</span>
+          <span>🔒 <strong>Données</strong> Aucune collecte — politique de confidentialité publiée</span>
+          <span class="store-status">● Prête techniquement — pas encore soumise aux stores</span>
         </div>
         <div class="fiche-grid">
           <div class="fiche-block"><span class="label">Contexte</span><p>Skull King est un jeu de société à scores complexes — plis, bonus, malus, primes — que mon entourage joue régulièrement. Personne n'a envie de faire les comptes à la main pendant dix manches.</p></div>
-          <div class="fiche-block"><span class="label">Le défi</span><p>Construire, sans framework ni équipe, une application complète : pas un prototype, un produit qu'on utilise vraiment autour d'une table, plusieurs fois par semaine.</p></div>
-          <div class="fiche-block"><span class="label">Ma démarche avec l'IA</span><p>Développée de bout en bout avec Claude : intégralité des règles codée, navigation animée d'un bateau pirate entre les manches, artwork personnalisé, interface pensée pour un téléphone posé au milieu de la table.</p></div>
-          <div class="fiche-block"><span class="label">Le résultat</span><p>Une application autonome de 670 Ko, sans backend ni installation — la preuve que je peux livrer un produit fini, pas seulement un support de cours.</p></div>
+          <div class="fiche-block"><span class="label">Le défi</span><p>Construire, sans framework ni équipe, une application complète — puis aller plus loin qu'une simple page web ouverte dans un navigateur : une vraie app installable, publiable sur l'App Store et Google Play, sans que le nom « Skull King » (propriété d'un éditeur) pose problème.</p></div>
+          <div class="fiche-block"><span class="label">Ma démarche avec l'IA</span><p>Développée de bout en bout avec Claude : intégralité des règles codée, navigation animée façon carte au trésor entre les manches, artwork personnalisé. Puis rebranding complet en « Plis et Butin » (identité visuelle, disclaimer légal), enrichissement du produit — trois variantes de règles, journal des manches, graphique d'évolution des scores, partage natif du classement — et mise en boîte avec Capacitor pour obtenir un projet iOS/Android complet (icônes, écrans de démarrage, retour haptique).</p></div>
+          <div class="fiche-block"><span class="label">Le résultat</span><p>Un projet prêt à compiler : code, icônes, captures d'écran et politique de confidentialité déjà en place. Il ne manque que la compilation finale sur mon poste (Xcode/Android Studio) et les comptes développeur pour soumettre aux stores — la preuve que je peux livrer un produit fini, pas seulement un support de cours.</p></div>
+        </div>
+        <p class="store-desc">Écran par écran : choix des règles (classique, mode fun avec Kraken, extension avec pouvoirs des pirates), saisie des enchères et bonus manche après manche, transition animée façon carte au trésor, puis classement final avec courbe d'évolution des scores et partage natif.</p>
+        <div class="store-gallery">
+          <img src="medias/images/pb-01-accueil.jpg" alt="Écran d'accueil et choix des règles de Plis et Butin" loading="lazy"/>
+          <img src="medias/images/pb-02-manche.jpg" alt="Saisie des enchères et plis pris par manche" loading="lazy"/>
+          <img src="medias/images/pb-03-transition.jpg" alt="Transition animée façon carte au trésor entre deux manches" loading="lazy"/>
+          <img src="medias/images/pb-04-fin-partie.jpg" alt="Écran de fin de partie avec classement et courbe d'évolution des scores" loading="lazy"/>
         </div>
         <div class="fiche-foot">
-          <div class="fiche-tools"><span class="pill">Claude</span><span class="pill">HTML/JS</span><span class="pill">Design UI</span></div>
+          <div class="fiche-tools"><span class="pill">Claude</span><span class="pill">Capacitor</span><span class="pill">HTML/JS</span><span class="pill">iOS &amp; Android</span></div>
           <div class="fiche-actions">
-            <button class="btn btn-outline btn-sm" data-app-url="apps/skull-king.html" data-app-title="Skull King — application">Lancer l'application →</button>
+            <button class="btn btn-outline btn-sm" data-app-url="apps/plis-et-butin.html" data-app-title="Plis et Butin — aperçu web">Essayer la version web →</button>
           </div>
         </div>
       </article>
@@ -696,56 +678,8 @@ footer strong{color:var(--chalk-dim)}
   </div>
 </div>
 
-<!-- ===== ADMIN ===== -->
-<button id="admin-btn" title="Gérer les autres réalisations">⚙️</button>
-<div class="admin-overlay" id="admin-overlay"></div>
-<div class="admin-panel" id="admin-panel">
-  <div class="admin-header">
-    <h2>Gérer « Autres réalisations »</h2>
-    <button class="admin-close" id="admin-close-btn">✕</button>
-  </div>
-  <div class="admin-body" id="admin-project-list"></div>
-  <div class="admin-footer">
-    <button class="btn-add-project" id="btn-add-project">+ Ajouter un nouveau projet</button>
-  </div>
-</div>
-
-<div class="form-overlay" id="form-overlay">
-  <div class="form-box">
-    <div class="form-header">
-      <h3 id="form-title">Nouveau projet</h3>
-      <button class="modal-close" id="form-close-btn">✕</button>
-    </div>
-    <div class="form-body">
-      <input type="hidden" id="f-id"/>
-      <div class="form-group"><label>Emoji / Icône</label><input type="text" id="f-icon" placeholder="Ex: 🎬" maxlength="4"/></div>
-      <div class="form-group">
-        <label>Couleur du tag</label>
-        <select id="f-tag-color">
-          <option value="tag-blue">Bleu clair</option>
-          <option value="tag-purple">Mauve</option>
-          <option value="tag-green">Or (mise en avant)</option>
-          <option value="tag-orange">Rouge</option>
-        </select>
-      </div>
-      <div class="form-group"><label>Catégorie (tag)</label><input type="text" id="f-tag" placeholder="Ex: Éducation & IA"/></div>
-      <div class="form-group"><label>Titre du projet</label><input type="text" id="f-title" placeholder="Ex: Séquence Jumanji CM2"/></div>
-      <div class="form-group"><label>Description</label><textarea id="f-description" placeholder="Décris ce que tu as fait, comment, et ce que ça apporte..."></textarea></div>
-      <div class="form-group"><label>Outils utilisés</label><input type="text" id="f-tools" placeholder="Claude, HeyGen, DALL·E (séparés par des virgules)"/><span class="form-hint">Sépare les outils par des virgules</span></div>
-      <div class="form-group"><label>Vidéos (nom du fichier dans medias/videos/)</label><textarea id="f-videos" placeholder="Titre|medias/videos/fichier.mp4" style="min-height:80px;font-family:monospace;font-size:.8rem"></textarea><span class="form-hint">Une vidéo par ligne : Titre|chemin_du_fichier.mp4</span></div>
-      <div class="form-group"><label>Lien externe (optionnel)</label><input type="text" id="f-link" placeholder="apps/monprojet.html"/></div>
-    </div>
-    <div class="form-footer">
-      <button class="btn-cancel" id="form-cancel-btn">Annuler</button>
-      <button class="btn-save" id="form-save-btn">Enregistrer</button>
-    </div>
-  </div>
-</div>
-
 <script>
 // ========== DONNÉES : AUTRES RÉALISATIONS ==========
-const DATA_VERSION = '7';
-
 const DEFAULT_PROJECTS = [
   { id:'gram-attack', icon:'🃏', tag:'Éducation & IA', tagColor:'tag-blue', title:'GRAM ATTACK — Jeu de cartes grammaire CM2',
     description:"Jeu de cartes pédagogique complet pour apprendre la grammaire en CM2 de manière ludique. Règles, cartes, design et contenu entièrement générés avec l'IA.",
@@ -771,6 +705,9 @@ const DEFAULT_PROJECTS = [
   { id:'canicule', icon:'☀️', tag:'Éducation & IA', tagColor:'tag-blue', title:'Journée « Défis Canicule » — CM2',
     description:"Portail d'accès et 4 mini-jeux interactifs conçus dans l'urgence pour occuper la classe un jour de forte chaleur, sans salle de sport disponible.",
     tools:['Claude','HTML/JS'], videos:[], link:'apps/canicule/index.html' },
+  { id:'coupe-sorciers', icon:'🎩', tag:'Éducation & IA', tagColor:'tag-blue', title:'Semaine « Coupe des Sorciers » — CM2',
+    description:"Semaine à thème Harry Potter : cérémonie du Choixpeau pour répartir la classe en 4 maisons, 4 défis disciplinaires (potions/calcul, sortilèges/grammaire, escape game, quiz), et un tableau de bord des points suivi en direct.",
+    tools:['Claude','HTML/JS'], videos:[], images:['medias/images/hp-choixpeau-preview.jpg'], link:'apps/coupe-sorciers/index.html' },
   { id:'grand-tournoi', icon:'🏆', tag:'Éducation & IA', tagColor:'tag-blue', title:'Journée « Grand Tournoi » — CM2',
     description:"Organisation complète d'une journée événementielle en classe : guide enseignant, défis papier et parcours interactif.",
     tools:['Claude','HTML/JS'], videos:[], link:'apps/journee-grand-tournoi.html' },
@@ -779,23 +716,7 @@ const DEFAULT_PROJECTS = [
     tools:['Claude','HTML/JS'], videos:[], link:'apps/escape-station-polaire.html' }
 ];
 
-function loadProjects(){
-  try{
-    const savedVersion = localStorage.getItem('portfolio_version');
-    if(savedVersion !== DATA_VERSION){
-      localStorage.setItem('portfolio_version', DATA_VERSION);
-      localStorage.removeItem('portfolio_projects');
-      return [...DEFAULT_PROJECTS];
-    }
-    const saved = localStorage.getItem('portfolio_projects');
-    return saved ? JSON.parse(saved) : [...DEFAULT_PROJECTS];
-  }catch{ return [...DEFAULT_PROJECTS]; }
-}
-function saveProjects(list){
-  localStorage.setItem('portfolio_projects', JSON.stringify(list));
-  localStorage.setItem('portfolio_version', DATA_VERSION);
-}
-let projects = loadProjects();
+let projects = [...DEFAULT_PROJECTS];
 
 const JUMANJI_VIDEOS = {
   title: 'Séquence Jumanji — vidéos avec Judy & Peter',
@@ -838,12 +759,6 @@ function renderProjects(){
       </div>`;
     container.appendChild(card);
   });
-
-  const addCard = document.createElement('div');
-  addCard.className = 'project-card add-project-card';
-  addCard.innerHTML = `<span>＋</span><span>Ajouter un projet</span>`;
-  addCard.onclick = () => openForm(null);
-  container.appendChild(addCard);
 
   container.querySelectorAll('.btn-mini[data-act="video"]').forEach(btn => {
     btn.onclick = () => { const p = projects.find(x => x.id === btn.dataset.id); if (p) openVideoModal(p); };
@@ -937,83 +852,6 @@ function wireAppLinks(scope){
   });
 }
 wireAppLinks(document);
-
-// ========== ADMIN ==========
-function openAdmin(){ renderAdminList(); document.getElementById('admin-panel').classList.add('open'); document.getElementById('admin-overlay').classList.add('open'); }
-function closeAdmin(){ document.getElementById('admin-panel').classList.remove('open'); document.getElementById('admin-overlay').classList.remove('open'); }
-function renderAdminList(){
-  const list = document.getElementById('admin-project-list');
-  list.innerHTML = '';
-  projects.forEach(p => {
-    const item = document.createElement('div');
-    item.className = 'admin-project-item';
-    item.innerHTML = `
-      <div class="proj-icon">${p.icon||'📁'}</div>
-      <div class="proj-info"><strong>${p.title}</strong><span>${p.tag}${p.videos&&p.videos.length?` · ${p.videos.length} vidéo(s)`:''}</span></div>
-      <div class="proj-actions"><button class="btn-edit" data-id="${p.id}">✏️</button><button class="btn-del" data-id="${p.id}">🗑️</button></div>`;
-    list.appendChild(item);
-  });
-  list.querySelectorAll('.btn-edit').forEach(btn => { btn.onclick = () => { closeAdmin(); openForm(btn.dataset.id); }; });
-  list.querySelectorAll('.btn-del').forEach(btn => {
-    btn.onclick = () => {
-      if(confirm('Supprimer ce projet ?')){
-        projects = projects.filter(p => p.id !== btn.dataset.id);
-        saveProjects(projects); renderProjects(); renderAdminList();
-      }
-    };
-  });
-}
-document.getElementById('admin-btn').onclick = openAdmin;
-document.getElementById('admin-close-btn').onclick = closeAdmin;
-document.getElementById('admin-overlay').onclick = closeAdmin;
-document.getElementById('btn-add-project').onclick = () => { closeAdmin(); openForm(null); };
-
-// ========== FORM ==========
-function openForm(projectId){
-  const overlay = document.getElementById('form-overlay');
-  document.getElementById('form-title').textContent = projectId ? 'Modifier le projet' : 'Nouveau projet';
-  if(projectId){
-    const p = projects.find(x => x.id === projectId);
-    if(p){
-      document.getElementById('f-id').value = p.id;
-      document.getElementById('f-icon').value = p.icon || '';
-      document.getElementById('f-tag').value = p.tag || '';
-      document.getElementById('f-tag-color').value = p.tagColor || 'tag-blue';
-      document.getElementById('f-title').value = p.title || '';
-      document.getElementById('f-description').value = p.description || '';
-      document.getElementById('f-tools').value = (p.tools||[]).join(', ');
-      document.getElementById('f-videos').value = (p.videos||[]).map(v => `${v.title}|${v.src}`).join('\n');
-      document.getElementById('f-link').value = p.link || '';
-    }
-  } else {
-    ['f-id','f-icon','f-tag','f-title','f-description','f-tools','f-videos','f-link'].forEach(id => document.getElementById(id).value = '');
-    document.getElementById('f-tag-color').value = 'tag-blue';
-  }
-  overlay.classList.add('open');
-}
-function closeForm(){ document.getElementById('form-overlay').classList.remove('open'); }
-function saveForm(){
-  const id = document.getElementById('f-id').value || 'proj_' + Date.now();
-  const title = document.getElementById('f-title').value.trim();
-  if(!title){ alert('Le titre est obligatoire.'); return; }
-  const videosRaw = document.getElementById('f-videos').value.trim();
-  const videos = videosRaw ? videosRaw.split('\n').map(line => { const [t,s] = line.split('|'); return { title:(t||'').trim(), src:(s||'').trim() }; }).filter(v => v.src) : [];
-  const project = {
-    id, icon: document.getElementById('f-icon').value.trim() || '📁',
-    tag: document.getElementById('f-tag').value.trim(),
-    tagColor: document.getElementById('f-tag-color').value,
-    title, description: document.getElementById('f-description').value.trim(),
-    tools: document.getElementById('f-tools').value.split(',').map(t => t.trim()).filter(Boolean),
-    videos, link: document.getElementById('f-link').value.trim() || null
-  };
-  const idx = projects.findIndex(p => p.id === id);
-  if(idx >= 0) projects[idx] = project; else projects.push(project);
-  saveProjects(projects); renderProjects(); closeForm();
-}
-document.getElementById('form-close-btn').onclick = closeForm;
-document.getElementById('form-cancel-btn').onclick = closeForm;
-document.getElementById('form-save-btn').onclick = saveForm;
-document.getElementById('form-overlay').onclick = (e) => { if(e.target === document.getElementById('form-overlay')) closeForm(); };
 
 // ========== HERO : EFFET MACHINE À ÉCRIRE ==========
 function initHero(){

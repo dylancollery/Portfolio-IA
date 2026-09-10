@@ -1,0 +1,170 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Coupe des Sorciers — CM2</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Cinzel+Decorative:wght@700&family=Cinzel:wght@400;700&family=IM+Fell+English&display=swap" rel="stylesheet">
+<style>
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0;}
+:root{
+  --bg:#0A0A1A; --bg2:#12122A; --border:#2A2A4A;
+  --gold:#EEBA30; --text:#F0F0FA; --muted:#AAAACC;
+  --gryffondor:#AE0001; --serpentard:#1A472A; --poufsouffle:#8a6d00; --serdaigle:#0E1A40;
+}
+body{font-family:'IM Fell English',Georgia,serif; background:var(--bg); color:var(--text); min-height:100vh; -webkit-font-smoothing:antialiased;}
+.hero{padding:56px 48px 40px; text-align:center; border-bottom:2px solid var(--border); background:radial-gradient(ellipse at top, rgba(238,186,48,.08), transparent 60%);}
+.eyebrow{font-family:'Cinzel',serif; font-size:12px; letter-spacing:.3em; text-transform:uppercase; color:var(--gold); font-weight:700; margin-bottom:14px;}
+.hero-title{font-family:'Cinzel Decorative',serif; font-size:clamp(38px,7vw,72px); color:var(--gold); text-shadow:0 0 40px rgba(238,186,48,.5); line-height:1.15;}
+.hero-tagline{font-size:clamp(15px,1.8vw,19px); font-style:italic; color:var(--muted); margin-top:16px; max-width:620px; margin-left:auto; margin-right:auto; line-height:1.6;}
+.hero-pills{display:flex; gap:10px; flex-wrap:wrap; justify-content:center; margin-top:24px;}
+.pill{background:var(--bg2); border:1.5px solid var(--border); border-radius:100px; padding:7px 16px; font-family:'Cinzel',serif; font-size:12px; font-weight:700; color:var(--muted);}
+.section-label{text-align:center; padding:44px 32px 18px;}
+.section-label h2{font-family:'Cinzel',serif; font-size:14px; letter-spacing:.28em; text-transform:uppercase; color:var(--muted); font-weight:700;}
+.divider{display:flex; align-items:center; justify-content:center; gap:12px; margin-top:10px;}
+.div-line{width:44px; height:1.5px; background:var(--border);}
+.div-dot{width:6px; height:6px; border-radius:50%; background:var(--gold);}
+.grid{display:grid; grid-template-columns:repeat(auto-fit,minmax(280px,1fr)); gap:20px; padding:24px 48px 64px; max-width:1140px; margin:0 auto;}
+.card{background:var(--bg2); border-radius:14px; border:1.5px solid var(--border); overflow:hidden; display:flex; flex-direction:column; text-decoration:none; color:inherit; transition:transform .22s cubic-bezier(.34,1.56,.64,1), border-color .22s;}
+.card:hover{transform:translateY(-5px); border-color:var(--gold);}
+.card-bar{height:4px; flex-shrink:0;}
+.c-choix .card-bar{background:var(--gold);}
+.c-potions .card-bar{background:var(--serpentard);}
+.c-sort .card-bar{background:var(--gryffondor);}
+.c-escape .card-bar{background:var(--serdaigle);}
+.c-quiz .card-bar{background:var(--poufsouffle);}
+.c-tableau .card-bar{background:var(--gold);}
+.card-head{padding:20px 22px 0; display:flex; align-items:flex-start; gap:14px;}
+.card-icon{width:48px; height:48px; border-radius:12px; display:flex; align-items:center; justify-content:center; font-size:24px; flex-shrink:0; background:rgba(238,186,48,.1);}
+.card-title{font-family:'Cinzel',serif; font-weight:700; font-size:19px; color:var(--gold); line-height:1.25;}
+.card-sub{font-family:'Cinzel',serif; font-size:10px; letter-spacing:.1em; text-transform:uppercase; color:var(--muted); margin-top:5px; font-weight:700;}
+.card-body{padding:14px 22px 0; flex:1;}
+.card-desc{font-size:14px; line-height:1.6; color:var(--muted);}
+.card-cta{display:block; margin:18px 20px 20px; padding:12px 18px; border-radius:8px; text-align:center; font-family:'Cinzel',serif; font-size:13px; font-weight:700; letter-spacing:.08em; color:var(--bg); background:var(--gold); text-decoration:none;}
+.card:hover .card-cta{filter:brightness(1.1);}
+footer{background:var(--bg2); border-top:1.5px solid var(--border); padding:18px 48px; display:flex; align-items:center; justify-content:space-between; flex-wrap:wrap; gap:8px;}
+.ft-left,.ft-right{font-family:'Cinzel',serif; font-size:11px; color:var(--muted); letter-spacing:.05em;}
+@media(max-width:720px){.hero{padding:36px 24px 32px;} .grid{padding:20px 16px 48px; gap:16px;} footer{padding:16px 20px; justify-content:center; text-align:center;}}
+</style>
+</head>
+<body>
+
+<header class="hero">
+  <p class="eyebrow">CM2 · Semaine à thème</p>
+  <h1 class="hero-title">🎩 Coupe des Sorciers</h1>
+  <p class="hero-tagline">Une semaine de classe transformée en année à Poudlard : répartition dans les quatre maisons, défis disciplinaires, et un tableau des points suivi jour après jour.</p>
+  <div class="hero-pills">
+    <span class="pill">🏰 4 maisons</span>
+    <span class="pill">⚡ 4 défis</span>
+    <span class="pill">🏆 Classement en direct</span>
+  </div>
+</header>
+
+<div class="section-label">
+  <h2>Choisissez une étape</h2>
+  <div class="divider"><div class="div-line"></div><div class="div-dot"></div><div class="div-line"></div></div>
+</div>
+
+<main class="grid">
+
+  <a class="card c-choix" href="choixpeau-ceremonie.html" target="_blank">
+    <div class="card-bar"></div>
+    <div class="card-head">
+      <div class="card-icon">🎩</div>
+      <div>
+        <div class="card-title">Cérémonie du Choixpeau</div>
+        <div class="card-sub">Répartition · Ouverture de la semaine</div>
+      </div>
+    </div>
+    <div class="card-body">
+      <p class="card-desc">Chaque élève est réparti dans l'une des quatre maisons (Gryffondor, Serpentard, Poufsouffle, Serdaigle) par le Choixpeau, en musique et en pleine mise en scène.</p>
+    </div>
+    <span class="card-cta">COMMENCER LA CÉRÉMONIE →</span>
+  </a>
+
+  <a class="card c-potions" href="defi1-potions.html" target="_blank">
+    <div class="card-bar"></div>
+    <div class="card-head">
+      <div class="card-icon">🧪</div>
+      <div>
+        <div class="card-title">Défi 1 — Potions de Calcul</div>
+        <div class="card-sub">Mathématiques</div>
+      </div>
+    </div>
+    <div class="card-body">
+      <p class="card-desc">Résoudre des calculs pour composer la bonne potion : chaque bonne réponse rapproche l'équipe de la formule finale.</p>
+    </div>
+    <span class="card-cta">OUVRIR LE DÉFI →</span>
+  </a>
+
+  <a class="card c-sort" href="defi2-sortileges.html" target="_blank">
+    <div class="card-bar"></div>
+    <div class="card-head">
+      <div class="card-icon">✨</div>
+      <div>
+        <div class="card-title">Défi 2 — Sortilèges de Grammaire</div>
+        <div class="card-sub">Français</div>
+      </div>
+    </div>
+    <div class="card-body">
+      <p class="card-desc">Lancer le bon « sortilège » grammatical au bon endroit dans la phrase pour valider chaque manche.</p>
+    </div>
+    <span class="card-cta">OUVRIR LE DÉFI →</span>
+  </a>
+
+  <a class="card c-escape" href="defi3-escape-game.html" target="_blank">
+    <div class="card-bar"></div>
+    <div class="card-head">
+      <div class="card-icon">🔐</div>
+      <div>
+        <div class="card-title">Défi 3 — Escape Game Harry Potter</div>
+        <div class="card-sub">Logique &amp; énigmes</div>
+      </div>
+    </div>
+    <div class="card-body">
+      <p class="card-desc">Une suite d'énigmes façon Poudlard à résoudre en équipe pour s'échapper de la salle commune.</p>
+    </div>
+    <span class="card-cta">LANCER L'ESCAPE GAME →</span>
+  </a>
+
+  <a class="card c-quiz" href="defi4-quiz-coupe-sorciers.html" target="_blank">
+    <div class="card-bar"></div>
+    <div class="card-head">
+      <div class="card-icon">🏆</div>
+      <div>
+        <div class="card-title">Défi 4 — Quiz Ardoise</div>
+        <div class="card-sub">Culture générale · Classe entière</div>
+      </div>
+    </div>
+    <div class="card-body">
+      <p class="card-desc">Un dernier quiz sur ardoise, toute la classe ensemble, pour départager les maisons avant le classement final.</p>
+    </div>
+    <span class="card-cta">DÉMARRER LE QUIZ →</span>
+  </a>
+
+  <a class="card c-tableau" href="tableau-bord-coupe-sorciers.html" target="_blank">
+    <div class="card-bar"></div>
+    <div class="card-head">
+      <div class="card-icon">📊</div>
+      <div>
+        <div class="card-title">Tableau de bord</div>
+        <div class="card-sub">Suivi des points par maison</div>
+      </div>
+    </div>
+    <div class="card-body">
+      <p class="card-desc">Le tableau que je gardais ouvert au tableau de la classe : points cumulés par maison, mis à jour après chaque défi.</p>
+    </div>
+    <span class="card-cta">VOIR LE CLASSEMENT →</span>
+  </a>
+
+</main>
+
+<footer>
+  <span class="ft-left">🎩 Coupe des Sorciers · Classe CM2</span>
+  <span class="ft-right">4 défis · Classement par maison · Prêt pour projecteur</span>
+</footer>
+
+</body>
+</html>

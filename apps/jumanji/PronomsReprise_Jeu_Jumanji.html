@@ -1,0 +1,813 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<title>Pronoms de Reprise — Opération Jumanji</title>
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+html,body{width:100%;height:100%;overflow:hidden;background:#0a1a0f;font-family:'Segoe UI',Arial,sans-serif;color:#e8f5e9}
+
+/* ── ÉCRANS ── */
+.screen{display:none;position:fixed;inset:0;flex-direction:column;padding:1.8vw 2.5vw 1.4vw}
+.screen.active{display:flex}
+
+/* ── TOPBAR ── */
+.topbar{display:flex;justify-content:space-between;align-items:center;margin-bottom:1vw;flex-shrink:0}
+.phase-badge{font-size:.95vw;font-weight:700;letter-spacing:.2vw;text-transform:uppercase;color:#4ade80;background:rgba(74,222,128,.12);border:1px solid #4ade80;padding:.3vw .9vw;border-radius:.4vw}
+.score-display{font-size:1.1vw;font-weight:700;color:#fbbf24;background:#111c13;padding:.35vw 1vw;border-radius:.4vw;border:1px solid #374151}
+.round-indicator{display:flex;gap:.45vw;align-items:center}
+.round-dot{width:.85vw;height:.85vw;border-radius:50%;background:#1a3d1e;transition:.3s}
+.round-dot.done{background:#4ade80}
+.round-dot.current{background:#fbbf24;box-shadow:0 0 .5vw #fbbf24}
+
+/* ── TITRE ── */
+.titre-screen{flex:1;display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;gap:1.2vw}
+.titre-emoji{font-size:5.5vw}
+.titre-main{font-size:4vw;font-weight:900;color:#4ade80;text-shadow:0 0 3vw rgba(74,222,128,.35)}
+.titre-sub{font-size:1.8vw;color:#6b7280;text-transform:uppercase;letter-spacing:.3vw}
+.phase-intro{background:#0d2410;border:1px solid #166534;border-radius:.8vw;padding:1.2vw 2vw;max-width:55vw;margin-top:.5vw}
+.phase-intro h2{font-size:1.6vw;color:#4ade80;margin-bottom:.6vw}
+.phase-intro p{font-size:1.4vw;color:#a7f3d0;line-height:1.6}
+
+/* ── COURS ── */
+.cours-body{flex:1;display:grid;grid-template-columns:1fr 1fr;gap:1vw;overflow:hidden}
+.cours-col{display:flex;flex-direction:column;gap:.8vw}
+.cours-card{background:#0d2410;border:1.5px solid #166534;border-radius:.8vw;padding:.9vw 1.2vw}
+.cours-card-title{font-size:1.1vw;font-weight:800;color:#4ade80;text-transform:uppercase;letter-spacing:.1vw;margin-bottom:.5vw;display:flex;align-items:center;gap:.4vw}
+.cours-card-body{font-size:1.25vw;color:#d1fae5;line-height:1.65}
+.cours-card-body strong{color:#fbbf24}
+.cours-card-body em{color:#a7f3d0;font-style:italic}
+.cours-card.accent{border-color:#fbbf24;background:#12200a}
+.cours-card.accent .cours-card-title{color:#fbbf24}
+.cours-table{width:100%;border-collapse:collapse;font-size:1.15vw;margin-top:.3vw}
+.cours-table th{background:#1a3d1e;color:#4ade80;padding:.35vw .7vw;text-align:left;font-weight:700;font-size:1vw;text-transform:uppercase;letter-spacing:.05vw}
+.cours-table td{padding:.35vw .7vw;border-top:1px solid #1a3d1e;color:#d1fae5;vertical-align:middle}
+.cours-table td:first-child{font-weight:700;color:#fbbf24}
+.chip-g{display:inline-block;background:#1a3d1e;border:1px solid #2d6a31;color:#4ade80;border-radius:.3vw;padding:.1vw .5vw;font-weight:700;font-size:1.1vw;margin:0 .1vw}
+.cours-exemple{background:#12200a;border-left:3px solid #4ade80;padding:.5vw .8vw;border-radius:0 .5vw .5vw 0;font-size:1.2vw;color:#a7f3d0;margin-top:.4vw}
+.cours-exemple strong{color:#4ade80}
+.piege-box{background:#1a0d0d;border:1.5px solid #ef4444;border-radius:.6vw;padding:.7vw 1vw;font-size:1.2vw;color:#fca5a5}
+.piege-box strong{color:#ef4444}
+
+/* ── ÉLIMINATION ── */
+.elim-consigne{font-size:1.45vw;color:#a7f3d0;font-style:italic;margin-bottom:1vw;border-left:.35vw solid #166534;padding-left:.9vw;flex-shrink:0}
+.cards-grid{display:grid;grid-template-columns:1fr 1fr;gap:1vw;flex:1}
+.card{
+  background:#0d2410;border:2px solid #1a3d1e;border-radius:.8vw;
+  padding:1.2vw 1.5vw;cursor:pointer;
+  display:flex;flex-direction:column;justify-content:center;
+  transition:border-color .2s,transform .1s,box-shadow .2s;
+  position:relative;overflow:hidden;
+}
+.card:hover{border-color:#2d6a31;box-shadow:0 0 1vw rgba(74,222,128,.1)}
+.card-num{font-size:1vw;font-weight:700;color:#374151;margin-bottom:.5vw}
+.card-text{font-size:1.9vw;line-height:1.6;color:#d1fae5}
+.card-text b{color:#fbbf24;font-weight:800}
+.card-expl{font-size:1.3vw;color:#6b7280;margin-top:.5vw;font-style:italic;display:none}
+
+.card.wrong-click{animation:shake .4s ease}
+@keyframes shake{0%,100%{transform:translateX(0)}25%{transform:translateX(-.8vw)}75%{transform:translateX(.8vw)}}
+.card.intrus{animation:explode .5s ease forwards;pointer-events:none}
+@keyframes explode{0%{transform:scale(1);opacity:1}50%{transform:scale(1.05);background:#3b0d0d;border-color:#ef4444}100%{transform:scale(.85);opacity:0}}
+.card.survivor{border-color:#4ade80;background:#0a2210;transition:.4s}
+.card.survivor .card-expl{display:block;color:#4ade80}
+.card.miss{border-color:#ef4444;animation:flash-red .3s}
+@keyframes flash-red{0%,100%{border-color:#1a3d1e}50%{border-color:#ef4444;background:#1a0d0d}}
+
+.elim-feedback{
+  background:#0d2410;border:1px solid #166534;border-radius:.6vw;
+  padding:.7vw 1.2vw;font-size:1.4vw;color:#a7f3d0;
+  margin-top:.8vw;flex-shrink:0;display:none;
+}
+.elim-feedback.visible{display:block}
+.elim-feedback .correct-label{color:#4ade80;font-weight:700;font-size:1.5vw}
+.elim-feedback .wrong-label{color:#fbbf24;font-size:1.2vw;margin-top:.3vw}
+
+/* ── TEXTE À TROUS ── */
+.trous-consigne{font-size:1.45vw;color:#a7f3d0;font-style:italic;margin-bottom:1vw;border-left:.35vw solid #166534;padding-left:.9vw;flex-shrink:0}
+.para-zone{
+  background:#0d2410;border:1px solid #1a3d1e;border-radius:.8vw;
+  padding:1.5vw 2vw;font-size:2.1vw;line-height:2.5;color:#d1fae5;
+  flex:1;position:relative;
+}
+.blank-btn{
+  display:inline-block;min-width:5vw;height:2.2vw;
+  background:rgba(251,191,36,.08);border:2px dashed #fbbf24;
+  border-radius:.3vw;cursor:pointer;vertical-align:middle;
+  font-size:1.8vw;font-weight:800;color:transparent;
+  padding:0 .6vw;text-align:center;line-height:2.2vw;
+  transition:.2s;position:relative;
+}
+.blank-btn:hover{background:rgba(251,191,36,.15)}
+.blank-btn.filled-ok{
+  background:rgba(74,222,128,.15);border:2px solid #4ade80;
+  color:#4ade80;cursor:default;
+}
+.blank-btn.filled-err{
+  background:rgba(239,68,68,.15);border:2px solid #ef4444;
+  color:#ef4444;animation:shake .4s;
+}
+
+/* Popup choix */
+.popup{
+  position:fixed;z-index:100;
+  display:none;flex-direction:column;align-items:center;gap:.5vw;
+  background:#0d2410;border:1.5px solid #4ade80;border-radius:.7vw;
+  padding:.8vw 1vw;box-shadow:0 .5vw 2vw rgba(0,0,0,.5);
+}
+.popup.active{display:flex}
+.popup-label{font-size:1vw;color:#4ade80;font-weight:700;text-transform:uppercase;letter-spacing:.1vw;margin-bottom:.2vw}
+.popup-opts{display:flex;gap:.6vw}
+.popup-opt{
+  background:#1a3d1e;border:1px solid #2d6a31;color:#d1fae5;
+  font-size:1.7vw;font-weight:800;padding:.4vw 1.2vw;border-radius:.4vw;
+  cursor:pointer;transition:.15s;
+}
+.popup-opt:hover{background:#166534;border-color:#4ade80}
+.popup-opt.opt-ok{background:#14532d;border-color:#4ade80;color:#4ade80;animation:pop-ok .3s}
+.popup-opt.opt-err{background:#3b0d0d;border-color:#ef4444;color:#ef4444;animation:shake .3s}
+@keyframes pop-ok{0%{transform:scale(1)}50%{transform:scale(1.2)}100%{transform:scale(1)}}
+
+.trous-progress{font-size:1vw;color:#374151;margin-top:.5vw;text-align:right;flex-shrink:0}
+
+/* ── BILAN ── */
+.bilan-box{flex:1;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:1.5vw;text-align:center}
+.bilan-score{font-size:5vw;font-weight:900;color:#4ade80;text-shadow:0 0 2vw rgba(74,222,128,.4)}
+.bilan-sub{font-size:1.8vw;color:#6b7280}
+.bilan-grid{display:grid;grid-template-columns:1fr 1fr;gap:1vw;max-width:50vw;margin-top:.5vw}
+.bilan-item{background:#0d2410;border:1px solid #1a3d1e;border-radius:.6vw;padding:.8vw 1.2vw;font-size:1.4vw;color:#a7f3d0}
+.bilan-item strong{color:#fbbf24}
+
+/* ── NAVIGATION ── */
+.nav{display:flex;justify-content:center;align-items:center;gap:1.2vw;padding-top:.8vw;flex-shrink:0}
+.btn{background:#0d2410;border:1px solid #1a3d1e;color:#d1fae5;font-size:1.1vw;font-weight:600;padding:.55vw 1.8vw;border-radius:.5vw;cursor:pointer;transition:.15s}
+.btn:hover{background:#1a3d1e}
+.btn.primary{background:#166534;color:#d1fae5;border-color:#4ade80;font-weight:700}
+.btn.primary:hover{background:#15803d}
+.btn:disabled{opacity:.3;cursor:default}
+</style>
+</head>
+<body>
+
+<!-- ══════════ TITRE ══════════ -->
+<div class="screen active" id="sc-title">
+  <div class="topbar">
+    <span class="phase-badge">Grammaire — CM2</span>
+    <span class="score-display" id="global-score">Score : 0</span>
+  </div>
+  <div class="titre-screen">
+    <div class="titre-emoji">🌿🎲🌿</div>
+    <div class="titre-main">Pronoms de Reprise</div>
+    <div class="titre-sub">Opération Jumanji</div>
+    <div class="phase-intro">
+      <h2>🎮 Deux phases de jeu</h2>
+      <p>📖 <strong style="color:#4ade80">D'abord</strong> : un mini-cours pour bien maîtriser les pronoms de reprise.</p>
+      <p style="margin-top:.5vw">⚡ <strong style="color:#fbbf24">Phase 1 — Élimination</strong> : 6 rounds — trouve la phrase avec le mauvais pronom de reprise. Clique sur l'intrus !</p>
+      <p style="margin-top:.5vw">✏️ <strong style="color:#fbbf24">Phase 2 — Texte à trous</strong> : 4 paragraphes — remplace les blancs en choisissant le bon pronom parmi 3 propositions.</p>
+    </div>
+  </div>
+  <div class="nav">
+    <button class="btn primary" onclick="goTo('sc-cours')">📖 Voir le cours →</button>
+  </div>
+</div>
+
+<!-- ══════════ ÉLIMINATION — ROUND 1 ══════════ -->
+<div class="screen" id="sc-elim-1">
+  <div class="topbar">
+    <span class="phase-badge">⚡ Phase 1 — Élimination</span>
+    <div class="round-indicator" id="dots-1"></div>
+    <span class="score-display" id="sc1-score">Score : 0</span>
+  </div>
+  <div class="elim-consigne">🔍 Round 1 — Une phrase contient le mauvais pronom de reprise. Trouve l'intrus et clique dessus !</div>
+  <div class="cards-grid" id="grid-1"></div>
+  <div class="elim-feedback" id="fb-1"></div>
+  <div class="nav">
+    <button class="btn" onclick="goTo('sc-cours')">← Cours</button>
+    <button class="btn primary" id="next-1" onclick="goTo('sc-elim-2')" disabled>Round 2 →</button>
+  </div>
+</div>
+
+<!-- ══════════ ÉLIMINATION — ROUND 2 ══════════ -->
+<div class="screen" id="sc-elim-2">
+  <div class="topbar">
+    <span class="phase-badge">⚡ Phase 1 — Élimination</span>
+    <div class="round-indicator" id="dots-2"></div>
+    <span class="score-display" id="sc2-score">Score : 0</span>
+  </div>
+  <div class="elim-consigne">🔍 Round 2 — Attention au nombre (singulier / pluriel) !</div>
+  <div class="cards-grid" id="grid-2"></div>
+  <div class="elim-feedback" id="fb-2"></div>
+  <div class="nav">
+    <button class="btn" onclick="goTo('sc-elim-1')">← Round 1</button>
+    <button class="btn primary" id="next-2" onclick="goTo('sc-elim-3')" disabled>Round 3 →</button>
+  </div>
+</div>
+
+<!-- ══════════ ÉLIMINATION — ROUND 3 ══════════ -->
+<div class="screen" id="sc-elim-3">
+  <div class="topbar">
+    <span class="phase-badge">⚡ Phase 1 — Élimination</span>
+    <div class="round-indicator" id="dots-3"></div>
+    <span class="score-display" id="sc3-score">Score : 0</span>
+  </div>
+  <div class="elim-consigne">🔍 Round 3 — Le pronom existe… mais ce n'est pas le bon type. Attention aux pronoms COD / COI !</div>
+  <div class="cards-grid" id="grid-3"></div>
+  <div class="elim-feedback" id="fb-3"></div>
+  <div class="nav">
+    <button class="btn" onclick="goTo('sc-elim-2')">← Round 2</button>
+    <button class="btn primary" id="next-3" onclick="goTo('sc-elim-4')" disabled>Round 4 →</button>
+  </div>
+</div>
+
+<!-- ══════════ ÉLIMINATION — ROUND 4 ══════════ -->
+<div class="screen" id="sc-elim-4">
+  <div class="topbar">
+    <span class="phase-badge">⚡ Phase 1 — Élimination</span>
+    <div class="round-indicator" id="dots-4"></div>
+    <span class="score-display" id="sc4-score">Score : 0</span>
+  </div>
+  <div class="elim-consigne">🔍 Round 4 — Attention au genre ! Le pronom doit s'accorder avec l'antécédent.</div>
+  <div class="cards-grid" id="grid-4"></div>
+  <div class="elim-feedback" id="fb-4"></div>
+  <div class="nav">
+    <button class="btn" onclick="goTo('sc-elim-3')">← Round 3</button>
+    <button class="btn primary" id="next-4" onclick="goTo('sc-elim-5')" disabled>Round 5 →</button>
+  </div>
+</div>
+
+<!-- ══════════ ÉLIMINATION — ROUND 5 ══════════ -->
+<div class="screen" id="sc-elim-5">
+  <div class="topbar">
+    <span class="phase-badge">⚡ Phase 1 — Élimination</span>
+    <div class="round-indicator" id="dots-5"></div>
+    <span class="score-display" id="sc5-score">Score : 0</span>
+  </div>
+  <div class="elim-consigne">🔍 Round 5 — Groupe mixte : fille + garçon = masculin pluriel. Piège classique !</div>
+  <div class="cards-grid" id="grid-5"></div>
+  <div class="elim-feedback" id="fb-5"></div>
+  <div class="nav">
+    <button class="btn" onclick="goTo('sc-elim-4')">← Round 4</button>
+    <button class="btn primary" id="next-5" onclick="goTo('sc-elim-6')" disabled>Round 6 →</button>
+  </div>
+</div>
+
+<!-- ══════════ ÉLIMINATION — ROUND 6 ══════════ -->
+<div class="screen" id="sc-elim-6">
+  <div class="topbar">
+    <span class="phase-badge">⚡ Phase 1 — Élimination</span>
+    <div class="round-indicator" id="dots-6"></div>
+    <span class="score-display" id="sc6-score">Score : 0</span>
+  </div>
+  <div class="elim-consigne">🔍 Round 6 — EXPERT ! Genre, nombre ET type de pronom. Concentre-toi !</div>
+  <div class="cards-grid" id="grid-6"></div>
+  <div class="elim-feedback" id="fb-6"></div>
+  <div class="nav">
+    <button class="btn" onclick="goTo('sc-elim-5')">← Round 5</button>
+    <button class="btn primary" id="next-6" onclick="goTo('sc-trous-intro')" disabled>✏️ Phase 2 →</button>
+  </div>
+</div>
+
+<!-- ══════════ COURS ══════════ -->
+<div class="screen" id="sc-cours">
+  <div class="topbar">
+    <span class="phase-badge">📖 Mini-cours — Pronoms de reprise</span>
+    <span class="score-display" id="cours-score">Score : 0</span>
+  </div>
+  <div class="cours-body">
+    <!-- COL GAUCHE -->
+    <div class="cours-col">
+      <div class="cours-card">
+        <div class="cours-card-title">📌 Qu'est-ce qu'un pronom de reprise ?</div>
+        <div class="cours-card-body">
+          Un <strong>pronom de reprise</strong> remplace un nom déjà mentionné dans le texte.<br>
+          Ce nom déjà mentionné s'appelle l'<strong>antécédent</strong>.<br><br>
+          Le pronom doit avoir le même <strong>genre</strong> (masc./fém.) et le même <strong>nombre</strong> (sing./plur.) que l'antécédent.
+          <div class="cours-exemple">
+            <em>Le lion rugit.</em> <strong>Il</strong> effraya tout le monde.<br>
+            → <strong>Il</strong> reprend <em>le lion</em> (masc. sing.)
+          </div>
+        </div>
+      </div>
+      <div class="cours-card">
+        <div class="cours-card-title">⚡ Pronoms sujets</div>
+        <div class="cours-card-body">
+          <table class="cours-table">
+            <tr><th></th><th>Singulier</th><th>Pluriel</th></tr>
+            <tr><td>Masculin</td><td><span class="chip-g">il</span></td><td><span class="chip-g">ils</span></td></tr>
+            <tr><td>Féminin</td><td><span class="chip-g">elle</span></td><td><span class="chip-g">elles</span></td></tr>
+          </table>
+          <div class="cours-exemple">
+            <em>Les dés roulèrent.</em> <strong>Ils</strong> s'arrêtèrent sur le 5.<br>
+            <em>La boîte brilla.</em> <strong>Elle</strong> s'ouvrit seule.
+          </div>
+        </div>
+      </div>
+      <div class="cours-card accent">
+        <div class="cours-card-title">⚠️ Piège — groupe mixte</div>
+        <div class="cours-card-body">
+          <div class="piege-box">
+            Un groupe avec <strong>fille + garçon</strong> → on utilise <strong>Ils</strong> (masculin l'emporte sur le féminin au pluriel).
+          </div>
+          <div class="cours-exemple">
+            <em>Sarah et Peter coururent.</em> <strong>Ils</strong> se cachèrent. ✅<br>
+            <em>Sarah et Peter coururent.</em> <strong>Elles</strong> se cachèrent. ❌
+          </div>
+        </div>
+      </div>
+    </div>
+    <!-- COL DROITE -->
+    <div class="cours-col">
+      <div class="cours-card">
+        <div class="cours-card-title">🎯 Pronoms objets (COD / COI)</div>
+        <div class="cours-card-body">
+          <table class="cours-table">
+            <tr><th>Pronom</th><th>Quand l'utiliser ?</th></tr>
+            <tr><td><span class="chip-g">le / la / l'</span></td><td>COD singulier (masc./fém.)</td></tr>
+            <tr><td><span class="chip-g">les</span></td><td>COD pluriel</td></tr>
+            <tr><td><span class="chip-g">lui</span></td><td>COI singulier (à qui ?)</td></tr>
+            <tr><td><span class="chip-g">leur</span></td><td>COI pluriel (à qui ?)</td></tr>
+            <tr><td><span class="chip-g">y</span></td><td>COI chose (à quoi ?)</td></tr>
+            <tr><td><span class="chip-g">en</span></td><td>COI chose (de quoi ?)</td></tr>
+          </table>
+          <div class="cours-exemple">
+            <em>Judy vit les singes.</em> <strong>Elle les chassa.</strong> (COD plur.) ✅<br>
+            <em>Judy parla aux singes.</em> <strong>Elle leur parla.</strong> (COI plur.) ✅
+          </div>
+        </div>
+      </div>
+      <div class="cours-card">
+        <div class="cours-card-title">🔁 Comment vérifier ?</div>
+        <div class="cours-card-body">
+          <strong>Étape 1</strong> — Trouve l'antécédent (le nom repris).<br>
+          <strong>Étape 2</strong> — Vérifie son genre et son nombre.<br>
+          <strong>Étape 3</strong> — Choisis le pronom qui correspond.<br><br>
+          <div class="cours-exemple">
+            <em>Les règles du jeu étaient complexes.</em><br>
+            Antécédent : <strong>les règles</strong> → fém. plur.<br>
+            → pronom sujet : <strong>Elles</strong> ✅ (pas <em>Ils</em> ❌)
+          </div>
+        </div>
+      </div>
+      <div class="cours-card accent">
+        <div class="cours-card-title">🧠 Astuce mémo</div>
+        <div class="cours-card-body">
+          <strong>Genre :</strong> regarde le déterminant d'origine — <em>le/un → il</em>, <em>la/une → elle</em>.<br>
+          <strong>Nombre :</strong> pluriel → <em>ils</em> ou <em>elles</em>.<br>
+          <strong>COD ou COI ?</strong> Pose la question au verbe :<br>
+          <em>verbe + qui/quoi ?</em> → COD (<span class="chip-g">le/la/les</span>)<br>
+          <em>verbe + à qui ?</em> → COI (<span class="chip-g">lui/leur</span>)
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="nav">
+    <button class="btn" onclick="goTo('sc-title')">← Titre</button>
+    <button class="btn primary" onclick="goTo('sc-elim-1')">⚡ Phase 1 : Élimination →</button>
+  </div>
+</div>
+
+<!-- ══════════ INTRO PHASE 2 ══════════ -->
+<div class="screen" id="sc-trous-intro">
+  <div class="topbar">
+    <span class="phase-badge">✏️ Phase 2 — Texte à trous</span>
+    <span class="score-display" id="intro-score">Score : 0</span>
+  </div>
+  <div class="titre-screen">
+    <div class="titre-emoji">✏️</div>
+    <div class="titre-main" style="font-size:3vw">Phase 2 — Texte à trous</div>
+    <div class="phase-intro">
+      <h2>Comment jouer ?</h2>
+      <p>Les pronoms ont disparu du texte. Clique sur une case <span style="border:2px dashed #fbbf24;padding:.1vw .5vw;color:#fbbf24;font-weight:800">&nbsp;?&nbsp;</span> pour voir 3 propositions.</p>
+      <p style="margin-top:.6vw">Choisis le bon pronom de reprise. Si c'est juste → <span style="color:#4ade80;font-weight:700">vert ✓</span>. Si c'est faux → <span style="color:#ef4444;font-weight:700">rouge ✗</span> et tu peux réessayer.</p>
+    </div>
+  </div>
+  <div class="nav">
+    <button class="btn" onclick="goTo('sc-elim-6')">← Phase 1</button>
+    <button class="btn primary" onclick="goTo('sc-trous-1')">Commencer →</button>
+  </div>
+</div>
+
+<!-- ══════════ TEXTE À TROUS — PARA 1 ══════════ -->
+<div class="screen" id="sc-trous-1">
+  <div class="topbar">
+    <span class="phase-badge">✏️ Texte à trous — Paragraphe 1 / 4</span>
+    <span class="score-display" id="sc-t1-score">Score : 0</span>
+  </div>
+  <div class="trous-consigne">Clique sur une case vide et choisis le bon pronom de reprise parmi les 3 propositions.</div>
+  <div class="para-zone" id="para-1"></div>
+  <div class="trous-progress" id="prog-1">0 / 3 complétés</div>
+  <div class="nav">
+    <button class="btn" onclick="goTo('sc-trous-intro')">← Intro</button>
+    <button class="btn primary" id="next-t1" onclick="goTo('sc-trous-2')" disabled>Paragraphe 2 →</button>
+  </div>
+</div>
+
+<!-- ══════════ TEXTE À TROUS — PARA 2 ══════════ -->
+<div class="screen" id="sc-trous-2">
+  <div class="topbar">
+    <span class="phase-badge">✏️ Texte à trous — Paragraphe 2 / 4</span>
+    <span class="score-display" id="sc-t2-score">Score : 0</span>
+  </div>
+  <div class="trous-consigne">Paragraphe 2 — Attention au genre et au nombre !</div>
+  <div class="para-zone" id="para-2"></div>
+  <div class="trous-progress" id="prog-2">0 / 5 complétés</div>
+  <div class="nav">
+    <button class="btn" onclick="goTo('sc-trous-1')">← Para 1</button>
+    <button class="btn primary" id="next-t2" onclick="goTo('sc-trous-3')" disabled>Paragraphe 3 →</button>
+  </div>
+</div>
+
+<!-- ══════════ TEXTE À TROUS — PARA 3 ══════════ -->
+<div class="screen" id="sc-trous-3">
+  <div class="topbar">
+    <span class="phase-badge">✏️ Texte à trous — Paragraphe 3 / 4</span>
+    <span class="score-display" id="sc-t3-score">Score : 0</span>
+  </div>
+  <div class="trous-consigne">Paragraphe 3 — Pronoms sujets ET pronoms COD (le / la / les). Concentre-toi !</div>
+  <div class="para-zone" id="para-3"></div>
+  <div class="trous-progress" id="prog-3">0 / 4 complétés</div>
+  <div class="nav">
+    <button class="btn" onclick="goTo('sc-trous-2')">← Para 2</button>
+    <button class="btn primary" id="next-t3" onclick="goTo('sc-trous-4')" disabled>Paragraphe 4 →</button>
+  </div>
+</div>
+
+<!-- ══════════ TEXTE À TROUS — PARA 4 ══════════ -->
+<div class="screen" id="sc-trous-4">
+  <div class="topbar">
+    <span class="phase-badge">✏️ Texte à trous — Paragraphe 4 / 4</span>
+    <span class="score-display" id="sc-t4-score">Score : 0</span>
+  </div>
+  <div class="trous-consigne">Dernier paragraphe ! Pronoms COI (lui / leur / y) et sujets mélangés. Expert !</div>
+  <div class="para-zone" id="para-4"></div>
+  <div class="trous-progress" id="prog-4">0 / 4 complétés</div>
+  <div class="nav">
+    <button class="btn" onclick="goTo('sc-trous-3')">← Para 3</button>
+    <button class="btn primary" id="next-t4" onclick="goTo('sc-bilan')" disabled>Voir le bilan →</button>
+  </div>
+</div>
+
+<!-- ══════════ BILAN ══════════ -->
+<div class="screen" id="sc-bilan">
+  <div class="topbar">
+    <span class="phase-badge">🏆 Bilan</span>
+    <span class="score-display" id="bilan-score-top">Score : 0</span>
+  </div>
+  <div class="bilan-box">
+    <div class="titre-emoji">🏆</div>
+    <div class="bilan-score" id="bilan-final">0 / 28</div>
+    <div class="bilan-sub">bonnes réponses</div>
+    <div class="bilan-grid">
+      <div class="bilan-item">⚡ Élimination<br><strong id="bilan-elim">0 / 12</strong></div>
+      <div class="bilan-item">✏️ Texte à trous<br><strong id="bilan-trous">0 / 16</strong></div>
+      <div class="bilan-item" style="grid-column:span 2;border-color:#4ade80">
+        📌 À retenir : le pronom de reprise s'accorde en <strong>genre et nombre</strong> avec son antécédent.
+      </div>
+    </div>
+  </div>
+  <div class="nav">
+    <button class="btn primary" onclick="resetAll();goTo('sc-title')">🔄 Rejouer</button>
+  </div>
+</div>
+
+<!-- POPUP CHOIX -->
+<div class="popup" id="popup">
+  <div class="popup-label">Quel pronom ?</div>
+  <div class="popup-opts" id="popup-opts"></div>
+</div>
+
+<script>
+/* ══════════════════════════════════════════
+   DONNÉES — 6 ROUNDS D'ÉLIMINATION
+══════════════════════════════════════════ */
+const elimRounds = [
+  /* ── Round 1 : genre (masc/fém) ── */
+  {
+    id:'grid-1', fb:'fb-1', next:'next-1', dots:'dots-1', scoreEl:'sc1-score',
+    cards:[
+      { text:'La jungle poussait partout. <b>Elle</b> envahissait tout l\'espace.', ok:true },
+      { text:'Peter et Judy coururent. <b>Ils</b> se cachèrent derrière le canapé.', ok:true },
+      { text:'Le rhinocéros fonça. <b>Elle</b> renversa tout sur son passage.', ok:false,
+        expl:'❌ Intrus ! "Elle" est incorrect : le rhinocéros est masculin → <b style="color:#4ade80">Il</b> renversa tout sur son passage.' },
+      { text:'Les dés tombèrent. <b>Ils</b> roulèrent jusqu\'au bord de la table.', ok:true },
+    ]
+  },
+  /* ── Round 2 : nombre (sing/plur) ── */
+  {
+    id:'grid-2', fb:'fb-2', next:'next-2', dots:'dots-2', scoreEl:'sc2-score',
+    cards:[
+      { text:'Judy saisit les cartes. <b>Elle</b> les examina soigneusement.', ok:true },
+      { text:'Les singes envahirent la cuisine. <b>Il</b> mangeait tous les fruits.', ok:false,
+        expl:'❌ Intrus ! "Il" est incorrect : les singes sont au pluriel → <b style="color:#4ade80">Ils</b> mangeaient tous les fruits.' },
+      { text:'Le jeu s\'arrêta enfin. <b>Il</b> avait tout changé.', ok:true },
+      { text:'Les règles étaient claires. <b>Elles</b> devaient être respectées.', ok:true },
+    ]
+  },
+  /* ── Round 3 : type de pronom (COD vs COI) ── */
+  {
+    id:'grid-3', fb:'fb-3', next:'next-3', dots:'dots-3', scoreEl:'sc3-score',
+    cards:[
+      { text:'Judy aperçut les singes. <b>Elle</b> les chassa de la cuisine.', ok:true },
+      { text:'Peter pensa au danger. <b>Il</b> y réfléchit longuement.', ok:true },
+      { text:'Judy parla aux singes. <b>Elle</b> les parla doucement.', ok:false,
+        expl:'❌ Intrus ! "les" est incorrect : "parler à" → COI → <b style="color:#4ade80">leur</b> parla (pronom COI pluriel).' },
+      { text:'La boîte était fermée. <b>Elle</b> brillait dans le noir.', ok:true },
+    ]
+  },
+  /* ── Round 4 : genre (fém → masc erroné) ── */
+  {
+    id:'grid-4', fb:'fb-4', next:'next-4', dots:'dots-4', scoreEl:'sc4-score',
+    cards:[
+      { text:'Alan courut dans la forêt. <b>Il</b> disparut entre les arbres.', ok:true },
+      { text:'La tempête arriva soudain. <b>Il</b> renversa toute la maison.', ok:false,
+        expl:'❌ Intrus ! "Il" est incorrect : la tempête est féminin → <b style="color:#4ade80">Elle</b> renversa toute la maison.' },
+      { text:'La partie du jeu reprit. <b>Elle</b> dura encore une heure.', ok:true },
+      { text:'Les explorateurs avancèrent. <b>Ils</b> découvrirent une caverne sombre.', ok:true },
+    ]
+  },
+  /* ── Round 5 : groupe mixte (ils vs elles) ── */
+  {
+    id:'grid-5', fb:'fb-5', next:'next-5', dots:'dots-5', scoreEl:'sc5-score',
+    cards:[
+      { text:'Les dés et les cartes volèrent. <b>Ils</b> envahirent toute la pièce.', ok:true },
+      { text:'Sarah et Alan regardèrent le jeu. <b>Elles</b> hésitèrent à y toucher.', ok:false,
+        expl:'❌ Intrus ! "Elles" est incorrect : Sarah (fém.) + Alan (masc.) → groupe mixte → <b style="color:#4ade80">Ils</b> hésitèrent à y toucher.' },
+      { text:'Peter et Judy lancèrent les dés. <b>Ils</b> attendirent le résultat.', ok:true },
+      { text:'Les plantes grimpantes et le lierre poussaient vite. <b>Ils</b> recouvraient les murs.', ok:true },
+    ]
+  },
+  /* ── Round 6 : expert — COD/COI + genre ── */
+  {
+    id:'grid-6', fb:'fb-6', next:'next-6', dots:'dots-6', scoreEl:'sc6-score',
+    cards:[
+      { text:'Peter chercha les dés perdus. <b>Il</b> les retrouva sous le canapé.', ok:true },
+      { text:'Alan écrivit une lettre à Judy. <b>Il</b> la écrivit en secret.', ok:false,
+        expl:'❌ Intrus ! "la" est incorrect : "écrire à quelqu\'un" → COI → <b style="color:#4ade80">lui</b> écrivit une lettre. (lui = COI singulier)' },
+      { text:'Judy pensa à la solution. <b>Elle</b> y réfléchit toute la nuit.', ok:true },
+      { text:'Alan parla aux enfants. <b>Il</b> leur expliqua les règles du jeu.', ok:true },
+    ]
+  }
+];
+
+/* ══════════════════════════════════════════
+   DONNÉES — TEXTE À TROUS
+══════════════════════════════════════════ */
+const paras = [
+  {
+    id:'para-1', prog:'prog-1', next:'next-t1', scoreEl:'sc-t1-score', total:3,
+    segments:[
+      { t:'text', v:'Peter et Judy trouvèrent une boîte dans le parc. ' },
+      { t:'blank', answer:'Ils',   opts:['Il','Ils','Elles'], expl:'Ils → reprend Peter et Judy (groupe mixte = masc. plur.)' },
+      { t:'text', v:' la rapportèrent à la maison. La boîte s\'ouvrit toute seule. ' },
+      { t:'blank', answer:'Elle',  opts:['Il','Elle','Ils'],  expl:'Elle → reprend la boîte (fém. sing.)' },
+      { t:'text', v:' brillait dans l\'obscurité. Les enfants regardèrent à l\'intérieur. ' },
+      { t:'blank', answer:'Ils',   opts:['Il','Ils','Elles'], expl:'Ils → reprend les enfants (masc. plur.)' },
+      { t:'text', v:' découvrirent un jeu de plateau mystérieux.' },
+    ]
+  },
+  {
+    id:'para-2', prog:'prog-2', next:'next-t2', scoreEl:'sc-t2-score', total:5,
+    segments:[
+      { t:'text', v:'Un lion surgit dans la pièce. ' },
+      { t:'blank', answer:'Il',   opts:['Il','Elle','Ils'],  expl:'Il → reprend un lion (masc. sing.)' },
+      { t:'text', v:' rugit de toutes ses forces. Peter aperçut les dés sur le sol. ' },
+      { t:'blank', answer:'Il',   opts:['Il','Elle','Ils'],  expl:'Il → reprend Peter (masc. sing.)' },
+      { t:'text', v:' les ramassa vite. Judy chercha une solution. ' },
+      { t:'blank', answer:'Elle', opts:['Il','Elle','Ils'],  expl:'Elle → reprend Judy (fém. sing.)' },
+      { t:'text', v:' en parla à son frère. Les deux enfants lancèrent les dés ensemble. ' },
+      { t:'blank', answer:'Ils',  opts:['Il','Elle','Ils'],  expl:'Ils → reprend les deux enfants (groupe mixte = masc. plur.)' },
+      { t:'text', v:' avaient compris : seule la fin de la partie ' },
+      { t:'blank', answer:'les',  opts:['le','la','les'],    expl:'les → reprend les deux enfants comme COD (plur.)' },
+      { t:'text', v:' sauverait.' },
+    ]
+  },
+  {
+    id:'para-3', prog:'prog-3', next:'next-t3', scoreEl:'sc-t3-score', total:4,
+    segments:[
+      { t:'text', v:'Le lion cherchait les enfants dans toute la maison. ' },
+      { t:'blank', answer:'Il',   opts:['Il','Elle','Ils'],  expl:'Il → reprend le lion (masc. sing.)' },
+      { t:'text', v:' les reniflait partout. Peter aperçut la bête derrière le canapé. ' },
+      { t:'blank', answer:'Il',   opts:['Il','Elle','Ils'],  expl:'Il → reprend Peter (masc. sing.)' },
+      { t:'text', v:' la regarda sans faire un geste. Les meubles tombaient un à un. ' },
+      { t:'blank', answer:'Ils',  opts:['Il','Ils','Elles'], expl:'Ils → reprend les meubles (masc. plur.)' },
+      { t:'text', v:' s\'écrasaient sur le sol. Judy ramassa les dés et ' },
+      { t:'blank', answer:'les',  opts:['le','la','les'],    expl:'les → reprend les dés comme COD (masc. plur.)' },
+      { t:'text', v:' lança de toutes ses forces.' },
+    ]
+  },
+  {
+    id:'para-4', prog:'prog-4', next:'next-t4', scoreEl:'sc-t4-score', total:4,
+    segments:[
+      { t:'text', v:'Alan se souvint des règles du jeu. ' },
+      { t:'blank', answer:'Il',   opts:['Il','Elle','Ils'],  expl:'Il → reprend Alan (masc. sing.)' },
+      { t:'text', v:' y réfléchit longuement. Ensuite il parla aux enfants pour les rassurer. ' },
+      { t:'blank', answer:'Il',   opts:['Il','Elle','Ils'],  expl:'Il → reprend Alan (masc. sing.)' },
+      { t:'text', v:' leur expliqua comment gagner la partie. La jungle et ses dangers disparurent enfin. ' },
+      { t:'blank', answer:'Ils',  opts:['Il','Ils','Elles'], expl:'Ils → reprend la jungle et ses dangers (groupe = masc. plur.)' },
+      { t:'text', v:' s\'évanouirent comme un mauvais rêve. La maison retrouva son calme. ' },
+      { t:'blank', answer:'Elle', opts:['Il','Elle','Ils'],  expl:'Elle → reprend la maison (fém. sing.)' },
+      { t:'text', v:' semblait enfin apaisée.' },
+    ]
+  }
+];
+
+/* ══════════════════════════════════════════
+   ÉTAT GLOBAL
+══════════════════════════════════════════ */
+let score = 0;
+let elimScore = 0;
+let trousScore = 0;
+
+function updateScoreDisplays(){
+  document.querySelectorAll('.score-display').forEach(el => el.textContent = 'Score : '+score);
+}
+
+/* ══════════════════════════════════════════
+   NAVIGATION
+══════════════════════════════════════════ */
+function goTo(id){
+  document.querySelectorAll('.screen').forEach(s=>s.classList.remove('active'));
+  document.getElementById(id).classList.add('active');
+  closePopup();
+}
+
+/* ══════════════════════════════════════════
+   ÉLIMINATION — INIT
+══════════════════════════════════════════ */
+function buildElim(round){
+  const grid = document.getElementById(round.id);
+  const dotsEl = document.getElementById(round.dots);
+  const rIdx = elimRounds.indexOf(round);
+  grid.innerHTML = '';
+  dotsEl.innerHTML = '';
+  elimRounds.forEach((_,i)=>{
+    const d = document.createElement('div');
+    d.className='round-dot'+(i<rIdx?' done':i===rIdx?' current':'');
+    dotsEl.appendChild(d);
+  });
+  round.cards.forEach((card, i)=>{
+    const el = document.createElement('div');
+    el.className = 'card';
+    el.innerHTML = `<div class="card-num">Phrase ${i+1}</div>
+      <div class="card-text">${card.text}</div>
+      <div class="card-expl"></div>`;
+    el.addEventListener('click', ()=> handleElimClick(el, card, round, i));
+    grid.appendChild(el);
+  });
+}
+
+function handleElimClick(el, card, round, idx){
+  const grid = document.getElementById(round.id);
+  const allCards = grid.querySelectorAll('.card');
+  const fb = document.getElementById(round.fb);
+  if(grid.dataset.solved) return;
+
+  if(!card.ok){
+    grid.dataset.solved = '1';
+    score += 2; elimScore += 2;
+    updateScoreDisplays();
+    el.classList.add('intrus');
+    setTimeout(()=>{
+      allCards.forEach((c,i)=>{
+        if(i !== idx){
+          c.classList.add('survivor');
+          c.querySelector('.card-expl').style.display='none';
+        }
+      });
+      fb.innerHTML = `<span class="correct-label">✅ Bravo ! L'intrus est trouvé !</span>
+        <span class="wrong-label">${round.cards[idx].expl}</span>`;
+      fb.classList.add('visible');
+      document.getElementById(round.next).disabled = false;
+    }, 500);
+  } else {
+    el.classList.add('miss');
+    score = Math.max(0, score-1); elimScore = Math.max(0, elimScore-1);
+    updateScoreDisplays();
+    setTimeout(()=> el.classList.remove('miss'), 350);
+    fb.innerHTML = `<span style="color:#fbbf24">⚠️ Ce n'est pas l'intrus — cherche encore !</span>`;
+    fb.classList.add('visible');
+    setTimeout(()=>{ if(!grid.dataset.solved) fb.classList.remove('visible'); }, 1500);
+  }
+}
+
+/* ══════════════════════════════════════════
+   TEXTE À TROUS — INIT
+══════════════════════════════════════════ */
+function buildPara(para){
+  const zone = document.getElementById(para.id);
+  zone.innerHTML = '';
+  para._filled = 0;
+  para.segments.forEach((seg)=>{
+    if(seg.t === 'text'){
+      zone.appendChild(document.createTextNode(seg.v));
+    } else {
+      const btn = document.createElement('button');
+      btn.className = 'blank-btn';
+      btn.textContent = '';
+      btn.addEventListener('click', e => {
+        e.stopPropagation();
+        showPopup(btn, seg, para);
+      });
+      zone.appendChild(btn);
+    }
+  });
+  updateTrousProg(para);
+}
+
+function updateTrousProg(para){
+  document.getElementById(para.prog).textContent = para._filled+' / '+para.total+' complétés';
+  if(para._filled >= para.total){
+    document.getElementById(para.next).disabled = false;
+  }
+}
+
+/* ══════════════════════════════════════════
+   POPUP
+══════════════════════════════════════════ */
+function showPopup(btn, seg, para){
+  if(btn.classList.contains('filled-ok')) return;
+  const popup = document.getElementById('popup');
+  const opts = document.getElementById('popup-opts');
+  opts.innerHTML = '';
+  seg.opts.forEach(opt=>{
+    const b = document.createElement('button');
+    b.className = 'popup-opt';
+    b.textContent = opt;
+    b.addEventListener('click', e=>{ e.stopPropagation(); handleOpt(b, opt, seg, btn, para); });
+    opts.appendChild(b);
+  });
+  const rect = btn.getBoundingClientRect();
+  popup.style.left = Math.min(rect.left, window.innerWidth-200)+'px';
+  popup.style.top = (rect.top - 80)+'px';
+  popup.classList.add('active');
+  requestAnimationFrame(()=>{
+    const pr = popup.getBoundingClientRect();
+    popup.style.top = Math.max(10, rect.top - pr.height - 10)+'px';
+    popup.style.left = Math.min(rect.left, window.innerWidth - pr.width - 10)+'px';
+  });
+}
+
+function closePopup(){
+  document.getElementById('popup').classList.remove('active');
+}
+
+function handleOpt(optBtn, opt, seg, btn, para){
+  if(opt === seg.answer){
+    score++; trousScore++;
+    updateScoreDisplays();
+    optBtn.classList.add('opt-ok');
+    btn.textContent = opt;
+    btn.classList.add('filled-ok');
+    para._filled++;
+    updateTrousProg(para);
+    setTimeout(closePopup, 400);
+  } else {
+    score = Math.max(0, score-1);
+    updateScoreDisplays();
+    optBtn.classList.add('opt-err');
+    setTimeout(()=> optBtn.classList.remove('opt-err'), 400);
+  }
+}
+
+document.addEventListener('click', e=>{
+  if(!e.target.closest('#popup')&&!e.target.classList.contains('blank-btn')) closePopup();
+});
+
+/* ══════════════════════════════════════════
+   BILAN
+══════════════════════════════════════════ */
+function showBilan(){
+  const totalElim = elimRounds.length * 2;
+  const totalTrous = paras.reduce((s,p)=>s+p.total, 0);
+  document.getElementById('bilan-final').textContent = score+' / '+(totalElim+totalTrous);
+  document.getElementById('bilan-elim').textContent = elimScore+' / '+totalElim;
+  document.getElementById('bilan-trous').textContent = trousScore+' / '+totalTrous;
+  document.getElementById('bilan-score-top').textContent = 'Score : '+score;
+}
+
+/* ══════════════════════════════════════════
+   RESET
+══════════════════════════════════════════ */
+function resetAll(){
+  score=0; elimScore=0; trousScore=0;
+  updateScoreDisplays();
+  elimRounds.forEach(r=>{
+    const grid=document.getElementById(r.id);
+    if(grid) delete grid.dataset.solved;
+    document.getElementById(r.next).disabled=true;
+    document.getElementById(r.fb).classList.remove('visible');
+  });
+  paras.forEach(p=>{ p._filled=0; document.getElementById(p.next).disabled=true; });
+  elimRounds.forEach(r => buildElim(r));
+  paras.forEach(p => buildPara(p));
+}
+
+/* ══════════════════════════════════════════
+   INIT
+══════════════════════════════════════════ */
+elimRounds.forEach(r => buildElim(r));
+paras.forEach(p => buildPara(p));
+document.getElementById('next-t4').addEventListener('click', showBilan);
+</script>
+</body>
+</html>

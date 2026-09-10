@@ -1,0 +1,439 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Défi 3 — Escape Game Harry Potter · CM2</title>
+<link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;700;900&family=IM+Fell+English:ital@0;1&display=swap" rel="stylesheet">
+<style>
+@page { size: A4 portrait; margin: 12mm 14mm 12mm 14mm; }
+*{ box-sizing:border-box; margin:0; padding:0; }
+body{ font-family:'IM Fell English',Georgia,serif; font-size:10pt; color:#1A1A2E; background:white; line-height:1.45; }
+.page{ width:182mm; min-height:271mm; margin:0 auto; background:white; padding-bottom:4mm; }
+@media print{ body{margin:0} .page{width:100%;margin:0} .page-break{page-break-after:always} .no-print{display:none!important} }
+
+/* ── EN-TÊTE ─────────────────────────────────────────────────────────── */
+.header-band{ background:#0A0A1A; color:white; padding:4.5mm 5mm 3.5mm;
+  border-bottom:3px solid #EEBA30; display:flex; justify-content:space-between; align-items:center; }
+.header-left{ display:flex; align-items:center; gap:3.5mm; }
+.defi-badge{ font-family:'Cinzel',serif; font-weight:700; font-size:8pt;
+  background:#EEBA30; color:#1A1A2E; padding:1.5mm 3mm; border-radius:2mm; letter-spacing:.08em; }
+.header-title{ font-family:'Cinzel',serif; font-size:13pt; font-weight:900; color:#EEBA30; }
+.header-subtitle{ font-size:7.5pt; color:#AAAACC; margin-top:.5mm; font-style:italic; font-family:Georgia,serif; }
+.header-right{ text-align:right; font-size:8pt; color:#AAAACC; line-height:1.8; font-family:Georgia,serif; }
+.student-line{ border-bottom:1px solid #EEBA3066; display:inline-block; min-width:32mm; }
+.score-box{ background:rgba(238,186,48,.15); border:1px solid #EEBA3055; border-radius:1.5mm;
+  padding:1mm 2.5mm; color:#EEBA30; font-weight:700; font-family:'Cinzel',serif; font-size:8.5pt;
+  margin-top:1mm; display:inline-block; }
+
+/* ── INTRO / MISE EN SCÈNE ───────────────────────────────────────────── */
+.intro-box{ background:linear-gradient(135deg,#0A0A1A,#1A1A2E);
+  border:2px solid #EEBA3033; border-left:4px solid #EEBA30;
+  border-radius:0 2.5mm 2.5mm 0; padding:3mm 4mm; margin:2.5mm 0;
+  color:#E2E8F0; font-size:9pt; line-height:1.55; }
+.intro-box .titre-scenario{ font-family:'Cinzel',serif; color:#EEBA30; font-weight:700;
+  font-size:10pt; margin-bottom:1mm; }
+
+/* ── CODE FINAL ─────────────────────────────────────────────────────── */
+.code-strip{ background:#0A0A1A; border:2px solid #EEBA30; border-radius:2mm;
+  padding:2.5mm 4mm; margin:2.5mm 0; display:flex; align-items:center; gap:4mm; flex-wrap:wrap; }
+.code-label{ font-family:'Cinzel',serif; font-size:8.5pt; color:#EEBA30; font-weight:700;
+  letter-spacing:.08em; white-space:nowrap; }
+.code-cells{ display:flex; gap:3mm; }
+.code-cell{ width:12mm; height:12mm; border:2.5px solid #EEBA30; border-radius:2mm;
+  display:flex; align-items:center; justify-content:center;
+  font-family:'Cinzel',serif; font-size:18pt; font-weight:900; color:#EEBA30; }
+.code-cell-label{ font-size:6.5pt; color:#AAAACC; text-align:center; margin-top:.5mm;
+  font-family:Georgia,serif; }
+.code-cell-wrap{ display:flex; flex-direction:column; align-items:center; }
+
+/* ── SALLE ───────────────────────────────────────────────────────────── */
+.salle{ margin-bottom:3mm; border:1.5px solid #EEBA3033; border-radius:2.5mm; overflow:hidden; }
+.salle-header{ padding:2.5mm 4mm; display:flex; align-items:center; gap:3mm; }
+.salle-num{ font-family:'Cinzel',serif; font-size:8pt; font-weight:700; letter-spacing:.08em;
+  white-space:nowrap; opacity:.9; }
+.salle-title{ font-family:'Cinzel',serif; font-size:10pt; font-weight:700; flex:1; }
+.salle-pts{ font-family:'Cinzel',serif; font-size:7.5pt; font-weight:700;
+  padding:.5mm 2mm; border-radius:1.5mm; white-space:nowrap; }
+.salle-body{ padding:2.5mm 4mm; background:white; }
+
+/* Couleurs par salle */
+.salle-1 .salle-header{ background:#1A472A; }
+.salle-1 .salle-num,.salle-1 .salle-title{ color:#4ADE80; }
+.salle-1 .salle-pts{ background:#16A34A; color:white; }
+.salle-1 .salle{ border-color:#1A472A44; }
+
+.salle-2 .salle-header{ background:#1E3A8A; }
+.salle-2 .salle-num,.salle-2 .salle-title{ color:#93C5FD; }
+.salle-2 .salle-pts{ background:#2563EB; color:white; }
+.salle-2 .salle{ border-color:#1E3A8A44; }
+
+.salle-3 .salle-header{ background:#78350F; }
+.salle-3 .salle-num,.salle-3 .salle-title{ color:#FCD34D; }
+.salle-3 .salle-pts{ background:#D97706; color:white; }
+.salle-3 .salle{ border-color:#78350F44; }
+
+.salle-4 .salle-header{ background:#581C87; }
+.salle-4 .salle-num,.salle-4 .salle-title{ color:#D8B4FE; }
+.salle-4 .salle-pts{ background:#7C3AED; color:white; }
+.salle-4 .salle{ border-color:#581C8744; }
+
+/* ── CONTENU EXERCICES ──────────────────────────────────────────────── */
+.ex-instruction{ font-size:8.5pt; font-style:italic; margin-bottom:2mm;
+  padding-left:2.5mm; border-left:3px solid currentColor; opacity:.75; }
+.calc-row{ display:flex; align-items:center; gap:2mm; font-size:9.5pt;
+  padding:1.2mm 0; border-bottom:1px dashed #E5E7EB; }
+.calc-row:last-child{ border-bottom:none; }
+.calc-num-small{ font-family:'Cinzel',serif; font-weight:700; font-size:7.5pt; min-width:4mm; }
+.calc-blank{ border-bottom:2px solid #1A1A2E; display:inline-block; min-width:18mm; height:4mm; vertical-align:bottom; }
+.calc-2col{ display:grid; grid-template-columns:1fr 1fr; gap:1mm 5mm; }
+
+.prob-context{ font-size:9.5pt; color:#1A1A2E; margin-bottom:1.5mm; line-height:1.5;
+  background:#F9FAFB; border-radius:1.5mm; padding:2mm 3mm; border-left:3px solid #D1D5DB; }
+.prob-line{ display:flex; align-items:center; gap:2mm; font-size:9.5pt; margin-top:1.5mm; flex-wrap:wrap; }
+.ans-blank{ border-bottom:1.5px solid #888; display:inline-block; min-width:20mm; height:3.5mm; vertical-align:bottom; }
+
+.gn-text{ font-style:italic; font-size:9.5pt; color:#1A1A2E; margin-bottom:1.5mm; }
+.gn-question{ font-size:9.5pt; margin-bottom:1mm; }
+.gn-blank-long{ border-bottom:1px solid #888; display:inline-block; min-width:60mm; height:3.5mm; vertical-align:bottom; }
+
+/* ── CODE CHIFFRE ────────────────────────────────────────────────────── */
+.code-reveal{ border:2px dashed #EEBA30; border-radius:2mm; padding:2mm 3mm;
+  background:#0A0A1A08; margin-top:2mm; display:flex; align-items:center; gap:2mm; font-size:9pt; }
+.code-reveal-label{ font-family:'Cinzel',serif; font-weight:700; font-size:8pt;
+  color:#EEBA30; background:#0A0A1A; padding:.5mm 2mm; border-radius:1mm; white-space:nowrap; }
+.code-reveal-blank{ border-bottom:2px solid #EEBA30; display:inline-block; min-width:12mm;
+  height:6mm; text-align:center; font-family:'Cinzel',serif; font-weight:700; font-size:15pt;
+  vertical-align:bottom; }
+
+/* ── PIED DE PAGE ────────────────────────────────────────────────────── */
+.page-footer{ border-top:1.5px solid #EEBA3055; padding-top:1.5mm; margin-top:3mm;
+  display:flex; justify-content:space-between; align-items:center;
+  font-size:7.5pt; color:#999; font-family:Georgia,serif; }
+.footer-logo{ font-family:'Cinzel',serif; color:#EEBA30; font-size:8pt; font-weight:700; }
+
+.print-btn{ position:fixed; bottom:20px; right:20px; background:#0A0A1A; color:#EEBA30;
+  border:2px solid #EEBA30; padding:10px 22px; border-radius:999px;
+  font-family:'Cinzel',serif; font-weight:700; font-size:12px; cursor:pointer;
+  letter-spacing:.06em; transition:all .2s; z-index:100; }
+.print-btn:hover{ background:#EEBA30; color:#0A0A1A; }
+.page-break{ border:none; border-top:2px dashed #EEBA3033; margin:6mm 0; }
+@media print{ .page-break{display:none} }
+</style>
+</head>
+<body>
+
+<button class="print-btn no-print" onclick="window.print()">⎙ Imprimer</button>
+
+<!-- ══════════════════════ PAGE 1 ══════════════════════════════════════════ -->
+<div class="page">
+
+  <!-- EN-TÊTE -->
+  <div class="header-band">
+    <div class="header-left">
+      <div class="defi-badge">DÉFI 3</div>
+      <div>
+        <div class="header-title">Escape Game — Poudlard</div>
+        <div class="header-subtitle">⚡ Harry Potter &ensp;·&ensp; Maths + Français + Culture HP &ensp;·&ensp; CM2 &ensp;·&ensp; Lundi 11 mai 2026</div>
+      </div>
+    </div>
+    <div class="header-right">
+      <div>Maison : <span class="student-line">&nbsp;</span></div>
+      <div>Prénom : <span class="student-line">&nbsp;</span></div>
+      <div class="score-box">Score : &ensp;&ensp;&ensp;/ 30</div>
+    </div>
+  </div>
+
+  <!-- MISE EN SCÈNE -->
+  <div class="intro-box">
+    <div class="titre-scenario">🔐 MISSION SECRÈTE — Tu es prisonnier de Poudlard !</div>
+    Voldemort a lancé un sort sur les 4 salles du château. Pour t'échapper, tu dois résoudre
+    les énigmes de <strong>chaque salle</strong> et trouver un <strong>chiffre du code</strong>
+    dans chacune d'elles. Une fois les 4 chiffres trouvés, combine-les dans l'ordre
+    pour former le <strong>code de sortie à 4 chiffres</strong>. Bonne chance !
+    &ensp;<em>Durée : 45 minutes · 4 salles · 30 points</em>
+  </div>
+
+  <!-- CODE FINAL -->
+  <div class="code-strip">
+    <span class="code-label">🔓 CODE DE SORTIE :</span>
+    <div class="code-cells">
+      <div class="code-cell-wrap">
+        <div class="code-cell"></div>
+        <div class="code-cell-label">Salle 1</div>
+      </div>
+      <div class="code-cell-wrap">
+        <div class="code-cell"></div>
+        <div class="code-cell-label">Salle 2</div>
+      </div>
+      <div class="code-cell-wrap">
+        <div class="code-cell"></div>
+        <div class="code-cell-label">Salle 3</div>
+      </div>
+      <div class="code-cell-wrap">
+        <div class="code-cell"></div>
+        <div class="code-cell-label">Salle 4</div>
+      </div>
+    </div>
+    <span style="font-size:8pt;color:#AAAACC;font-style:italic;font-family:Georgia,serif">
+      → Chaque salle révèle 1 chiffre à inscrire ici
+    </span>
+  </div>
+
+  <!-- ══ SALLE 1 ════════════════════════════════════════════════════════ -->
+  <div class="salle salle-1">
+    <div class="salle-header">
+      <div class="salle-num">SALLE 1</div>
+      <div class="salle-title">🧪 La Salle des Potions — Calcul</div>
+      <div class="salle-pts">8 pts</div>
+    </div>
+    <div class="salle-body">
+      <div class="ex-instruction" style="color:#1A472A">
+        Rogue a laissé une recette codée. Résous les 3 étapes dans l'ordre pour trouver le chiffre secret.
+      </div>
+
+      <div class="calc-2col">
+        <div class="calc-row">
+          <span class="calc-num-small">Étape 1 :</span>
+          3 × 4 = <span class="calc-blank"></span>
+        </div>
+        <div class="calc-row">
+          <span class="calc-num-small">Étape 2 :</span>
+          Résultat ÷ 2 = <span class="calc-blank"></span>
+        </div>
+        <div class="calc-row" style="grid-column:1/-1">
+          <span class="calc-num-small">Étape 3 :</span>
+          Résultat + 1 = <span class="calc-blank" style="min-width:22mm"></span>
+          <span style="font-size:8.5pt;color:#16A34A;margin-left:2mm">← c'est ton chiffre !</span>
+        </div>
+      </div>
+
+      <div style="margin-top:2mm;font-size:9pt;color:#14532D">
+        <strong>Problème bonus (2 pts) :</strong>
+        Hermione prépare 6 bouteilles de potion. Elle a besoin de 7 ingrédients par bouteille.
+        Combien en tout ?
+        &ensp; 6 × 7 = <span class="calc-blank"></span>
+        &ensp;→ <span class="calc-blank" style="min-width:30mm"></span> ingrédients.
+      </div>
+
+      <div class="code-reveal">
+        <span class="code-reveal-label">🔢 Chiffre Salle 1</span>
+        <span style="font-size:8.5pt">Le résultat de l'Étape 3 est :</span>
+        <span class="code-reveal-blank"></span>
+        <span style="font-size:8pt;color:#666;font-style:italic">Reporte-le dans la case Salle 1 du code !</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- ══ SALLE 2 ════════════════════════════════════════════════════════ -->
+  <div class="salle salle-2">
+    <div class="salle-header">
+      <div class="salle-num">SALLE 2</div>
+      <div class="salle-title">📖 La Bibliothèque Interdite — Groupe Nominal</div>
+      <div class="salle-pts">8 pts</div>
+    </div>
+    <div class="salle-body">
+      <div class="ex-instruction" style="color:#1E3A8A">
+        Un parchemin magique révèle le chiffre secret. Pour le décoder, compte les GN dans la phrase ci-dessous.
+      </div>
+
+      <div class="gn-text">
+        « Harry saisit <u>une vieille baguette dorée</u>,
+        prit <u>un vieux grimoire poussiéreux</u> et rangea
+        <u>des formules magiques</u> dans <u>son sac en cuir</u>. »
+      </div>
+
+      <div class="gn-question">
+        <strong>Question 1 (2 pts) :</strong> Combien de GN y a-t-il dans cette phrase ?
+        &ensp; Réponse : <span class="ans-blank"></span> GN
+        &ensp; <span style="font-size:8.5pt;color:#2563EB">← ton chiffre !</span>
+      </div>
+
+      <div class="gn-question">
+        <strong>Question 2 (3 pts) :</strong> Identifie les éléments du GN <em>« une vieille baguette dorée »</em> :
+      </div>
+      <div style="display:flex;gap:3mm;flex-wrap:wrap;font-size:9pt;margin:1mm 0 2mm 4mm">
+        Déterminant : <span class="ans-blank"></span>
+        &ensp; Adjectif(s) : <span class="ans-blank" style="min-width:28mm"></span>
+        &ensp; Nom : <span class="ans-blank"></span>
+      </div>
+
+      <div class="gn-question">
+        <strong>Question 3 (3 pts) :</strong> Enrichis le GN <em>« un grimoire »</em> avec 2 procédés différents :
+      </div>
+      <div style="display:flex;flex-direction:column;gap:1mm;margin:1mm 0 0 4mm;font-size:9.5pt">
+        <div>Avec un adjectif : un <span class="gn-blank-long"></span> grimoire</div>
+        <div>Avec un CDN : un grimoire de <span class="gn-blank-long"></span></div>
+      </div>
+
+      <div class="code-reveal">
+        <span class="code-reveal-label">🔢 Chiffre Salle 2</span>
+        <span style="font-size:8.5pt">Le nombre de GN (Question 1) est :</span>
+        <span class="code-reveal-blank"></span>
+        <span style="font-size:8pt;color:#666;font-style:italic">Reporte-le dans la case Salle 2 du code !</span>
+      </div>
+    </div>
+  </div>
+
+  <div class="page-footer">
+    <span class="footer-logo">🔐 Escape Game Poudlard · CM2</span>
+    <span>Dylan Collery · Défi 3 · Page 1/2</span>
+    <span>Salle 1 (Calcul) · Salle 2 (GN)</span>
+  </div>
+
+</div>
+
+<hr class="page-break">
+
+<!-- ══════════════════════ PAGE 2 ══════════════════════════════════════════ -->
+<div class="page">
+
+  <div style="display:flex;justify-content:space-between;align-items:center;
+              border-bottom:2px solid #EEBA30;padding-bottom:2mm;margin-bottom:3mm">
+    <span style="font-family:'Cinzel',serif;font-size:9pt;color:#1A1A2E;font-weight:700">
+      🔐 DÉFI 3 — Escape Game Poudlard
+    </span>
+    <span style="font-size:8pt;color:#999;font-family:Georgia,serif">
+      Prénom : <span style="border-bottom:1px solid #888;display:inline-block;min-width:30mm">&nbsp;</span>
+      &ensp; Page 2/2
+    </span>
+  </div>
+
+  <!-- ══ SALLE 3 ════════════════════════════════════════════════════════ -->
+  <div class="salle salle-3">
+    <div class="salle-header">
+      <div class="salle-num">SALLE 3</div>
+      <div class="salle-title">⭐ La Tour d'Astronomie — Culture Harry Potter</div>
+      <div class="salle-pts">7 pts</div>
+    </div>
+    <div class="salle-body">
+      <div class="ex-instruction" style="color:#78350F">
+        Les étoiles de Poudlard te parlent ! Réponds aux questions. Ta note sur 4 (une question vaut 1 pt)
+        est le chiffre secret de cette salle.
+      </div>
+
+      <div class="calc-row">
+        <span class="calc-num-small">Q1.</span>
+        <span style="font-size:9.5pt;flex:1">Comment s'appelle le sport de Poudlard joué sur des balais ?</span>
+      </div>
+      <div style="margin:0 0 1.5mm 8mm;font-size:9.5pt">
+        Réponse : <span class="gn-blank-long" style="min-width:65mm"></span>
+      </div>
+
+      <div class="calc-row">
+        <span class="calc-num-small">Q2.</span>
+        <span style="font-size:9.5pt;flex:1">Cite les 4 maisons de Poudlard (1 point si tu en trouves les 4 !) :</span>
+      </div>
+      <div style="margin:0 0 1.5mm 8mm;font-size:9.5pt">
+        <span class="gn-blank-long" style="min-width:130mm;display:block;margin-top:1mm"></span>
+      </div>
+
+      <div class="calc-row">
+        <span class="calc-num-small">Q3.</span>
+        <span style="font-size:9.5pt;flex:1">Quel sortilège permet d'allumer le bout de sa baguette magique ?</span>
+      </div>
+      <div style="margin:0 0 1.5mm 8mm;font-size:9.5pt">
+        Réponse : <span class="gn-blank-long" style="min-width:65mm"></span>
+      </div>
+
+      <div class="calc-row">
+        <span class="calc-num-small">Q4.</span>
+        <span style="font-size:9.5pt;flex:1">Comment s'appelle la meilleure amie d'Harry ? (Prénom + Nom)</span>
+      </div>
+      <div style="margin:0 0 1.5mm 8mm;font-size:9.5pt">
+        Réponse : <span class="gn-blank-long" style="min-width:65mm"></span>
+      </div>
+
+      <div style="margin-top:2mm;font-size:9pt;font-style:italic;color:#78350F">
+        <strong>Mon score à ces 4 questions :</strong>
+        &ensp; <span style="border:1.5px solid #D97706;display:inline-block;width:8mm;height:6mm;text-align:center;border-radius:1mm;vertical-align:middle"></span>
+        / 4
+        <span style="margin-left:2mm;font-size:8.5pt">← Ce chiffre est le code de la Salle 3 !</span>
+      </div>
+
+      <div class="code-reveal">
+        <span class="code-reveal-label">🔢 Chiffre Salle 3</span>
+        <span style="font-size:8.5pt">Ton nombre de bonnes réponses (sur 4) est :</span>
+        <span class="code-reveal-blank"></span>
+        <span style="font-size:8pt;color:#666;font-style:italic">Reporte-le dans la case Salle 3 du code !</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- ══ SALLE 4 ════════════════════════════════════════════════════════ -->
+  <div class="salle salle-4">
+    <div class="salle-header">
+      <div class="salle-num">SALLE 4</div>
+      <div class="salle-title">🏆 Le Grand Hall — Problème Final</div>
+      <div class="salle-pts">7 pts</div>
+    </div>
+    <div class="salle-body">
+      <div class="ex-instruction" style="color:#581C87">
+        Dernier obstacle avant la liberté ! Résous ce problème en 2 étapes pour trouver le chiffre final.
+      </div>
+
+      <div class="prob-context">
+        Dumbledore distribue des étoiles de mérite aux élèves du Grand Hall.
+        Il a <strong>48 étoiles</strong> au total. Il les répartit en <strong>parts égales</strong>
+        entre <strong>6 tables</strong>. Sur chaque table, les élèves se répartissent
+        les étoiles entre <strong>8 élèves</strong>.
+      </div>
+
+      <div style="margin-top:2mm;font-size:9.5pt">
+        <div class="prob-line">
+          <strong>Étape 1 :</strong> Combien d'étoiles par table ?
+          &ensp; 48 ÷ 6 = <span class="ans-blank" style="min-width:15mm"></span>
+          &ensp; étoiles par table
+        </div>
+        <div class="prob-line" style="margin-top:1.5mm">
+          <strong>Étape 2 :</strong> Combien d'étoiles par élève ?
+          &ensp; <span class="ans-blank" style="min-width:10mm"></span> ÷ 8 = <span class="ans-blank" style="min-width:15mm"></span>
+          &ensp; étoile(s) par élève
+        </div>
+      </div>
+
+      <div style="margin-top:2mm;font-size:9pt;font-style:italic;color:#7C3AED">
+        <strong>Attention :</strong> Le chiffre secret est le résultat de l'Étape 2 (étoiles par élève).
+      </div>
+
+      <div style="margin-top:2mm;font-size:9pt;color:#581C87">
+        <strong>Question bonus (2 pts) :</strong>
+        Si Dumbledore donne en plus 1 étoile spéciale à chacun des 8 élèves d'une table,
+        combien d'étoiles supplémentaires distribue-t-il ?
+        &ensp; <span class="ans-blank" style="min-width:15mm"></span> étoiles.
+      </div>
+
+      <div class="code-reveal">
+        <span class="code-reveal-label">🔢 Chiffre Salle 4</span>
+        <span style="font-size:8.5pt">Le résultat de l'Étape 2 est :</span>
+        <span class="code-reveal-blank"></span>
+        <span style="font-size:8pt;color:#666;font-style:italic">Reporte-le dans la case Salle 4 du code !</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- RAPPEL CODE FINAL -->
+  <div class="code-strip" style="margin-top:2mm">
+    <span class="code-label">🔓 TON CODE FINAL :</span>
+    <div class="code-cells">
+      <div class="code-cell-wrap"><div class="code-cell"></div><div class="code-cell-label">Salle 1</div></div>
+      <div class="code-cell-wrap"><div class="code-cell"></div><div class="code-cell-label">Salle 2</div></div>
+      <div class="code-cell-wrap"><div class="code-cell"></div><div class="code-cell-label">Salle 3</div></div>
+      <div class="code-cell-wrap"><div class="code-cell"></div><div class="code-cell-label">Salle 4</div></div>
+    </div>
+    <span style="font-size:8pt;color:#4ADE80;font-family:'Cinzel',serif;font-weight:700">
+      Remets ce code à ton professeur pour t'échapper ! 🎉
+    </span>
+  </div>
+
+  <!-- PIED DE PAGE 2 -->
+  <div class="page-footer">
+    <span class="footer-logo">🔐 Escape Game Poudlard · CM2</span>
+    <span>Dylan Collery · Défi 3 · Page 2/2</span>
+    <span>Salle 3 (Culture HP) · Salle 4 (Problème)</span>
+  </div>
+
+</div>
+
+</body>
+</html>

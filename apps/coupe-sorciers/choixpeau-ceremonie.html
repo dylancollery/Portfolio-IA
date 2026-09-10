@@ -1,0 +1,711 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>🎩 Cérémonie du Choixpeau — CM2 C</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=MedievalSharp&family=Cinzel:wght@400;700;900&family=Cinzel+Decorative:wght@700&family=IM+Fell+English:ital@0;1&display=swap');
+
+  :root {
+    --gold: #EEBA30;
+    --dark: #0A0A1A;
+    --gryffondor: #AE0001;
+    --gryffondor-acc: #EEBA30;
+    --serpentard: #1A472A;
+    --serpentard-acc: #BBBBBB;
+    --poufsouffle: #2B2B2B;
+    --poufsouffle-acc: #F0C700;
+    --serdaigle: #0E1A40;
+    --serdaigle-acc: #9B7B3A;
+  }
+
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  body {
+    background: var(--dark);
+    color: #fff;
+    font-family: 'IM Fell English', Georgia, serif;
+    min-height: 100vh;
+    overflow-x: hidden;
+  }
+
+  /* ── ÉTOILES BACKGROUND ── */
+  #stars {
+    position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+    pointer-events: none; z-index: 0;
+  }
+  .star {
+    position: absolute;
+    background: #fff;
+    border-radius: 50%;
+    animation: twinkle var(--dur, 3s) infinite var(--delay, 0s) alternate;
+  }
+  @keyframes twinkle { 0%{opacity:0.1;} 100%{opacity:0.9;} }
+
+  /* ── PAGES ── */
+  .page { position: relative; z-index: 1; min-height: 100vh; display: flex; flex-direction: column; align-items: center; justify-content: center; padding: 20px; }
+  .page.hidden { display: none; }
+
+  /* ── INTRO ── */
+  #page-intro { text-align: center; gap: 30px; }
+  .title-main {
+    font-family: 'Cinzel Decorative', serif;
+    font-size: clamp(2rem, 5vw, 4rem);
+    color: var(--gold);
+    text-shadow: 0 0 40px rgba(238,186,48,0.8), 0 0 80px rgba(238,186,48,0.4);
+    animation: glow 2s infinite alternate;
+    line-height: 1.3;
+  }
+  @keyframes glow {
+    0%  { text-shadow: 0 0 20px rgba(238,186,48,0.6); }
+    100%{ text-shadow: 0 0 60px rgba(238,186,48,1), 0 0 100px rgba(238,186,48,0.5); }
+  }
+  .title-sub {
+    font-family: 'Cinzel', serif;
+    font-size: clamp(1rem, 2.5vw, 1.5rem);
+    color: #AAAACC;
+    letter-spacing: 4px;
+    margin-top: 10px;
+  }
+  .hat-big { font-size: clamp(6rem, 15vw, 12rem); animation: hatFloat 3s ease-in-out infinite; display: block; }
+  @keyframes hatFloat { 0%,100%{transform:translateY(0) rotate(-3deg);} 50%{transform:translateY(-15px) rotate(3deg);} }
+
+  .btn-start {
+    margin-top: 30px;
+    padding: 18px 50px;
+    font-family: 'Cinzel', serif;
+    font-size: 1.4rem;
+    font-weight: 700;
+    color: var(--dark);
+    background: linear-gradient(135deg, #EEBA30, #C8A000);
+    border: none;
+    border-radius: 8px;
+    cursor: pointer;
+    letter-spacing: 2px;
+    box-shadow: 0 0 30px rgba(238,186,48,0.5);
+    transition: all 0.3s;
+  }
+  .btn-start:hover { transform: scale(1.05); box-shadow: 0 0 50px rgba(238,186,48,0.8); }
+
+  .house-preview {
+    display: flex; gap: 20px; flex-wrap: wrap; justify-content: center; margin-top: 20px;
+  }
+  .house-chip {
+    padding: 8px 20px; border-radius: 20px; font-family:'Cinzel',serif;
+    font-size: 0.9rem; font-weight: 700; letter-spacing: 1px; border: 2px solid;
+  }
+
+  /* ── SORTING ── */
+  #page-sorting { gap: 0; padding: 15px; justify-content: flex-start; }
+
+  .sorting-header {
+    width: 100%; display: flex; align-items: center; justify-content: space-between;
+    padding: 10px 20px; background: rgba(255,255,255,0.05);
+    border-bottom: 1px solid rgba(238,186,48,0.3);
+    border-radius: 12px; margin-bottom: 15px;
+  }
+  .sorting-title { font-family:'Cinzel',serif; font-size: 1.1rem; color: var(--gold); }
+  .counter { font-family:'Cinzel',serif; color: #AAAACC; font-size: 1rem; }
+
+  /* Houses bar */
+  .houses-bar {
+    display: flex; gap: 10px; width: 100%; margin-bottom: 15px; flex-wrap: wrap;
+  }
+  .house-card {
+    flex: 1; min-width: 130px; border-radius: 12px; padding: 10px 14px;
+    border: 2px solid rgba(255,255,255,0.2);
+    transition: all 0.5s;
+  }
+  .house-card-name { font-family:'Cinzel',serif; font-weight:700; font-size:0.95rem; }
+  .house-card-count { font-size: 1.8rem; font-weight:bold; margin: 4px 0; }
+  .house-card-members { font-size: 0.7rem; opacity: 0.8; line-height: 1.5; }
+
+  /* Main arena */
+  .arena {
+    flex: 1; display: flex; flex-direction: column; align-items: center; justify-content: center;
+    width: 100%; gap: 20px;
+  }
+
+  .hat-sorting {
+    font-size: clamp(4rem, 10vw, 8rem);
+    animation: hatIdle 2s ease-in-out infinite;
+    transition: transform 0.3s;
+  }
+  @keyframes hatIdle { 0%,100%{transform:rotate(-2deg);} 50%{transform:rotate(2deg);} }
+  .hat-sorting.shaking {
+    animation: hatShake 0.15s infinite !important;
+  }
+  @keyframes hatShake {
+    0%{transform:rotate(-8deg) scale(1.1);}
+    25%{transform:rotate(8deg) scale(1.15);}
+    50%{transform:rotate(-6deg) scale(1.1);}
+    75%{transform:rotate(6deg) scale(1.15);}
+    100%{transform:rotate(-8deg) scale(1.1);}
+  }
+
+  .student-name-big {
+    font-family:'Cinzel Decorative',serif;
+    font-size: clamp(2rem, 6vw, 4.5rem);
+    color: #fff;
+    text-align: center;
+    min-height: 70px;
+    text-shadow: 0 0 20px rgba(255,255,255,0.5);
+    transition: all 0.5s;
+  }
+
+  .speech-bubble {
+    max-width: 700px; text-align:center;
+    font-size: clamp(1rem, 2.5vw, 1.3rem);
+    color: #DDD;
+    font-style: italic;
+    min-height: 60px;
+    padding: 0 20px;
+    line-height: 1.7;
+  }
+
+  .reveal-flash {
+    position: fixed; top:0; left:0; width:100%; height:100%;
+    pointer-events:none; opacity:0; z-index:100;
+    transition: opacity 0.1s;
+  }
+  .reveal-flash.active { animation: flash 0.8s forwards; }
+  @keyframes flash {
+    0%{opacity:0;} 20%{opacity:0.6;} 100%{opacity:0;}
+  }
+
+  .house-reveal {
+    font-family:'Cinzel Decorative',serif;
+    font-size: clamp(2.5rem, 8vw, 6rem);
+    font-weight: 900;
+    text-align: center;
+    opacity: 0;
+    transform: scale(0.5);
+    transition: all 0.5s cubic-bezier(0.34, 1.56, 0.64, 1);
+    text-shadow: 0 0 40px currentColor;
+    min-height: 80px;
+  }
+  .house-reveal.show { opacity: 1; transform: scale(1); }
+
+  .btn-next {
+    padding: 15px 45px;
+    font-family: 'Cinzel', serif;
+    font-size: 1.2rem;
+    font-weight: 700;
+    background: linear-gradient(135deg, var(--gold), #C8A000);
+    color: var(--dark);
+    border: none;
+    border-radius: 8px;
+    cursor: pointer;
+    letter-spacing: 2px;
+    box-shadow: 0 0 20px rgba(238,186,48,0.4);
+    transition: all 0.3s;
+    margin-top: 10px;
+  }
+  .btn-next:hover:not(:disabled) { transform: scale(1.05); box-shadow: 0 0 40px rgba(238,186,48,0.7); }
+  .btn-next:disabled { opacity: 0.4; cursor: not-allowed; }
+
+  /* Sparkles */
+  .sparkle {
+    position: fixed; pointer-events: none; z-index: 200;
+    font-size: 1.5rem;
+    animation: sparkleFly var(--dur,1s) forwards;
+  }
+  @keyframes sparkleFly {
+    0%  { transform: translate(0,0) scale(1); opacity:1; }
+    100%{ transform: translate(var(--dx),var(--dy)) scale(0); opacity:0; }
+  }
+
+  /* ── FINAL ── */
+  #page-final { gap: 30px; text-align: center; }
+  .final-title {
+    font-family:'Cinzel Decorative',serif;
+    font-size: clamp(1.8rem,4vw,3rem);
+    color: var(--gold);
+    text-shadow: 0 0 40px rgba(238,186,48,0.8);
+  }
+  .final-houses {
+    display: flex; gap: 20px; flex-wrap: wrap; justify-content:center; width:100%; max-width:1000px;
+  }
+  .final-house {
+    flex: 1; min-width: 200px; border-radius: 16px; padding: 20px;
+    border: 2px solid rgba(255,255,255,0.3);
+  }
+  .final-house-name { font-family:'Cinzel',serif; font-size:1.3rem; font-weight:700; margin-bottom:10px; }
+  .final-house-animal { font-size:2rem; margin-bottom:8px; }
+  .final-member { font-size:0.95rem; padding:4px 0; border-bottom:1px solid rgba(255,255,255,0.1); }
+  .btn-restart {
+    padding:12px 35px; font-family:'Cinzel',serif; font-size:1rem;
+    background:rgba(255,255,255,0.1); color:#fff; border:2px solid var(--gold);
+    border-radius:8px; cursor:pointer; transition:all 0.3s; letter-spacing:1px;
+  }
+  .btn-restart:hover { background:var(--gold); color:var(--dark); }
+
+  /* ── RESPONSIF ── */
+  @media(max-width:600px) {
+    .houses-bar { gap:6px; }
+    .house-card { min-width: 100px; padding: 8px 10px; }
+    .house-card-name { font-size:0.75rem; }
+    .house-card-count { font-size:1.4rem; }
+  }
+</style>
+</head>
+<body>
+
+<!-- ÉTOILES -->
+<div id="stars"></div>
+
+<!-- FLASH -->
+<div class="reveal-flash" id="flash"></div>
+
+<!-- ══════════════ PAGE INTRO ══════════════ -->
+<div class="page" id="page-intro">
+  <div class="title-main">⚗️ Cérémonie du<br>Choixpeau Magique</div>
+  <div class="title-sub">CM2 C · Poudlard · Anno MMXXVI</div>
+
+  <span class="hat-big">🎩</span>
+
+  <div class="house-preview">
+    <div class="house-chip" style="background:rgba(174,0,1,0.3);border-color:#AE0001;color:#EEBA30;">🦁 Gryffondor</div>
+    <div class="house-chip" style="background:rgba(26,71,42,0.3);border-color:#1A472A;color:#BBBBBB;">🐍 Serpentard</div>
+    <div class="house-chip" style="background:rgba(43,43,43,0.5);border-color:#F0C700;color:#F0C700;">🦡 Poufsouffle</div>
+    <div class="house-chip" style="background:rgba(14,26,64,0.4);border-color:#9B7B3A;color:#9B7B3A;">🦅 Serdaigle</div>
+  </div>
+
+  <button class="btn-start" onclick="startCeremony()">✨ Commencer la Cérémonie ✨</button>
+  <div style="display:flex;gap:12px;align-items:center;margin-top:16px;flex-wrap:wrap;justify-content:center;">
+    <button id="btn-mute" onclick="toggleMute()" style="background:rgba(255,255,255,0.1);border:1px solid #555;color:#AAA;padding:8px 18px;border-radius:20px;cursor:pointer;font-size:0.85rem;font-family:sans-serif;">🔊 Son activé</button>
+    <div style="font-size:0.85rem;color:#555;font-family:sans-serif;">25 élèves · 4 maisons · Répartition magique garantie</div>
+  </div>
+
+  <!-- Sélecteur de voix -->
+  <div style="margin-top:18px;background:rgba(255,255,255,0.05);border:1px solid rgba(238,186,48,0.3);border-radius:12px;padding:14px 20px;max-width:520px;width:100%;">
+    <div style="font-family:'Cinzel',serif;color:#EEBA30;font-size:0.85rem;margin-bottom:8px;text-align:center;letter-spacing:1px;">🎙️ VOIX DU CHOIXPEAU</div>
+    <select id="voice-select" onchange="changeVoice()" style="width:100%;padding:8px 12px;background:#1A1A2E;color:#fff;border:1px solid #EEBA30;border-radius:8px;font-size:0.9rem;cursor:pointer;">
+      <option>Chargement des voix...</option>
+    </select>
+    <div style="display:flex;gap:10px;margin-top:10px;align-items:center;flex-wrap:wrap;">
+      <div style="font-family:sans-serif;font-size:0.8rem;color:#888;">Grave :</div>
+      <input type="range" id="pitch-slider" min="0.1" max="1.5" step="0.05" value="0.55"
+        oninput="document.getElementById('pitch-val').textContent=this.value"
+        style="flex:1;accent-color:#EEBA30;">
+      <span id="pitch-val" style="color:#EEBA30;font-size:0.8rem;font-family:sans-serif;min-width:30px;">0.55</span>
+        <button onclick="testVoice()" style="background:rgba(238,186,48,0.2);border:1px solid #EEBA30;color:#EEBA30;padding:5px 14px;border-radius:6px;cursor:pointer;font-size:0.8rem;font-family:sans-serif;">▶ Tester</button>
+      <button onclick="loadVoices()" style="background:rgba(255,255,255,0.05);border:1px solid #555;color:#AAA;padding:5px 14px;border-radius:6px;cursor:pointer;font-size:0.8rem;font-family:sans-serif;">🔄 Rafraîchir</button>
+    </div>
+  </div>
+</div>
+
+<!-- ══════════════ PAGE SORTING ══════════════ -->
+<div class="page hidden" id="page-sorting">
+  <div class="sorting-header">
+    <div class="sorting-title">🎩 Le Choixpeau Parle...</div>
+    <div class="counter" id="counter">0 / 25 élèves triés</div>
+  </div>
+
+  <div class="houses-bar" id="houses-bar"></div>
+
+  <div class="arena">
+    <div class="hat-sorting" id="hat">🎩</div>
+    <div class="student-name-big" id="student-display">— Qui sera le suivant ? —</div>
+    <div class="speech-bubble" id="speech-text">Approchez, approchez... Le Choixpeau voit tout, sait tout.</div>
+    <div class="house-reveal" id="house-reveal"></div>
+    <button class="btn-next" id="btn-next" onclick="nextStudent()">🎲 Tirer au sort le prochain élève →</button>
+  </div>
+</div>
+
+<!-- ══════════════ PAGE FINAL ══════════════ -->
+<div class="page hidden" id="page-final">
+  <div class="final-title">🏆 Cérémonie Terminée !<br>Que la Coupe des Sorciers commence !</div>
+  <div class="final-houses" id="final-houses"></div>
+  <button class="btn-restart" onclick="restart()">🔄 Recommencer la cérémonie</button>
+</div>
+
+<script>
+// ──────────────────────────────────────────
+//  DONNÉES
+// ──────────────────────────────────────────
+const STUDENTS = [
+  'Youness','Walid','Thalya','Inès','Tuna',
+  'Samuel','Loan','Marie-Cécile','Adame','Chloé',
+  'Aidan','Neyla','Mathis','Lucas','Kamel Elyes',
+  'Kethianna','Ilknur','Tahiel','Sirine','Noussayba',
+  'Yacine','Ainhoa','Ilyes','Lukas','Mickaela'
+];
+
+const HOUSES = [
+  {
+    id:'gryffondor', name:'Gryffondor', animal:'🦁',
+    color:'#AE0001', accent:'#EEBA30', text:'#EEBA30',
+    values:'Bravoure · Courage · Chevalerie',
+    speeches:[
+      "Hmm... une bravoure extraordinaire... un cœur qui ne recule devant rien ! Je le sens vibrer en toi...",
+      "Quelle flamme ! Quel courage ! Tu n'hésites pas face au danger, tu fondes dedans !",
+      "Un esprit chevaleresque, une âme noble et courageuse... oui, oui, sans aucun doute...",
+      "Tu as le feu dans les veines ! Cette force, cette détermination à défendre ce qui est juste...",
+      "Loyal, vaillant, prêt à tout pour protéger ceux qui te sont chers...",
+      "Je sens en toi la bravoure de tes ancêtres... une force que tu ne soupçonnes pas encore !"
+    ]
+  },
+  {
+    id:'serpentard', name:'Serpentard', animal:'🐍',
+    color:'#1A472A', accent:'#BBBBBB', text:'#BBBBBB',
+    values:'Ruse · Ambition · Détermination',
+    speeches:[
+      "Tiens, tiens... quelle ruse ! Quel esprit vif et calculateur... tu vois toujours plusieurs coups d'avance...",
+      "Une ambition dévorante, une intelligence acérée comme une lame... intéressant, très intéressant...",
+      "La détermination coule dans tes veines. Tu sais ce que tu veux et comment l'obtenir.",
+      "Un esprit subtil, perspicace... tu n'agis jamais sans avoir réfléchi à toutes les conséquences.",
+      "Hmm... rusé, ambitieux, malin comme un serpent... cette maison te fera honneur !",
+      "Ta ténacité est remarquable. Tu atteins toujours ton but, quoi qu'il arrive."
+    ]
+  },
+  {
+    id:'poufsouffle', name:'Poufsouffle', animal:'🦡',
+    color:'#2B2B2B', accent:'#F0C700', text:'#F0C700',
+    values:'Loyauté · Patience · Travail',
+    speeches:[
+      "Ah, quelle loyauté ! Tu ne trahiras jamais ceux que tu aimes. C'est une force rare et précieuse...",
+      "Un travailleur infatigable ! La patience et la persévérance sont tes plus grandes qualités.",
+      "Tu es juste, honnête, digne de confiance. Tes amis peuvent compter sur toi en toutes circonstances.",
+      "Je sens en toi une bonté sincère, un sens du travail bien fait qui force l'admiration.",
+      "Humble et laborieux, tu avances pas à pas mais tu arrives toujours à destination !",
+      "Quelle bienveillance ! Quel sens de la justice ! Tu trouves le bon en chaque personne."
+    ]
+  },
+  {
+    id:'serdaigle', name:'Serdaigle', animal:'🦅',
+    color:'#0E1A40', accent:'#9B7B3A', text:'#9B7B3A',
+    values:'Sagesse · Intelligence · Créativité',
+    speeches:[
+      "Quelle intelligence remarquable ! Ton esprit est une bibliothèque infinie, toujours en quête de savoir...",
+      "Une curiosité insatiable, une créativité débordante... les mystères du monde n'ont aucun secret pour toi.",
+      "Sagesse et perspicacité... tu poses les bonnes questions là où les autres ne voient que des réponses.",
+      "Ton imagination est un don extraordinaire. Tu vois des connexions que personne d'autre ne perçoit.",
+      "Un esprit analytique et curieux... tu apprends vite, tu retiens tout, tu comprends l'essentiel.",
+      "La sagesse de tes réflexions dépasse ton âge. Ta maison sera fière de toi !"
+    ]
+  }
+];
+
+// ──────────────────────────────────────────
+//  ÉTAT
+// ──────────────────────────────────────────
+let assignments = []; // [{student, house}]
+let currentIdx  = -1;
+let houseMembers = {gryffondor:[],serpentard:[],poufsouffle:[],serdaigle:[]};
+let speechIdx = {gryffondor:0,serpentard:0,poufsouffle:0,serdaigle:0};
+let isAnimating = false;
+let currentHouseId = null;
+
+// ──────────────────────────────────────────
+//  UTILITAIRES
+// ──────────────────────────────────────────
+function shuffle(arr) {
+  const a = [...arr];
+  for (let i = a.length - 1; i > 0; i--) {
+    const j = Math.floor(Math.random() * (i+1));
+    [a[i],a[j]] = [a[j],a[i]];
+  }
+  return a;
+}
+
+function createAssignments() {
+  const shuffledStudents = shuffle(STUDENTS);
+  const counts = shuffle([7,6,6,6]); // one house gets 7, randomly chosen
+  const result = [];
+  let idx = 0;
+  for (let h = 0; h < 4; h++) {
+    for (let i = 0; i < counts[h]; i++) {
+      result.push({ student: shuffledStudents[idx++], houseIdx: h });
+    }
+  }
+  return shuffle(result);
+}
+
+function makeStars() {
+  const container = document.getElementById('stars');
+  for (let i = 0; i < 120; i++) {
+    const s = document.createElement('div');
+    s.className = 'star';
+    const size = Math.random()*2+1;
+    s.style.cssText = `
+      width:${size}px;height:${size}px;
+      top:${Math.random()*100}%;left:${Math.random()*100}%;
+      --dur:${2+Math.random()*4}s;--delay:${Math.random()*3}s;
+    `;
+    container.appendChild(s);
+  }
+}
+
+function buildHousesBar() {
+  const bar = document.getElementById('houses-bar');
+  bar.innerHTML = '';
+  HOUSES.forEach(h => {
+    const card = document.createElement('div');
+    card.className = 'house-card';
+    card.id = `hcard-${h.id}`;
+    card.style.background = h.color + '33';
+    card.style.borderColor = h.accent + '88';
+    card.innerHTML = `
+      <div class="house-card-name" style="color:${h.accent}">${h.animal} ${h.name}</div>
+      <div class="house-card-count" style="color:${h.accent}" id="count-${h.id}">0</div>
+      <div class="house-card-members" id="members-${h.id}"></div>
+    `;
+    bar.appendChild(card);
+  });
+}
+
+function updateHouseCard(houseId, memberName) {
+  const count = houseMembers[houseId].length;
+  document.getElementById(`count-${houseId}`).textContent = count;
+  const membersEl = document.getElementById(`members-${houseId}`);
+  membersEl.innerHTML = houseMembers[houseId].map(n => `<div>⚡ ${n}</div>`).join('');
+
+  const card = document.getElementById(`hcard-${houseId}`);
+  const h = HOUSES.find(x => x.id === houseId);
+  card.style.borderColor = h.accent;
+  card.style.boxShadow = `0 0 15px ${h.accent}66`;
+}
+
+function spawnSparkles(color) {
+  const cx = window.innerWidth/2, cy = window.innerHeight/2;
+  const emojis = ['✨','⭐','💫','🌟','✦','*'];
+  for (let i = 0; i < 18; i++) {
+    const el = document.createElement('div');
+    el.className = 'sparkle';
+    const angle = (i/18)*Math.PI*2;
+    const dist = 80+Math.random()*200;
+    el.style.cssText = `
+      left:${cx}px;top:${cy}px;
+      color:${color};
+      --dx:${Math.cos(angle)*dist}px;
+      --dy:${Math.sin(angle)*dist}px;
+      --dur:${0.6+Math.random()*0.8}s;
+    `;
+    el.textContent = emojis[Math.floor(Math.random()*emojis.length)];
+    document.body.appendChild(el);
+    setTimeout(()=>el.remove(), 1500);
+  }
+}
+
+function typeText(el, text, cb) {
+  el.textContent = '';
+  let i = 0;
+  const timer = setInterval(() => {
+    if (i < text.length) { el.textContent += text[i++]; }
+    else { clearInterval(timer); if(cb) cb(); }
+  }, 22);
+}
+
+// ──────────────────────────────────────────
+//  MUTE
+// ──────────────────────────────────────────
+let muted = false;
+function toggleMute() {
+  muted = !muted;
+  document.getElementById('btn-mute').textContent = muted ? '🔇 Son coupé' : '🔊 Son activé';
+  if (muted) window.speechSynthesis.cancel();
+}
+const _speak = speak;
+speak = function(text, opts) { if (!muted) _speak(text, opts); };
+
+// ──────────────────────────────────────────
+//  LOGIQUE CÉRÉMONIE
+// ──────────────────────────────────────────
+function startCeremony() {
+  assignments = createAssignments();
+  houseMembers = {gryffondor:[],serpentard:[],poufsouffle:[],serdaigle:[]};
+  speechIdx = {gryffondor:0,serpentard:0,poufsouffle:0,serdaigle:0};
+  currentIdx = -1;
+  currentHouseId = null;
+
+  document.getElementById('page-intro').classList.add('hidden');
+  document.getElementById('page-sorting').classList.remove('hidden');
+  buildHousesBar();
+
+  document.getElementById('student-display').textContent = '— Qui sera le suivant ? —';
+  document.getElementById('speech-text').textContent = 'Approchez, approchez... Le Choixpeau voit tout, sait tout.';
+  // Discours de bienvenue
+  setTimeout(() => speak(
+    "Bienvenue à Poudlard ! Je suis le Choixpeau Magique. Je vais vous révéler votre destinée. Approchez sans crainte... je vois tout, je sais tout.",
+    { pitch: 0.50, rate: 0.78 }
+  ), 400);
+  document.getElementById('house-reveal').textContent = '';
+  document.getElementById('house-reveal').className = 'house-reveal';
+  document.getElementById('counter').textContent = '0 / 25 élèves triés';
+}
+
+function nextStudent() {
+  if (isAnimating) return;
+  currentIdx++;
+
+  if (currentIdx >= assignments.length) {
+    showFinal();
+    return;
+  }
+
+  isAnimating = true;
+  const btn = document.getElementById('btn-next');
+  btn.disabled = true;
+
+  const {student, houseIdx} = assignments[currentIdx];
+  const house = HOUSES[houseIdx];
+  currentHouseId = house.id;
+
+  // Reset reveal
+  const revealEl = document.getElementById('house-reveal');
+  revealEl.className = 'house-reveal';
+  revealEl.textContent = '';
+  revealEl.style.color = '';
+
+  // Student name appears
+  const nameEl = document.getElementById('student-display');
+  nameEl.textContent = student;
+  nameEl.style.color = '#fff';
+
+  // Hat shakes
+  const hat = document.getElementById('hat');
+  hat.classList.add('shaking');
+  document.getElementById('speech-text').textContent = '...';
+
+  // Phase 1: suspense (1.5s)
+  setTimeout(() => {
+    const speech = house.speeches[speechIdx[house.id] % house.speeches.length];
+    speechIdx[house.id]++;
+    // Le chapeau parle ET le texte se tape en même temps
+    speak(speech, { pitch: 0.55, rate: 0.80 });
+    typeText(document.getElementById('speech-text'), speech, () => {});
+  }, 600);
+
+  // Phase 2: révélation (3.5s après)
+  setTimeout(() => {
+    hat.classList.remove('shaking');
+
+    // Flash
+    const flash = document.getElementById('flash');
+    flash.style.background = house.color;
+    flash.classList.add('active');
+    setTimeout(()=>flash.classList.remove('active'), 800);
+
+    // Sparkles
+    spawnSparkles(house.accent);
+
+    // House reveal + voix qui crie le nom de la maison
+    revealEl.style.color = house.accent;
+    revealEl.textContent = `${house.animal} ${house.name.toUpperCase()} !`;
+    revealEl.classList.add('show');
+    setTimeout(() => speak(`${house.name} !`, { pitch: 0.4, rate: 0.6, volume: 1.0 }), 300);
+
+    // Update house
+    houseMembers[house.id].push(student);
+    updateHouseCard(house.id);
+
+    // Counter
+    document.getElementById('counter').textContent = `${currentIdx+1} / 25 élèves triés`;
+
+    // Bouton suivant
+    const isLast = currentIdx === assignments.length - 1;
+    btn.textContent = isLast ? '🏆 Voir les résultats finaux !' : '🎲 Tirer au sort le prochain élève →';
+    btn.disabled = false;
+    isAnimating = false;
+
+  }, 3500);
+}
+
+function showFinal() {
+  document.getElementById('page-sorting').classList.add('hidden');
+  document.getElementById('page-final').classList.remove('hidden');
+
+  const container = document.getElementById('final-houses');
+  container.innerHTML = '';
+  HOUSES.forEach(h => {
+    const div = document.createElement('div');
+    div.className = 'final-house';
+    div.style.background = h.color + '44';
+    div.style.borderColor = h.accent;
+    div.innerHTML = `
+      <div class="final-house-animal">${h.animal}</div>
+      <div class="final-house-name" style="color:${h.accent}">${h.name}</div>
+      <div style="font-size:0.8rem;color:#AAA;margin-bottom:10px;font-style:italic;">${h.values}</div>
+      <div style="font-size:1.1rem;font-weight:bold;color:${h.accent};margin-bottom:8px;">${houseMembers[h.id].length} élèves</div>
+      ${houseMembers[h.id].map(n=>`<div class="final-member">⚡ ${n}</div>`).join('')}
+    `;
+    container.appendChild(div);
+  });
+
+  // Sparkles finaux
+  for(let i=0;i<3;i++) setTimeout(()=>spawnSparkles('#EEBA30'), i*400);
+}
+
+function restart() {
+  document.getElementById('page-final').classList.add('hidden');
+  document.getElementById('page-intro').classList.remove('hidden');
+}
+
+// ──────────────────────────────────────────
+//  SYNTHÈSE VOCALE — LE CHAPEAU PARLE
+// ──────────────────────────────────────────
+let frVoice = null;
+let allVoices = [];
+
+function loadVoices() {
+  allVoices = window.speechSynthesis.getVoices();
+  if (!allVoices.length) return;
+
+  // Auto-sélection : préfère voix françaises, sinon prend la première
+  frVoice = allVoices.find(v => v.lang.startsWith('fr') && v.name.toLowerCase().includes('thomas'))
+         || allVoices.find(v => v.lang.startsWith('fr') && v.name.toLowerCase().includes('henri'))
+         || allVoices.find(v => v.lang.startsWith('fr') && !v.name.toLowerCase().includes('female') && !v.name.toLowerCase().includes('woman'))
+         || allVoices.find(v => v.lang.startsWith('fr'))
+         || allVoices[0];
+
+  // Peupler le menu déroulant
+  const sel = document.getElementById('voice-select');
+  if (!sel) return;
+  sel.innerHTML = '';
+  allVoices.forEach((v, i) => {
+    const opt = document.createElement('option');
+    opt.value = i;
+    const flag = v.lang.startsWith('fr') ? '🇫🇷 ' : (v.lang.startsWith('en') ? '🇬🇧 ' : '🌐 ');
+    opt.textContent = `${flag}${v.name} (${v.lang})`;
+    opt.selected = v === frVoice;
+    sel.appendChild(opt);
+  });
+}
+
+function changeVoice() {
+  const idx = document.getElementById('voice-select').value;
+  frVoice = allVoices[idx];
+}
+
+function testVoice() {
+  const pitch = parseFloat(document.getElementById('pitch-slider').value);
+  speak("Silence ! Je suis le Choixpeau Magique, et je vais révéler votre destinée !", { pitch, rate: 0.80 });
+}
+
+// Les voix se chargent de façon asynchrone dans Chrome
+window.speechSynthesis.onvoiceschanged = loadVoices;
+loadVoices();
+
+function speak(text, options = {}) {
+  window.speechSynthesis.cancel();
+  const utt = new SpeechSynthesisUtterance(text);
+  utt.voice = frVoice;
+  utt.lang  = frVoice ? frVoice.lang : 'fr-FR';
+  // Utilise le slider si disponible, sinon la valeur passée en option
+  const sliderPitch = parseFloat(document.getElementById('pitch-slider')?.value ?? 0.55);
+  utt.pitch = options.pitch ?? sliderPitch;
+  utt.rate  = options.rate  ?? 0.82;
+  utt.volume= options.volume?? 1.0;
+  window.speechSynthesis.speak(utt);
+  return utt;
+}
+
+// ──────────────────────────────────────────
+//  INIT
+// ──────────────────────────────────────────
+makeStars();
+</script>
+</body>
+</html>

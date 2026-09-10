@@ -1,0 +1,832 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Défi 2 — Sortilèges de Grammaire · CM2</title>
+<link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;700&family=IM+Fell+English:ital@0;1&display=swap" rel="stylesheet">
+<style>
+/* ── MISE EN PAGE A4 ────────────────────────────────────────────────── */
+@page {
+  size: A4 portrait;
+  margin: 14mm 15mm 14mm 15mm;
+}
+
+* { box-sizing: border-box; margin: 0; padding: 0; }
+
+body {
+  font-family: 'IM Fell English', Georgia, serif;
+  font-size: 10.5pt;
+  color: #1A1A2E;
+  background: white;
+  line-height: 1.45;
+}
+
+.page {
+  width: 180mm;
+  min-height: 267mm;
+  margin: 0 auto;
+  background: white;
+  padding-bottom: 6mm;
+}
+
+@media print {
+  body { margin: 0; }
+  .page { width: 100%; margin: 0; }
+  .page-break { page-break-after: always; }
+  .no-print { display: none !important; }
+}
+
+/* ── EN-TÊTE ─────────────────────────────────────────────────────────── */
+.header-band {
+  background: #1A1A2E;
+  color: white;
+  padding: 5mm 6mm 4mm;
+  border-bottom: 3px solid #EEBA30;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 0;
+}
+
+.header-left { display: flex; align-items: center; gap: 4mm; }
+
+.defi-badge {
+  font-family: 'Cinzel', serif;
+  font-weight: 700;
+  font-size: 8.5pt;
+  background: #EEBA30;
+  color: #1A1A2E;
+  padding: 1.5mm 3mm;
+  border-radius: 2mm;
+  letter-spacing: .08em;
+  white-space: nowrap;
+}
+
+.header-title {
+  font-family: 'Cinzel', serif;
+  font-size: 14pt;
+  font-weight: 700;
+  color: #EEBA30;
+  letter-spacing: .04em;
+}
+
+.header-subtitle {
+  font-size: 8pt;
+  color: #AAAACC;
+  margin-top: 1mm;
+  font-style: italic;
+  font-family: Georgia, serif;
+}
+
+.header-right {
+  text-align: right;
+  font-size: 8pt;
+  color: #AAAACC;
+  line-height: 1.6;
+  font-family: Georgia, serif;
+}
+
+.student-line {
+  border-bottom: 1px solid #EEBA3066;
+  display: inline-block;
+  min-width: 35mm;
+  margin-bottom: 1mm;
+}
+
+.score-box {
+  background: rgba(238,186,48,.15);
+  border: 1px solid #EEBA3055;
+  border-radius: 1.5mm;
+  padding: 1mm 2.5mm;
+  color: #EEBA30;
+  font-weight: 700;
+  font-family: 'Cinzel', serif;
+  font-size: 9pt;
+  margin-top: 1mm;
+  display: inline-block;
+}
+
+/* Bandeau infos élève */
+.student-band {
+  background: #F8F5E4;
+  border: 1px solid #EEBA3055;
+  padding: 2.5mm 5mm;
+  display: flex;
+  gap: 8mm;
+  align-items: center;
+  font-size: 9pt;
+  flex-wrap: wrap;
+}
+
+.student-band label { font-weight: 700; color: #1A1A2E; }
+.field-line {
+  border-bottom: 1px solid #888;
+  display: inline-block;
+  min-width: 38mm;
+  height: 4mm;
+}
+.score-field {
+  border-bottom: 1px solid #888;
+  display: inline-block;
+  min-width: 16mm;
+  height: 4mm;
+}
+
+/* ── INTRO ───────────────────────────────────────────────────────────── */
+.intro-box {
+  background: linear-gradient(135deg, #1A1A2E08, #EEBA3012);
+  border: 1.5px solid #EEBA3044;
+  border-left: 4px solid #EEBA30;
+  border-radius: 0 2mm 2mm 0;
+  padding: 2.5mm 4mm;
+  font-size: 9pt;
+  font-style: italic;
+  color: #4A3800;
+  margin: 3mm 0;
+  line-height: 1.5;
+}
+
+.intro-box .lightning { color: #EEBA30; font-style: normal; }
+
+/* ── EXERCICE ────────────────────────────────────────────────────────── */
+.exercise {
+  margin-bottom: 4mm;
+  border: 1px solid #D4C06022;
+  border-radius: 2mm;
+  overflow: hidden;
+}
+
+.ex-header {
+  background: #1A1A2E;
+  color: white;
+  padding: 2mm 4mm;
+  display: flex;
+  align-items: center;
+  gap: 3mm;
+}
+
+.ex-number {
+  font-family: 'Cinzel', serif;
+  font-size: 8pt;
+  color: #EEBA30;
+  font-weight: 700;
+  letter-spacing: .06em;
+  white-space: nowrap;
+}
+
+.ex-title {
+  font-size: 10pt;
+  font-weight: 700;
+  font-family: 'Cinzel', serif;
+  color: white;
+  flex: 1;
+}
+
+.ex-points {
+  background: #EEBA30;
+  color: #1A1A2E;
+  font-family: 'Cinzel', serif;
+  font-size: 7.5pt;
+  font-weight: 700;
+  padding: 0.5mm 2mm;
+  border-radius: 1.5mm;
+  white-space: nowrap;
+}
+
+.ex-body {
+  padding: 3mm 4.5mm;
+  background: white;
+}
+
+.ex-instruction {
+  font-size: 9pt;
+  font-style: italic;
+  color: #4A3800;
+  margin-bottom: 2.5mm;
+  border-left: 3px solid #EEBA3066;
+  padding-left: 2.5mm;
+}
+
+/* ── TABLEAU ANALYSE ─────────────────────────────────────────────────── */
+.analyse-table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 9.5pt;
+  margin-top: 1mm;
+}
+
+.analyse-table th {
+  background: #2D2060;
+  color: #EEBA30;
+  font-family: 'Cinzel', serif;
+  font-weight: 700;
+  font-size: 8pt;
+  padding: 2mm 3mm;
+  border: 1px solid #EEBA3033;
+  text-align: center;
+  letter-spacing: .04em;
+}
+
+.analyse-table td {
+  border: 1px solid #D4D4D4;
+  padding: 2mm 3mm;
+  vertical-align: middle;
+  font-size: 9pt;
+}
+
+.analyse-table tr:nth-child(even) td { background: #FAFAF5; }
+.analyse-table .given { font-style: italic; color: #4A3800; font-weight: 600; }
+.analyse-table .answer-cell { background: #FFFEF5; }
+
+.exemple-tag {
+  background: #EEBA3022;
+  border: 1px solid #EEBA3055;
+  border-radius: 1mm;
+  font-size: 7pt;
+  color: #8B6914;
+  padding: 0.2mm 1.5mm;
+  font-family: sans-serif;
+  font-style: normal;
+  font-weight: 700;
+  vertical-align: middle;
+}
+
+/* ── EXERCICE 2 — ACCORDS ────────────────────────────────────────────── */
+.accord-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 1.5mm 5mm;
+  margin-top: 1mm;
+}
+
+.accord-item {
+  display: flex;
+  align-items: baseline;
+  gap: 1.5mm;
+  font-size: 9.5pt;
+}
+
+.accord-num {
+  font-weight: 700;
+  color: #1A1A2E;
+  font-family: 'Cinzel', serif;
+  font-size: 8pt;
+  min-width: 4mm;
+}
+
+.accord-text { flex: 1; }
+.accord-blank {
+  border-bottom: 1px solid #888;
+  display: inline-block;
+  min-width: 36mm;
+  height: 3.5mm;
+  vertical-align: bottom;
+}
+
+/* ── EXERCICE 3 — ENRICHISSEMENT ─────────────────────────────────────── */
+.enrich-list {
+  margin-top: 1mm;
+}
+
+.enrich-item {
+  margin-bottom: 2.8mm;
+  font-size: 9.5pt;
+}
+
+.enrich-tag {
+  display: inline-block;
+  background: #1A1A2E;
+  color: #EEBA30;
+  font-family: 'Cinzel', serif;
+  font-size: 7pt;
+  font-weight: 700;
+  padding: 0.5mm 2mm;
+  border-radius: 1mm;
+  margin-right: 1.5mm;
+  vertical-align: middle;
+  letter-spacing: .04em;
+}
+
+.enrich-prompt { font-style: italic; color: #333; }
+.enrich-blank {
+  border-bottom: 1px solid #888;
+  display: inline-block;
+  min-width: 80mm;
+  height: 3.5mm;
+  vertical-align: bottom;
+}
+
+.enrich-wide {
+  border-bottom: 1px solid #888;
+  display: block;
+  width: 100%;
+  height: 3.5mm;
+  margin-top: 1mm;
+}
+
+.reminder-box {
+  background: #FFFBEB;
+  border: 1px solid #EEBA3055;
+  border-radius: 1.5mm;
+  padding: 1.5mm 3mm;
+  font-size: 8pt;
+  color: #78550A;
+  margin-top: 2mm;
+}
+
+.reminder-box strong { color: #1A1A2E; }
+
+/* ── EXERCICE 4 — PRODUCTION ─────────────────────────────────────────── */
+.sortilege-name {
+  display: flex;
+  align-items: center;
+  gap: 2mm;
+  margin-bottom: 2mm;
+  font-size: 9.5pt;
+}
+
+.name-blank {
+  border-bottom: 1.5px solid #1A1A2E;
+  flex: 1;
+  height: 4mm;
+}
+
+.writing-label {
+  font-weight: 700;
+  font-size: 9pt;
+  color: #1A1A2E;
+  margin: 2mm 0 1mm;
+}
+
+.writing-example {
+  background: #F0FFF0;
+  border-left: 3px solid #22C55E;
+  padding: 1.5mm 3mm;
+  font-size: 8.5pt;
+  font-style: italic;
+  color: #14532D;
+  margin-bottom: 1.5mm;
+  border-radius: 0 1mm 1mm 0;
+}
+
+.writing-line {
+  border-bottom: 1px solid #CCC;
+  width: 100%;
+  height: 6mm;
+  display: block;
+  margin-bottom: 1.5mm;
+}
+
+.analyse-mini {
+  margin-top: 2mm;
+  font-weight: 700;
+  font-size: 9pt;
+  color: #1A1A2E;
+  margin-bottom: 1.5mm;
+}
+
+.gn-row {
+  display: flex;
+  gap: 2mm;
+  align-items: center;
+  margin-bottom: 1.5mm;
+  font-size: 8.5pt;
+  flex-wrap: wrap;
+}
+
+.gn-label {
+  font-family: 'Cinzel', serif;
+  font-weight: 700;
+  color: #EEBA30;
+  background: #1A1A2E;
+  padding: 0.5mm 2mm;
+  border-radius: 1mm;
+  font-size: 7.5pt;
+  white-space: nowrap;
+}
+
+.gn-field {
+  display: inline-flex;
+  align-items: center;
+  gap: 1mm;
+  font-size: 8.5pt;
+}
+
+.gn-blank {
+  border-bottom: 1px solid #888;
+  display: inline-block;
+  min-width: 22mm;
+  height: 3.5mm;
+  vertical-align: bottom;
+}
+
+.gn-proc-blank {
+  border-bottom: 1px solid #888;
+  display: inline-block;
+  min-width: 30mm;
+  height: 3.5mm;
+  vertical-align: bottom;
+}
+
+/* ── PIED DE PAGE ────────────────────────────────────────────────────── */
+.page-footer {
+  border-top: 1.5px solid #EEBA3055;
+  padding-top: 2mm;
+  margin-top: 4mm;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  font-size: 7.5pt;
+  color: #999;
+  font-family: Georgia, serif;
+}
+
+.footer-logo {
+  font-family: 'Cinzel', serif;
+  color: #EEBA30;
+  font-size: 8pt;
+  font-weight: 700;
+}
+
+/* ── BOUTON IMPRIMER (masqué à l'impression) ─────────────────────────── */
+.print-btn {
+  position: fixed;
+  bottom: 20px;
+  right: 20px;
+  background: #1A1A2E;
+  color: #EEBA30;
+  border: 2px solid #EEBA30;
+  padding: 10px 22px;
+  border-radius: 999px;
+  font-family: 'Cinzel', serif;
+  font-weight: 700;
+  font-size: 12px;
+  cursor: pointer;
+  letter-spacing: .06em;
+  transition: all .2s;
+  z-index: 100;
+}
+.print-btn:hover { background: #EEBA30; color: #1A1A2E; }
+
+/* séparateur de page en aperçu */
+.page-break {
+  border: none;
+  border-top: 2px dashed #EEBA3033;
+  margin: 8mm 0;
+}
+@media print { .page-break { display: none; } }
+</style>
+</head>
+<body>
+
+<button class="print-btn no-print" onclick="window.print()">⎙ Imprimer</button>
+
+<!-- ══════════════════════ PAGE 1 ══════════════════════════════════════════ -->
+<div class="page">
+
+  <!-- EN-TÊTE -->
+  <div class="header-band">
+    <div class="header-left">
+      <div class="defi-badge">DÉFI 2</div>
+      <div>
+        <div class="header-title">Sortilèges de Grammaire</div>
+        <div class="header-subtitle">⚡ Harry Potter &ensp;·&ensp; Groupe Nominal &ensp;·&ensp; CM2 &ensp;·&ensp; Lundi 11 mai 2026</div>
+      </div>
+    </div>
+    <div class="header-right">
+      <div>Maison : <span class="student-line">&nbsp;</span></div>
+      <div>Prénom : <span class="student-line">&nbsp;</span></div>
+      <div class="score-box">Score : &ensp;&ensp;&ensp;/ 30</div>
+    </div>
+  </div>
+
+  <!-- INTRO -->
+  <div class="intro-box">
+    <span class="lightning">⚡</span> <strong>Mission :</strong> Pour lancer des sortilèges puissants,
+    tout apprenti sorcier doit maîtriser les <strong>Groupes Nominaux</strong>.
+    Relève les 4 défis pour prouver ta valeur à Poudlard !
+    &ensp;<em>Durée : 45 minutes · Total : 30 points</em>
+  </div>
+
+  <!-- ── EXERCICE 1 ─────────────────────────────────────────────────────── -->
+  <div class="exercise">
+    <div class="ex-header">
+      <div class="ex-number">EXERCICE 1</div>
+      <div class="ex-title">Analyse les descriptions de sortilèges !</div>
+      <div class="ex-points">6 pts</div>
+    </div>
+    <div class="ex-body">
+      <div class="ex-instruction">
+        Identifie les éléments de chaque Groupe Nominal.
+        La première ligne est donnée en exemple.
+      </div>
+
+      <table class="analyse-table">
+        <thead>
+          <tr>
+            <th style="width:44%">Description du sortilège</th>
+            <th style="width:18%">Déterminant</th>
+            <th style="width:24%">Adjectif(s) épithète</th>
+            <th style="width:14%">Nom</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td class="given">une <u>lumière</u> éblouissante <span class="exemple-tag">EXEMPLE</span></td>
+            <td class="given" style="text-align:center">une</td>
+            <td class="given" style="text-align:center">éblouissante</td>
+            <td class="given" style="text-align:center">lumière</td>
+          </tr>
+          <tr>
+            <td class="given">le vieux <u>grimoire</u> poussiéreux</td>
+            <td class="answer-cell">&nbsp;</td>
+            <td class="answer-cell">&nbsp;</td>
+            <td class="answer-cell">&nbsp;</td>
+          </tr>
+          <tr>
+            <td class="given">des <u>formules</u> magiques</td>
+            <td class="answer-cell">&nbsp;</td>
+            <td class="answer-cell">&nbsp;</td>
+            <td class="answer-cell">&nbsp;</td>
+          </tr>
+          <tr>
+            <td class="given">un <u>bouclier</u> brillant et invisible</td>
+            <td class="answer-cell">&nbsp;</td>
+            <td class="answer-cell">&nbsp;</td>
+            <td class="answer-cell">&nbsp;</td>
+          </tr>
+          <tr>
+            <td class="given">les puissants <u>sortilèges</u> dorés</td>
+            <td class="answer-cell">&nbsp;</td>
+            <td class="answer-cell">&nbsp;</td>
+            <td class="answer-cell">&nbsp;</td>
+          </tr>
+          <tr>
+            <td class="given">une longue <u>baguette</u> de bois</td>
+            <td class="answer-cell">&nbsp;</td>
+            <td class="answer-cell">&nbsp;</td>
+            <td class="answer-cell">&nbsp;</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+  <!-- ── EXERCICE 2 ─────────────────────────────────────────────────────── -->
+  <div class="exercise">
+    <div class="ex-header">
+      <div class="ex-number">EXERCICE 2</div>
+      <div class="ex-title">Accorde les adjectifs — le sortilège doit être précis !</div>
+      <div class="ex-points">8 pts</div>
+    </div>
+    <div class="ex-body">
+      <div class="ex-instruction">
+        Accorde correctement l'adjectif entre parenthèses et écris le GN complet sur la ligne.
+        Attention au genre et au nombre du nom !
+      </div>
+
+      <div class="accord-grid">
+
+        <div class="accord-item">
+          <span class="accord-num">1.</span>
+          <span class="accord-text">
+            une potion <em>(mystérieux)</em><br>
+            → <span class="accord-blank"></span>
+          </span>
+        </div>
+
+        <div class="accord-item">
+          <span class="accord-num">2.</span>
+          <span class="accord-text">
+            des formules <em>(ancien)</em><br>
+            → <span class="accord-blank"></span>
+          </span>
+        </div>
+
+        <div class="accord-item">
+          <span class="accord-num">3.</span>
+          <span class="accord-text">
+            un bouclier <em>(invisible)</em><br>
+            → <span class="accord-blank"></span>
+          </span>
+        </div>
+
+        <div class="accord-item">
+          <span class="accord-num">4.</span>
+          <span class="accord-text">
+            des dragons <em>(puissant)</em><br>
+            → <span class="accord-blank"></span>
+          </span>
+        </div>
+
+        <div class="accord-item">
+          <span class="accord-num">5.</span>
+          <span class="accord-text">
+            une cape <em>(magique et léger)</em><br>
+            → <span class="accord-blank"></span>
+          </span>
+        </div>
+
+        <div class="accord-item">
+          <span class="accord-num">6.</span>
+          <span class="accord-text">
+            des éclairs <em>(brillant et doré)</em><br>
+            → <span class="accord-blank"></span>
+          </span>
+        </div>
+
+        <div class="accord-item">
+          <span class="accord-num">7.</span>
+          <span class="accord-text">
+            une sorcière <em>(vieux et sage)</em><br>
+            → <span class="accord-blank"></span>
+          </span>
+        </div>
+
+        <div class="accord-item">
+          <span class="accord-num">8.</span>
+          <span class="accord-text">
+            un beau <em>(chapeau)</em> pointu → pluriel :<br>
+            → <span class="accord-blank"></span>
+          </span>
+        </div>
+
+      </div>
+    </div>
+  </div>
+
+  <!-- PIED DE PAGE 1 -->
+  <div class="page-footer">
+    <span class="footer-logo">⚡ Poudlard · CM2</span>
+    <span>Dylan Collery · Défi 2 · Page 1/2</span>
+    <span>Groupe Nominal — Accord des adjectifs</span>
+  </div>
+
+</div><!-- fin page 1 -->
+
+<!-- Séparateur visible en aperçu navigateur -->
+<hr class="page-break">
+
+<!-- ══════════════════════ PAGE 2 ══════════════════════════════════════════ -->
+<div class="page">
+
+  <!-- Mini en-tête page 2 -->
+  <div style="display:flex;justify-content:space-between;align-items:center;
+              border-bottom:2px solid #EEBA30;padding-bottom:2mm;margin-bottom:3mm">
+    <span style="font-family:'Cinzel',serif;font-size:9pt;color:#1A1A2E;font-weight:700">
+      ⚡ DÉFI 2 — Sortilèges de Grammaire
+    </span>
+    <span style="font-size:8pt;color:#999;font-family:Georgia,serif">
+      Prénom : <span class="student-line" style="min-width:30mm">&nbsp;</span>
+      &ensp; Page 2/2
+    </span>
+  </div>
+
+  <!-- ── EXERCICE 3 ─────────────────────────────────────────────────────── -->
+  <div class="exercise">
+    <div class="ex-header">
+      <div class="ex-number">EXERCICE 3</div>
+      <div class="ex-title">Enrichis les GN — rends les sortilèges plus puissants !</div>
+      <div class="ex-points">8 pts</div>
+    </div>
+    <div class="ex-body">
+      <div class="ex-instruction">
+        Enrichis chaque GN avec le procédé indiqué. Utilise le thème Harry Potter pour tes réponses !
+      </div>
+
+      <div class="enrich-list">
+
+        <div class="enrich-item">
+          <span class="enrich-tag">Adj. AVANT</span>
+          <span class="enrich-prompt">« une cape »</span> → une
+          <span class="enrich-blank"></span> cape
+        </div>
+
+        <div class="enrich-item">
+          <span class="enrich-tag">Adj. APRÈS</span>
+          <span class="enrich-prompt">« un sortilège »</span> → un sortilège
+          <span class="enrich-blank"></span>
+        </div>
+
+        <div class="enrich-item">
+          <span class="enrich-tag">CDN</span>
+          <span class="enrich-prompt">« la baguette »</span> → la baguette de
+          <span class="enrich-blank"></span>
+        </div>
+
+        <div class="enrich-item">
+          <span class="enrich-tag">RELATIVE</span>
+          <span class="enrich-prompt">« un sorcier »</span> → un sorcier qui
+          <span class="enrich-blank"></span>
+        </div>
+
+        <div class="enrich-item">
+          <span class="enrich-tag">Adj. + CDN</span>
+          <span class="enrich-prompt">« un dragon »</span> →
+          <span class="enrich-blank" style="min-width:100mm"></span>
+        </div>
+
+        <div class="enrich-item">
+          <span class="enrich-tag">Adj. + RELATIVE</span>
+          <span class="enrich-prompt">« une potion »</span> →
+          <span class="enrich-blank" style="min-width:95mm"></span>
+        </div>
+
+        <div class="enrich-item">
+          <span class="enrich-tag">PLURIEL</span>
+          <span class="enrich-prompt">« un beau chapeau pointu »</span> →
+          <span class="enrich-blank" style="min-width:70mm"></span>
+        </div>
+
+        <div class="enrich-item">
+          <span class="enrich-tag">GN CHAMPION</span>
+          <span class="enrich-prompt">« une baguette » (au moins 4 procédés)</span> →
+          <span class="enrich-wide"></span>
+        </div>
+
+      </div>
+
+      <div class="reminder-box">
+        <strong>Rappel des procédés :</strong> &ensp;
+        Adj. avant le nom (grand, vieux…) &ensp;|&ensp;
+        Adj. après le nom (magique, doré…) &ensp;|&ensp;
+        CDN = <em>de + GN</em> &ensp;|&ensp;
+        Relative = <em>qui / que + verbe</em>
+      </div>
+    </div>
+  </div>
+
+  <!-- ── EXERCICE 4 ─────────────────────────────────────────────────────── -->
+  <div class="exercise">
+    <div class="ex-header">
+      <div class="ex-number">EXERCICE 4</div>
+      <div class="ex-title">Invente ton propre sortilège !</div>
+      <div class="ex-points">8 pts</div>
+    </div>
+    <div class="ex-body">
+
+      <div class="ex-instruction">
+        Tu es un apprenti sorcier ! Invente un sortilège original et décris son effet
+        en utilisant <strong>au moins 3 GN enrichis</strong>.
+      </div>
+
+      <!-- Nom du sortilège -->
+      <div class="sortilege-name">
+        <span style="font-weight:700;white-space:nowrap;font-size:9.5pt">
+          ✨ Nom du sortilège :
+        </span>
+        <span class="name-blank"></span>
+      </div>
+
+      <!-- Zone de production écrite -->
+      <div class="writing-label">Décris l'effet de ton sortilège (utilise au moins 3 GN enrichis) :</div>
+      <div class="writing-example">
+        Exemple : « Ce puissant sortilège de lumière crée une aura dorée et apaisante
+        que personne ne peut voir. »
+      </div>
+      <div class="writing-line"></div>
+      <div class="writing-line"></div>
+      <div class="writing-line"></div>
+
+      <!-- Tableau d'analyse des GN -->
+      <div class="analyse-mini">🔍 Identifie maintenant tes 3 GN et analyse-les :</div>
+
+      <div class="gn-row">
+        <span class="gn-label">GN 1</span>
+        <span class="gn-field">Dét. : <span class="gn-blank"></span></span>
+        <span class="gn-field">Adj. : <span class="gn-blank" style="min-width:28mm"></span></span>
+        <span class="gn-field">Nom : <span class="gn-blank"></span></span>
+        <span class="gn-field">Procédé : <span class="gn-proc-blank"></span></span>
+      </div>
+
+      <div class="gn-row">
+        <span class="gn-label">GN 2</span>
+        <span class="gn-field">Dét. : <span class="gn-blank"></span></span>
+        <span class="gn-field">Adj. : <span class="gn-blank" style="min-width:28mm"></span></span>
+        <span class="gn-field">Nom : <span class="gn-blank"></span></span>
+        <span class="gn-field">Procédé : <span class="gn-proc-blank"></span></span>
+      </div>
+
+      <div class="gn-row">
+        <span class="gn-label">GN 3</span>
+        <span class="gn-field">Dét. : <span class="gn-blank"></span></span>
+        <span class="gn-field">Adj. : <span class="gn-blank" style="min-width:28mm"></span></span>
+        <span class="gn-field">Nom : <span class="gn-blank"></span></span>
+        <span class="gn-field">Procédé : <span class="gn-proc-blank"></span></span>
+      </div>
+
+    </div>
+  </div>
+
+  <!-- PIED DE PAGE 2 -->
+  <div class="page-footer">
+    <span class="footer-logo">⚡ Poudlard · CM2</span>
+    <span>Dylan Collery · Défi 2 · Page 2/2</span>
+    <span>Enrichissement du GN — Production écrite</span>
+  </div>
+
+</div><!-- fin page 2 -->
+
+</body>
+</html>

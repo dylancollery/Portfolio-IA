@@ -1,0 +1,639 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>🏆 Coupe des Sorciers — CM2 C</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Cinzel:wght@400;700;900&family=Cinzel+Decorative:wght@700;900&family=IM+Fell+English:ital@0;1&display=swap');
+
+  :root {
+    --dark:  #07071A;
+    --gold:  #EEBA30;
+    --gold2: #C8A000;
+    --gry-c: #AE0001; --gry-a: #EEBA30;
+    --ser-c: #1A472A; --ser-a: #BBBBBB;
+    --pou-c: #3A3000; --pou-a: #F0C700;
+    --sed-c: #0E1A40; --sed-a: #9B7B3A;
+  }
+
+  * { margin:0; padding:0; box-sizing:border-box; }
+
+  body {
+    background: var(--dark);
+    color: #fff;
+    font-family: 'Cinzel', serif;
+    min-height: 100vh;
+    overflow: hidden;
+    display: flex;
+    flex-direction: column;
+    user-select: none;
+  }
+
+  /* ── ÉTOILES ── */
+  #stars { position:fixed;top:0;left:0;width:100%;height:100%;pointer-events:none;z-index:0; }
+  .star { position:absolute;background:#fff;border-radius:50%;animation:tw var(--d,3s) infinite var(--dl,0s) alternate; }
+  @keyframes tw { 0%{opacity:.05} 100%{opacity:.7} }
+
+  /* ── LAYOUT ── */
+  .layout { position:relative;z-index:1;display:flex;flex-direction:column;height:100vh;padding:10px 14px;gap:8px; }
+
+  /* ── HEADER ── */
+  .header {
+    display:flex; align-items:center; justify-content:center; gap:16px;
+    padding:6px 0;
+  }
+  .header-title {
+    font-family:'Cinzel Decorative',serif;
+    font-size:clamp(1.2rem,2.5vw,2rem);
+    color:var(--gold);
+    text-shadow:0 0 30px rgba(238,186,48,.7);
+    letter-spacing:3px;
+    text-align:center;
+  }
+
+  /* ── CHALLENGE BANNER ── */
+  .challenge-banner {
+    display:flex; align-items:center; justify-content:space-between;
+    background:rgba(255,255,255,.05);
+    border:1px solid rgba(238,186,48,.4);
+    border-radius:12px;
+    padding:8px 16px;
+    gap:12px;
+    flex-wrap:wrap;
+  }
+  .challenge-icon { font-size:2rem; }
+  .challenge-info { flex:1; }
+  .challenge-name {
+    font-size:clamp(1rem,2vw,1.5rem);
+    font-weight:700; color:var(--gold);
+    letter-spacing:1px;
+  }
+  .challenge-sub { font-size:0.8rem; color:#AAAACC; font-style:italic; margin-top:2px; }
+  .challenge-btns { display:flex; gap:6px; flex-wrap:wrap; }
+  .ch-btn {
+    padding:5px 12px; border-radius:6px; cursor:pointer;
+    font-family:'Cinzel',serif; font-size:0.72rem; font-weight:700;
+    border:1px solid; transition:all .2s; white-space:nowrap;
+  }
+  .ch-btn:hover { opacity:.8; transform:scale(1.04); }
+  .ch-btn.active { box-shadow:0 0 12px currentColor; }
+
+  /* ── HOUSES ── */
+  .houses { display:flex; gap:10px; flex:1; min-height:0; }
+  .house-card {
+    flex:1; border-radius:16px; padding:12px 10px;
+    display:flex; flex-direction:column; align-items:center; justify-content:space-between;
+    border:2px solid rgba(255,255,255,.15);
+    transition:box-shadow .4s, border-color .4s;
+    min-width:0;
+  }
+  .house-card.leader { border-width:3px; }
+  .house-animal { font-size:clamp(1.8rem,4vw,3.5rem); }
+  .house-name {
+    font-family:'Cinzel Decorative',serif;
+    font-size:clamp(.7rem,1.4vw,1.1rem);
+    font-weight:700; text-align:center; margin-top:4px;
+  }
+  .house-points {
+    font-size:clamp(3rem,8vw,7rem);
+    font-weight:900; line-height:1;
+    text-shadow:0 0 30px currentColor;
+    transition:transform .15s;
+  }
+  .house-points.bump { animation:bump .3s; }
+  @keyframes bump { 0%{transform:scale(1)} 50%{transform:scale(1.25)} 100%{transform:scale(1)} }
+
+  .house-controls { display:flex; gap:8px; align-items:center; }
+  .pts-btn {
+    width:clamp(32px,5vw,44px); height:clamp(32px,5vw,44px);
+    border-radius:50%; border:none; cursor:pointer;
+    font-size:clamp(1rem,2vw,1.5rem); font-weight:900;
+    transition:transform .15s, box-shadow .15s;
+    display:flex; align-items:center; justify-content:center;
+  }
+  .pts-btn:hover { transform:scale(1.15); }
+  .pts-btn.plus  { background:rgba(0,200,100,.25); color:#00FF88; border:2px solid #00CC66; }
+  .pts-btn.minus { background:rgba(200,0,0,.25);   color:#FF6666; border:2px solid #CC0000; }
+  .pts-label { font-size:.7rem; color:#888; text-align:center; margin-top:2px; }
+
+  /* Points value selector */
+  .pts-val {
+    font-size:.85rem; color:#EEBA30; cursor:pointer;
+    background:rgba(238,186,48,.1); border:1px solid rgba(238,186,48,.3);
+    border-radius:6px; padding:3px 8px; white-space:nowrap;
+  }
+
+  /* ── TIMER SECTION ── */
+  .timer-section {
+    background:rgba(0,0,0,.4);
+    border:1px solid rgba(238,186,48,.3);
+    border-radius:14px;
+    padding:10px 16px;
+    display:flex; align-items:center; justify-content:space-between; gap:12px;
+    flex-wrap:wrap;
+  }
+  .timer-display {
+    font-size:clamp(2.5rem,7vw,5.5rem);
+    font-weight:900; letter-spacing:4px;
+    font-variant-numeric:tabular-nums;
+    color:#EEBA30;
+    text-shadow:0 0 30px rgba(238,186,48,.8);
+    transition:color .3s;
+    min-width:200px; text-align:center;
+  }
+  .timer-display.warning { color:#FF8800; text-shadow:0 0 30px rgba(255,136,0,.9); animation:timerPulse .5s infinite alternate; }
+  .timer-display.danger  { color:#FF3333; text-shadow:0 0 30px rgba(255,0,0,1);   animation:timerPulse .25s infinite alternate; }
+  @keyframes timerPulse { 0%{opacity:1} 100%{opacity:.5} }
+
+  .timer-controls { display:flex; gap:8px; align-items:center; flex-wrap:wrap; }
+  .timer-preset {
+    padding:6px 12px; border-radius:8px; cursor:pointer;
+    font-family:'Cinzel',serif; font-size:.75rem; font-weight:700;
+    background:rgba(255,255,255,.07); border:1px solid rgba(255,255,255,.2);
+    color:#CCC; transition:all .2s;
+  }
+  .timer-preset:hover { background:rgba(238,186,48,.2); border-color:var(--gold); color:var(--gold); }
+  .timer-preset.active-preset { background:rgba(238,186,48,.25); border-color:var(--gold); color:var(--gold); }
+
+  .timer-custom { display:flex; gap:6px; align-items:center; }
+  .timer-custom input {
+    width:55px; padding:5px 8px; border-radius:6px;
+    background:rgba(255,255,255,.08); border:1px solid rgba(255,255,255,.2);
+    color:#fff; font-family:'Cinzel',serif; font-size:.9rem; text-align:center;
+  }
+  .timer-custom label { font-size:.7rem; color:#888; }
+
+  .t-btn {
+    padding:8px 18px; border-radius:8px; border:none; cursor:pointer;
+    font-family:'Cinzel',serif; font-size:.85rem; font-weight:700; letter-spacing:1px;
+    transition:all .2s;
+  }
+  .t-btn.start  { background:linear-gradient(135deg,#00AA55,#007733); color:#fff; }
+  .t-btn.pause  { background:linear-gradient(135deg,#CC8800,#886600); color:#fff; }
+  .t-btn.reset  { background:rgba(255,255,255,.1); color:#AAA; border:1px solid #555; }
+  .t-btn:hover  { transform:scale(1.05); opacity:.9; }
+
+  /* ── FLASH OVERLAY ── */
+  #flash-overlay {
+    position:fixed;top:0;left:0;width:100%;height:100%;
+    pointer-events:none;z-index:500;opacity:0;
+  }
+  @keyframes flashAnim { 0%{opacity:0} 20%{opacity:.7} 100%{opacity:0} }
+
+  /* ── MODAL CHALLENGE ── */
+  .modal-bg {
+    display:none; position:fixed;top:0;left:0;width:100%;height:100%;
+    background:rgba(0,0,0,.85); z-index:600;
+    align-items:center; justify-content:center;
+  }
+  .modal-bg.open { display:flex; }
+  .modal {
+    background:#0D0D2A; border:2px solid var(--gold);
+    border-radius:20px; padding:30px; max-width:700px; width:90%;
+    text-align:center;
+  }
+  .modal-title { font-family:'Cinzel Decorative',serif; font-size:1.4rem; color:var(--gold); margin-bottom:16px; }
+  .modal-grid { display:grid; grid-template-columns:1fr 1fr; gap:12px; margin-bottom:16px; }
+  .modal-ch {
+    padding:14px; border-radius:12px;
+    border:2px solid rgba(255,255,255,.15);
+    transition:all .2s; text-align:left;
+    display:flex; flex-direction:column; gap:4px;
+  }
+  .modal-ch:hover { border-color:var(--gold); }
+  .modal-ch.sel { border-color:var(--gold); background:rgba(238,186,48,.12); }
+  .modal-ch-top { display:flex; align-items:flex-start; gap:10px; cursor:pointer; }
+  .modal-ch-icon { font-size:1.8rem; flex-shrink:0; }
+  .modal-ch-info { flex:1; }
+  .modal-ch-name { font-weight:700; font-size:.92rem; margin-bottom:2px; color:var(--gold); }
+  .modal-ch-sub  { font-size:.72rem; color:#EEBA3099; font-weight:600; letter-spacing:.05em; margin-bottom:2px; }
+  .modal-ch-desc { font-size:.73rem; color:#AAA; font-style:italic; line-height:1.4; }
+  .modal-ch-footer { display:flex; align-items:center; justify-content:space-between; margin-top:6px; }
+  .modal-ch-dur  { font-size:.75rem; color:#888; }
+  .modal-ch-pts  { font-size:.75rem; color:#4ADE80; font-weight:700; }
+  .modal-ch-open {
+    padding:4px 10px; border-radius:5px; border:1px solid currentColor;
+    font-family:'Cinzel',serif; font-size:.68rem; font-weight:700;
+    cursor:pointer; transition:all .2s; background:transparent;
+    letter-spacing:.04em;
+  }
+  .modal-ch-open:hover { opacity:.8; transform:scale(1.05); }
+  .modal-close { padding:10px 30px; border-radius:8px; border:none; cursor:pointer; font-family:'Cinzel',serif; font-size:1rem; background:linear-gradient(135deg,var(--gold),var(--gold2)); color:#000; font-weight:700; }
+  /* bouton Ouvrir dans la bannière */
+  .ch-btn.open-btn { color:#4ADE80; border-color:#4ADE80; }
+
+  /* ── TIME'S UP ── */
+  #times-up {
+    display:none; position:fixed;top:0;left:0;width:100%;height:100%;
+    background:rgba(0,0,0,.9); z-index:700;
+    align-items:center; justify-content:center; flex-direction:column; gap:20px;
+    text-align:center;
+  }
+  #times-up.show { display:flex; }
+  .times-up-text {
+    font-family:'Cinzel Decorative',serif;
+    font-size:clamp(3rem,10vw,8rem);
+    color:#FF3333;
+    animation:shake .15s infinite;
+    text-shadow:0 0 60px rgba(255,0,0,1);
+  }
+  @keyframes shake { 0%{transform:rotate(-2deg)} 100%{transform:rotate(2deg)} }
+  .times-up-sub { font-size:clamp(1rem,3vw,2rem); color:var(--gold); }
+</style>
+</head>
+<body>
+
+<div id="stars"></div>
+<div id="flash-overlay"></div>
+
+<!-- ══ TIMES UP ══ -->
+<div id="times-up">
+  <div class="times-up-text">⏰ TEMPS ÉCOULÉ !</div>
+  <div class="times-up-sub">Posez les plumes, sorciers !</div>
+  <button onclick="dismissTimesUp()" style="margin-top:20px;padding:12px 35px;border-radius:10px;border:none;cursor:pointer;font-family:'Cinzel',serif;font-size:1.1rem;background:var(--gold);color:#000;font-weight:700;">Continuer →</button>
+</div>
+
+<!-- ══ MODAL CHOIX DÉFI ══ -->
+<div class="modal-bg" id="modal-ch">
+  <div class="modal">
+    <div class="modal-title">🧙 Choisir un Défi</div>
+    <div class="modal-grid" id="modal-grid"></div>
+    <button class="modal-close" onclick="closeModal()">✓ Valider</button>
+  </div>
+</div>
+
+<!-- ══ LAYOUT PRINCIPAL ══ -->
+<div class="layout">
+
+  <!-- HEADER -->
+  <div class="header">
+    <div class="header-title">🏆 La Coupe des Sorciers — CM2 C 🏆</div>
+  </div>
+
+  <!-- CHALLENGE BANNER -->
+  <div class="challenge-banner">
+    <div class="challenge-icon" id="ch-icon">✨</div>
+    <div class="challenge-info">
+      <div class="challenge-name" id="ch-name">Aucun défi actif</div>
+      <div class="challenge-sub" id="ch-sub">Cliquez sur "Changer de défi" pour commencer</div>
+    </div>
+    <div class="challenge-btns">
+      <button class="ch-btn" style="color:#EEBA30;border-color:#EEBA30;" onclick="openModal()">🎯 Changer de défi</button>
+      <button class="ch-btn open-btn" id="btn-open-defi" onclick="openCurrentDefi()" style="display:none">🚀 Ouvrir le défi</button>
+      <div style="display:flex;align-items:center;gap:6px;">
+        <span style="font-size:.75rem;color:#888;">+pts :</span>
+        <select id="pts-select" style="background:#1A1A2E;color:#EEBA30;border:1px solid #EEBA30;border-radius:6px;padding:4px 8px;font-family:'Cinzel',serif;font-size:.8rem;cursor:pointer;">
+          <option value="5">5 pts</option>
+          <option value="10" selected>10 pts</option>
+          <option value="15">15 pts</option>
+          <option value="20">20 pts</option>
+          <option value="50">50 pts</option>
+        </select>
+      </div>
+    </div>
+  </div>
+
+  <!-- HOUSES -->
+  <div class="houses" id="houses-container"></div>
+
+  <!-- TIMER -->
+  <div class="timer-section">
+    <div>
+      <div style="font-size:.75rem;color:#888;margin-bottom:4px;letter-spacing:2px;">TEMPS RESTANT</div>
+      <div class="timer-display" id="timer-display">00:00</div>
+    </div>
+    <div class="timer-controls">
+      <div style="display:flex;flex-direction:column;gap:5px;">
+        <div style="font-size:.7rem;color:#666;letter-spacing:1px;">PRÉRÉGLAGES</div>
+        <div style="display:flex;gap:5px;flex-wrap:wrap;">
+          <button class="timer-preset" onclick="setTimer(15)">15 min</button>
+          <button class="timer-preset" onclick="setTimer(20)">20 min</button>
+          <button class="timer-preset" onclick="setTimer(30)">30 min</button>
+          <button class="timer-preset" onclick="setTimer(45)" style="color:#EEBA30;border-color:#EEBA30;">⭐ 45 min</button>
+          <button class="timer-preset" onclick="setTimer(60)">1 heure</button>
+        </div>
+      </div>
+      <div class="timer-custom">
+        <label>Min :</label>
+        <input type="number" id="custom-min" min="1" max="120" value="20" onchange="setTimer(parseInt(this.value)||20)">
+      </div>
+      <div style="display:flex;gap:6px;">
+        <button class="t-btn start" id="btn-start-timer" onclick="startTimer()">▶ Lancer</button>
+        <button class="t-btn pause" id="btn-pause-timer" onclick="pauseTimer()" style="display:none">⏸ Pause</button>
+        <button class="t-btn reset" onclick="resetTimer()">↺ Reset</button>
+      </div>
+    </div>
+  </div>
+
+</div><!-- .layout -->
+
+<script>
+// ─────────────────────────────────────────
+//  DONNÉES
+// ─────────────────────────────────────────
+const HOUSES = [
+  { id:'gryffondor', name:'Gryffondor', animal:'🦁', bg:'var(--gry-c)', accent:'var(--gry-a)', accentHex:'#EEBA30' },
+  { id:'serpentard',  name:'Serpentard',  animal:'🐍', bg:'var(--ser-c)', accent:'var(--ser-a)', accentHex:'#BBBBBB' },
+  { id:'poufsouffle', name:'Poufsouffle', animal:'🦡', bg:'var(--pou-c)', accent:'var(--pou-a)', accentHex:'#F0C700' },
+  { id:'serdaigle',   name:'Serdaigle',   animal:'🦅', bg:'var(--sed-c)', accent:'var(--sed-a)', accentHex:'#9B7B3A' },
+];
+
+const CHALLENGES = [
+  {
+    id:1, icon:'⚗️', name:'Défi 1 — Potions de Calcul',
+    sub:'Mathématiques', pts:'30 pts',
+    desc:'Calcul mental · Fractions magiques · Problèmes · Tableau Rogue',
+    dur:45, color:'#2E7D32',
+    file:'Defi1_Potions.html'
+  },
+  {
+    id:2, icon:'⚡', name:'Défi 2 — Sortilèges de Grammaire',
+    sub:'Français — Groupe Nominal', pts:'30 pts',
+    desc:'Analyse GN · Accords d\'adjectifs · Enrichissement · Production libre',
+    dur:45, color:'#1A3A8A',
+    file:'Defi2_Sortileges.html'
+  },
+  {
+    id:3, icon:'🔐', name:'Défi 3 — Escape Game Poudlard',
+    sub:'Maths + Français + Culture HP', pts:'30 pts',
+    desc:'4 salles · Calcul → GN → Culture HP → Problème · Code secret final',
+    dur:45, color:'#6A1B9A',
+    file:'Defi3_EscapeGame.html'
+  },
+  {
+    id:4, icon:'🎴', name:'Défi 4 — Quiz Ardoise',
+    sub:'Français · Maths · Harry Potter', pts:'Questions flash',
+    desc:'Ardoise interactive — mode présentateur — thème HP disponible',
+    dur:20, color:'#B8860B',
+    file:'Français/GN_Quiz_Ardoise.html'
+  },
+];
+
+// ─────────────────────────────────────────
+//  ÉTAT
+// ─────────────────────────────────────────
+const points = { gryffondor:0, serpentard:0, poufsouffle:0, serdaigle:0 };
+let currentChallenge = null;
+let timerTotal = 0;
+let timerLeft  = 0;
+let timerRunning = false;
+let timerInterval = null;
+let selectedModalCh = null;
+
+// ─────────────────────────────────────────
+//  ÉTOILES
+// ─────────────────────────────────────────
+function makeStars() {
+  const c = document.getElementById('stars');
+  for(let i=0;i<80;i++){
+    const s=document.createElement('div'); s.className='star';
+    const sz=Math.random()*2+1;
+    s.style.cssText=`width:${sz}px;height:${sz}px;top:${Math.random()*100}%;left:${Math.random()*100}%;--d:${2+Math.random()*4}s;--dl:${Math.random()*3}s;`;
+    c.appendChild(s);
+  }
+}
+
+// ─────────────────────────────────────────
+//  MAISONS
+// ─────────────────────────────────────────
+function buildHouses() {
+  const container = document.getElementById('houses-container');
+  container.innerHTML = '';
+  HOUSES.forEach(h => {
+    const div = document.createElement('div');
+    div.className = 'house-card';
+    div.id = `house-${h.id}`;
+    div.style.background = `${h.bg}`;
+    div.style.backgroundImage = `linear-gradient(160deg,${h.bg} 60%, rgba(0,0,0,.3))`;
+    div.innerHTML = `
+      <div style="text-align:center">
+        <div class="house-animal">${h.animal}</div>
+        <div class="house-name" style="color:${h.accent}">${h.name}</div>
+      </div>
+      <div class="house-points" id="pts-${h.id}" style="color:${h.accent}">0</div>
+      <div>
+        <div class="house-controls">
+          <button class="pts-btn minus" onclick="addPoints('${h.id}',-1)">−</button>
+          <button class="pts-btn plus"  onclick="addPoints('${h.id}', 1)">+</button>
+        </div>
+        <div class="pts-label" style="color:${h.accent}88">± <span id="lbl-pts-${h.id}">10</span> pts</div>
+      </div>
+    `;
+    container.appendChild(div);
+  });
+  // Sync label
+  document.getElementById('pts-select').addEventListener('change', () => {
+    HOUSES.forEach(h => {
+      const el = document.getElementById(`lbl-pts-${h.id}`);
+      if(el) el.textContent = document.getElementById('pts-select').value;
+    });
+  });
+}
+
+function addPoints(houseId, sign) {
+  const val = parseInt(document.getElementById('pts-select').value) || 10;
+  points[houseId] = Math.max(0, points[houseId] + sign * val);
+  const el = document.getElementById(`pts-${houseId}`);
+  el.textContent = points[houseId];
+  el.classList.remove('bump');
+  void el.offsetWidth;
+  el.classList.add('bump');
+  updateLeader();
+  flashScreen(sign > 0 ? '#EEBA3022' : '#FF000022');
+}
+
+function updateLeader() {
+  const max = Math.max(...Object.values(points));
+  HOUSES.forEach(h => {
+    const card = document.getElementById(`house-${h.id}`);
+    if (points[h.id] === max && max > 0) {
+      card.classList.add('leader');
+      card.style.borderColor = h.accentHex;
+      card.style.boxShadow = `0 0 25px ${h.accentHex}88`;
+    } else {
+      card.classList.remove('leader');
+      card.style.borderColor = 'rgba(255,255,255,.15)';
+      card.style.boxShadow = 'none';
+    }
+  });
+}
+
+// ─────────────────────────────────────────
+//  DÉFIS
+// ─────────────────────────────────────────
+function buildModal() {
+  const grid = document.getElementById('modal-grid');
+  grid.innerHTML = '';
+  CHALLENGES.forEach(ch => {
+    const div = document.createElement('div');
+    div.className = 'modal-ch';
+    div.id = `mch-${ch.id}`;
+    div.style.background = ch.color + '18';
+    div.style.borderColor = ch.color + '55';
+    div.innerHTML = `
+      <div class="modal-ch-top" onclick="selectModalCh(${ch.id})">
+        <div class="modal-ch-icon">${ch.icon}</div>
+        <div class="modal-ch-info">
+          <div class="modal-ch-name">${ch.name}</div>
+          <div class="modal-ch-sub">${ch.sub}</div>
+          <div class="modal-ch-desc">${ch.desc}</div>
+        </div>
+      </div>
+      <div class="modal-ch-footer">
+        <div>
+          <span class="modal-ch-dur">⏱ ${ch.dur} min</span>
+          &ensp;<span class="modal-ch-pts">✦ ${ch.pts}</span>
+        </div>
+        <button class="modal-ch-open" style="color:${ch.color};border-color:${ch.color};"
+          onclick="event.stopPropagation(); openDefiFile('${ch.file}')">
+          🚀 Ouvrir
+        </button>
+      </div>
+    `;
+    grid.appendChild(div);
+  });
+}
+
+function selectModalCh(id) {
+  selectedModalCh = id;
+  document.querySelectorAll('.modal-ch').forEach(el => el.classList.remove('sel'));
+  document.getElementById(`mch-${id}`)?.classList.add('sel');
+}
+
+function openDefiFile(file) {
+  const base = location.href.replace(/[^/]*$/, '');
+  window.open(base + file, '_blank');
+}
+
+function openCurrentDefi() {
+  if (currentChallenge?.file) openDefiFile(currentChallenge.file);
+}
+
+function openModal() { document.getElementById('modal-ch').classList.add('open'); }
+function closeModal() {
+  document.getElementById('modal-ch').classList.remove('open');
+  if (!selectedModalCh) return;
+  const ch = CHALLENGES.find(c => c.id === selectedModalCh);
+  if (!ch) return;
+  currentChallenge = ch;
+  document.getElementById('ch-icon').textContent = ch.icon;
+  document.getElementById('ch-name').textContent = ch.name;
+  document.getElementById('ch-sub').textContent  = `${ch.sub} · ${ch.dur} min · ${ch.pts}`;
+  // Affiche le bouton Ouvrir dans la bannière
+  const btnOpen = document.getElementById('btn-open-defi');
+  if (btnOpen) btnOpen.style.display = '';
+  setTimer(ch.dur);
+  selectedModalCh = null;
+}
+
+// ─────────────────────────────────────────
+//  TIMER
+// ─────────────────────────────────────────
+function setTimer(minutes) {
+  resetTimer();
+  timerTotal = minutes * 60;
+  timerLeft  = timerTotal;
+  document.getElementById('custom-min').value = minutes;
+  renderTimer();
+  // Highlight preset
+  document.querySelectorAll('.timer-preset').forEach(b => {
+    b.classList.toggle('active-preset', b.textContent.includes(minutes === 60 ? '1 heure' : minutes + ' min'));
+  });
+}
+
+function renderTimer() {
+  const m = Math.floor(timerLeft / 60);
+  const s = timerLeft % 60;
+  const disp = document.getElementById('timer-display');
+  disp.textContent = `${String(m).padStart(2,'0')}:${String(s).padStart(2,'0')}`;
+  disp.classList.remove('warning','danger');
+  if (timerLeft <= 60 && timerLeft > 0)  disp.classList.add('danger');
+  else if (timerLeft <= 180 && timerLeft > 0) disp.classList.add('warning');
+}
+
+function startTimer() {
+  if (timerRunning || timerLeft <= 0) return;
+  timerRunning = true;
+  document.getElementById('btn-start-timer').style.display = 'none';
+  document.getElementById('btn-pause-timer').style.display = '';
+  timerInterval = setInterval(() => {
+    timerLeft--;
+    renderTimer();
+    if (timerLeft <= 0) {
+      clearInterval(timerInterval);
+      timerRunning = false;
+      timesUp();
+    }
+  }, 1000);
+}
+
+function pauseTimer() {
+  if (!timerRunning) return;
+  timerRunning = false;
+  clearInterval(timerInterval);
+  document.getElementById('btn-start-timer').style.display = '';
+  document.getElementById('btn-pause-timer').style.display = 'none';
+}
+
+function resetTimer() {
+  pauseTimer();
+  timerLeft = timerTotal;
+  renderTimer();
+  document.getElementById('timer-display').classList.remove('warning','danger');
+  document.getElementById('btn-start-timer').style.display = '';
+  document.getElementById('btn-pause-timer').style.display = 'none';
+}
+
+function timesUp() {
+  document.getElementById('times-up').classList.add('show');
+  // Bip d'alarme
+  try {
+    const ctx = new AudioContext();
+    [0,300,600,900].forEach(delay => {
+      const osc = ctx.createOscillator();
+      const gain = ctx.createGain();
+      osc.connect(gain); gain.connect(ctx.destination);
+      osc.frequency.value = 880;
+      gain.gain.setValueAtTime(0.4, ctx.currentTime + delay/1000);
+      gain.gain.exponentialRampToValueAtTime(0.001, ctx.currentTime + delay/1000 + 0.4);
+      osc.start(ctx.currentTime + delay/1000);
+      osc.stop(ctx.currentTime + delay/1000 + 0.4);
+    });
+  } catch(e) {}
+}
+
+function dismissTimesUp() {
+  document.getElementById('times-up').classList.remove('show');
+  resetTimer();
+}
+
+// ─────────────────────────────────────────
+//  FLASH
+// ─────────────────────────────────────────
+function flashScreen(color) {
+  const el = document.getElementById('flash-overlay');
+  el.style.background = color;
+  el.style.animation = 'none';
+  void el.offsetWidth;
+  el.style.animation = 'flashAnim .5s forwards';
+}
+
+// ─────────────────────────────────────────
+//  RACCOURCIS CLAVIER
+// ─────────────────────────────────────────
+document.addEventListener('keydown', e => {
+  if (e.code === 'Space') { e.preventDefault(); timerRunning ? pauseTimer() : startTimer(); }
+  if (e.code === 'KeyR')  resetTimer();
+});
+
+// ─────────────────────────────────────────
+//  INIT
+// ─────────────────────────────────────────
+makeStars();
+buildHouses();
+buildModal();
+renderTimer();
+</script>
+</body>
+</html>
