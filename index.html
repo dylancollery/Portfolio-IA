@@ -3,12 +3,12 @@
 <head>
 <meta charset="UTF-8"/>
 <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-<title>Dylan Collery — Ingénieur pédagogique IA</title>
-<meta name="description" content="Ancien professeur des écoles devenu ingénieur pédagogique spécialisé IA : séquences, outils interactifs et applications conçus avec l'IA. Projets, démos, CV."/>
+<title>Dylan Collery | Ingénierie pédagogique et IA</title>
+<meta name="description" content="Ancien professeur des écoles, je veux aider des équipes non techniques à adopter l'IA : séquences, outils interactifs, applications et automatisations conçus avec l'IA. Projets, démos, CV."/>
 <!-- Aperçu du lien sur LinkedIn, par mail, etc. -->
 <meta property="og:type" content="website"/>
-<meta property="og:title" content="Dylan Collery — Ingénieur pédagogique IA"/>
-<meta property="og:description" content="Des expériences d'apprentissage conçues avec l'IA, testées en vraie classe. Projets, démos jouables, CV."/>
+<meta property="og:title" content="Dylan Collery | Ingénierie pédagogique et IA"/>
+<meta property="og:description" content="Des expériences d'apprentissage et des automatisations conçues avec l'IA. Projets, démos jouables, CV."/>
 <meta property="og:url" content="https://dylancollery.github.io/Portfolio-IA/"/>
 <meta property="og:image" content="https://dylancollery.github.io/Portfolio-IA/medias/images/hp-02-portail.jpg"/>
 <meta property="og:locale" content="fr_FR"/>
@@ -22,9 +22,10 @@
    ============================================================ */
 :root{
   --bg:#14231b; --bg-2:#1b2e23; --bg-3:#22392b;
-  --ink:#f4f1e6; --ink-dim:#b3c1b5; --ink-faint:#83938a;
+  --ink:#f4f1e6; --ink-dim:#b3c1b5; --ink-faint:#85958c;
   --line:rgba(244,241,232,.12); --line-strong:rgba(244,241,232,.24);
   --accent:#ec6a5f; --accent-soft:rgba(236,106,95,.15);
+  --on-accent:#14231b; --accent-on-ink:#b03a31; --gold-on-ink:#8a6214;
   --gold:#e3bf68; --gold-soft:rgba(227,191,104,.14);
   --teal:#6cc3bd; --teal-soft:rgba(108,195,189,.13);
   --shadow:0 12px 32px -12px rgba(0,0,0,.5);
@@ -39,7 +40,8 @@
   --bg:#f7f4ec; --bg-2:#fffdf8; --bg-3:#efe9dc;
   --ink:#16261d; --ink-dim:#4a5a50; --ink-faint:#7b887f;
   --line:rgba(22,38,29,.11); --line-strong:rgba(22,38,29,.22);
-  --accent:#d6493f; --accent-soft:rgba(214,73,63,.1);
+  --accent:#c8413a; --accent-soft:rgba(200,65,58,.1);
+  --on-accent:#fff; --accent-on-ink:#ec6a5f; --gold-on-ink:#e3bf68;
   --gold:#a8791c; --gold-soft:rgba(198,150,52,.16);
   --teal:#1f6f6f; --teal-soft:rgba(31,111,111,.11);
   --shadow:0 1px 2px rgba(22,38,29,.05), 0 12px 32px -12px rgba(22,38,29,.18);
@@ -53,7 +55,7 @@ body{font-family:var(--sans); background:var(--bg); color:var(--ink); line-heigh
 body::before{content:''; position:fixed; inset:0; pointer-events:none; z-index:1; opacity:var(--chalk-grain); background-image:radial-gradient(rgba(244,241,232,.9) .6px, transparent .6px); background-size:3px 3px}
 a{color:inherit}
 img{max-width:100%; display:block}
-::selection{background:var(--accent); color:#fff}
+::selection{background:var(--accent); color:var(--on-accent)}
 :focus-visible{outline:2px solid var(--accent); outline-offset:3px; border-radius:6px}
 .wrap{max-width:1160px; margin:0 auto; padding:0 1.5rem}
 .eyebrow{font-size:.74rem; font-weight:700; letter-spacing:.14em; text-transform:uppercase; color:var(--accent)}
@@ -70,7 +72,7 @@ img{max-width:100%; display:block}
 .btn:hover{transform:translateY(-2px)}
 .btn-primary{background:var(--ink); color:var(--bg)}
 .btn-primary:hover{box-shadow:var(--shadow)}
-.btn-accent{background:var(--accent); color:#fff}
+.btn-accent{background:var(--accent); color:var(--on-accent)}
 .btn-outline{background:transparent; color:var(--ink); border-color:var(--line-strong)}
 .btn-outline:hover{border-color:var(--ink)}
 .btn-sm{padding:.55rem 1rem; font-size:.82rem}
@@ -85,7 +87,7 @@ img{max-width:100%; display:block}
 nav{position:sticky; top:0; z-index:200; background:color-mix(in srgb, var(--bg) 85%, transparent); backdrop-filter:blur(12px); border-bottom:1px solid var(--line)}
 nav .wrap{display:flex; align-items:center; justify-content:space-between; gap:1rem; height:64px}
 .logo{display:flex; align-items:center; gap:.6rem; text-decoration:none; font:600 1.02rem var(--serif)}
-.logo-badge{width:34px; height:34px; border-radius:10px; background:var(--accent); color:#fff; display:grid; place-items:center; font:700 .85rem var(--serif); transform:rotate(-4deg)}
+.logo-badge{width:34px; height:34px; border-radius:10px; background:var(--accent); color:var(--on-accent); display:grid; place-items:center; font:700 .85rem var(--serif); transform:rotate(-4deg)}
 .nav-links{display:flex; align-items:center; gap:.2rem; list-style:none}
 .nav-links a{font-size:.88rem; color:var(--ink-dim); text-decoration:none; padding:.45rem .8rem; border-radius:999px; transition:background .2s, color .2s}
 .nav-links a:hover, .nav-links a.active{color:var(--ink); background:var(--bg-3)}
@@ -160,12 +162,20 @@ section{padding:5.5rem 0; scroll-margin-top:64px}
 .t-pb .phone{width:62%; margin:0 auto 1rem; border-radius:22px; border:5px solid #0b1f1f; overflow:hidden; box-shadow:0 18px 40px rgba(0,0,0,.4); transform:rotate(-4deg)}
 .t-hp{grid-column:span 3; grid-row:span 2}
 .t-fe{grid-column:span 3; background:var(--ink); color:var(--bg)}
-.t-fe p{color:color-mix(in srgb, var(--bg) 75%, transparent)} .t-fe .go{background:var(--accent); color:#fff}
-.t-video{grid-column:span 3; background:var(--accent); color:#fff; cursor:pointer; border:none; text-align:left; font:inherit}
-.t-video p{color:rgba(255,255,255,.88)} .t-video .eyebrow{color:#fff}
+.t-fe p{color:color-mix(in srgb, var(--bg) 75%, transparent)} .t-fe .go{background:var(--accent); color:var(--on-accent)} .t-fe .eyebrow{color:var(--accent-on-ink)}
+.t-video{grid-column:span 3; background:var(--accent); color:var(--on-accent); cursor:pointer; border:none; text-align:left; font:inherit}
+.t-video p{color:color-mix(in srgb, var(--on-accent) 88%, transparent)} .t-video .eyebrow{color:var(--on-accent)} .t-video .go{color:var(--ink)}
+.t-shot{grid-column:span 3; color:#fff; padding:0; justify-content:flex-start}
+.t-shot .tile-shot{aspect-ratio:16/9; overflow:hidden}
+.t-shot .tile-shot img{width:100%; height:100%; object-fit:cover}
+.t-shot .tile-copy{padding:1.5rem}
+.t-shot p{color:rgba(255,255,255,.8)}
+.t-shot .go{left:1.1rem; right:auto; background:rgba(255,255,255,.92); color:#16261d}
+.t-lea{background:#234c66} .t-lea .eyebrow{color:#ffe3a3}
+.t-jarvis{background:#07182a} .t-jarvis .eyebrow{color:#7fdcf0}
 @media (max-width:900px){
   .bento{grid-template-columns:repeat(2,1fr)}
-  .t-jumanji,.t-hp,.t-fe,.t-video,.t-pb{grid-column:span 2}
+  .t-jumanji,.t-hp,.t-fe,.t-video,.t-pb,.t-shot{grid-column:span 2}
   .t-pb .phone{width:44%}
 }
 
@@ -189,7 +199,7 @@ section{padding:5.5rem 0; scroll-margin-top:64px}
 .step-dot{width:30px; height:30px; border-radius:50%; background:var(--bg-3); display:grid; place-items:center; font-size:.85rem; flex:none}
 .step h4{font-size:.72rem; font-weight:700; letter-spacing:.1em; text-transform:uppercase; color:var(--ink-faint); margin-bottom:.2rem}
 .step p{font-size:.94rem; color:var(--ink-dim)}
-.step.result .step-dot{background:var(--accent); color:#fff}
+.step.result .step-dot{background:var(--accent); color:var(--on-accent)}
 .step.result p{color:var(--ink); font-weight:500}
 .case-foot{display:flex; flex-wrap:wrap; gap:.6rem; align-items:center}
 .tools{display:flex; flex-wrap:wrap; gap:.35rem; margin-bottom:1.2rem}
@@ -243,7 +253,7 @@ section{padding:5.5rem 0; scroll-margin-top:64px}
 .card-actions{display:flex; gap:.45rem; margin-top:.9rem; flex-wrap:wrap}
 .mini{font:600 .76rem var(--sans); padding:.4rem .8rem; border-radius:999px; border:1px solid var(--line-strong); background:transparent; color:var(--ink); cursor:pointer}
 .mini:hover{border-color:var(--ink)}
-.mini.accent{background:var(--accent); color:#fff; border-color:var(--accent)}
+.mini.accent{background:var(--accent); color:var(--on-accent); border-color:var(--accent)}
 
 /* ============================================================
    COMPÉTENCES + APPORT
@@ -290,8 +300,10 @@ section{padding:5.5rem 0; scroll-margin-top:64px}
 .final{background:var(--ink); color:var(--bg); border-radius:32px; padding:4rem 2rem; text-align:center; margin:0 1.5rem}
 .final h2{font:600 clamp(1.9rem,4.4vw,3rem)/1.12 var(--serif); margin:.8rem auto 1rem; max-width:18ch}
 .final p{color:color-mix(in srgb, var(--bg) 75%, transparent); max-width:52ch; margin:0 auto 2rem}
-.final .eyebrow{color:var(--gold)}
+.final .eyebrow{color:var(--gold-on-ink)}
 .final .btn-accent{font-size:1rem; padding:1rem 1.8rem}
+.final .btn-outline{font-size:1rem; padding:1rem 1.8rem; margin-left:.5rem; color:var(--bg); border-color:color-mix(in srgb, var(--bg) 45%, transparent)}
+@media (max-width:640px){ .final .btn-outline{margin:.6rem 0 0} }
 footer{padding:3.5rem 0 2rem}
 .foot{display:grid; grid-template-columns:2fr 1fr 1fr; gap:2rem; padding-bottom:2rem; border-bottom:1px solid var(--line)}
 @media (max-width:700px){ .foot{grid-template-columns:1fr} }
@@ -315,7 +327,7 @@ footer{padding:3.5rem 0 2rem}
 .media-wrap video, .media-wrap img{width:100%; height:100%; object-fit:contain}
 .media-list{display:flex; flex-wrap:wrap; gap:.45rem; padding:.9rem 1.2rem}
 .media-list button{font:600 .78rem var(--sans); padding:.45rem .85rem; border-radius:999px; border:1px solid var(--line-strong); background:transparent; color:var(--ink-dim); cursor:pointer}
-.media-list button.on{background:var(--accent); color:#fff; border-color:var(--accent)}
+.media-list button.on{background:var(--accent); color:var(--on-accent); border-color:var(--accent)}
 .app-box{max-width:1140px; width:96vw}
 .app-frame{height:78vh; background:#fff}
 .app-frame iframe{width:100%; height:100%; border:none}
@@ -356,9 +368,9 @@ try{ const t = localStorage.getItem('dc-theme'); if(t) document.documentElement.
 <header class="hero" id="top">
   <div class="wrap">
     <div>
-      <p class="eyebrow">Ingénieur pédagogique · spécialisation IA</p>
+      <p class="eyebrow">Ingénierie pédagogique et IA</p>
       <h1>Des expériences d'apprentissage qui donnent <em>envie d'aller jusqu'au bout.</em></h1>
-      <p class="hero-sub">Bonjour, je suis Dylan. <strong>Ancien professeur des écoles</strong> (CE1/CE2 puis CM2, Master MEEF 2), je conçois des séquences, des outils interactifs et des applications <strong>avec l'IA comme partenaire de fabrication</strong>, seul, sans équipe ni budget, et testés en vraie classe.</p>
+      <p class="hero-sub">Bonjour, je suis Dylan. <strong>Ancien professeur des écoles</strong> (CE1/CE2 puis CM2, Master MEEF 2), je veux aider des équipes non techniques à adopter l'IA. Je conçois des séquences, des outils interactifs et des automatisations <strong>avec l'IA comme partenaire de fabrication</strong>, et mes outils de classe ont été testés avec de vrais élèves.</p>
       <div class="hero-cta">
         <a href="#projets" class="btn btn-accent">Voir mes projets →</a>
         <a href="cv/CV_Dylan_Collery.pdf" download class="btn btn-outline">Télécharger mon CV</a>
@@ -379,11 +391,11 @@ try{ const t = localStorage.getItem('dc-theme'); if(t) document.documentElement.
 <!-- ===== CHIFFRES ===== -->
 <div class="proof">
   <div class="wrap">
-    <div class="stat"><b>13</b><span>projets réalisés</span></div>
+    <div class="stat"><b>16</b><span>projets réalisés</span></div>
     <div class="stat"><b>7</b><span>vidéos IA créées</span></div>
     <div class="stat"><b>2</b><span>avatars IA (Judy et Peter)</span></div>
-    <div class="stat"><b>30+</b><span>documents générés</span></div>
-    <div class="stat"><b>6+</b><span>outils IA maîtrisés</span></div>
+    <div class="stat"><b>30+</b><span>supports de classe produits</span></div>
+    <div class="stat"><b>8+</b><span>outils IA pratiqués</span></div>
   </div>
 </div>
 
@@ -393,7 +405,7 @@ try{ const t = localStorage.getItem('dc-theme'); if(t) document.documentElement.
     <div class="section-head reveal">
       <p class="eyebrow">À la une</p>
       <h2>Ce que j'ai vraiment construit</h2>
-      <p>Pas des maquettes : des outils utilisés en classe, sur un terrain de volley ou autour d'une table de jeu, conçus, écrits et livrés seul, avec l'IA comme partenaire de fabrication.</p>
+      <p>Des outils utilisés en classe ou autour d'une table de jeu, un prototype pour enseignants et des automatisations, conçus seul, avec l'IA comme partenaire de fabrication.</p>
     </div>
 
     <div class="bento reveal">
@@ -429,9 +441,27 @@ try{ const t = localStorage.getItem('dc-theme'); if(t) document.documentElement.
       <button type="button" class="tile t-video" id="tile-videos">
         <span class="go">▶</span>
         <span class="eyebrow">À regarder</span>
-        <h3>Les 7 vidéos de Judy et Peter</h3>
-        <p>Les avatars IA qui ouvrent chaque séance de Jumanji.</p>
+        <h3>Les 7 vidéos de la séquence Jumanji</h3>
+        <p>Les avatars IA qui ouvrent les séances de Jumanji.</p>
       </button>
+      <a href="#cas-lea" class="tile t-shot t-lea">
+        <span class="go">↗</span>
+        <div class="tile-shot"><img src="medias/images/lea-01-accueil.png" alt="" loading="lazy"/></div>
+        <div class="tile-copy">
+          <span class="eyebrow">Prototype e-learning · Adultes</span>
+          <h3>Une semaine avec Léa</h3>
+          <p>Apprendre aux enseignants à préparer avec l'IA, sans mettre leurs élèves en danger.</p>
+        </div>
+      </a>
+      <a href="#cas-jarvis" class="tile t-shot t-jarvis">
+        <span class="go">↗</span>
+        <div class="tile-shot"><img src="medias/images/jarvis-00-ecran-complet.jpg" alt="" loading="lazy"/></div>
+        <div class="tile-copy">
+          <span class="eyebrow">Automatisation · n8n et Claude Code</span>
+          <h3>Jarvis : un poste de pilotage automatisé</h3>
+          <p>Veille IA, offres et priorités du jour réunies sur un seul écran.</p>
+        </div>
+      </a>
     </div>
   </div>
 </section>
@@ -441,20 +471,20 @@ try{ const t = localStorage.getItem('dc-theme'); if(t) document.documentElement.
   <div class="wrap">
     <div class="section-head reveal">
       <p class="eyebrow">Études de cas</p>
-      <h2>Quatre projets, du besoin au résultat</h2>
+      <h2>Six projets, du besoin au résultat</h2>
       <p>Pour chacun : le contexte, le défi, ce que l'IA a changé dans ma façon de concevoir, et ce qui en est sorti.</p>
     </div>
 
     <!-- CAS 1 : JUMANJI -->
     <article class="case reveal" id="cas-jumanji">
       <div>
-        <div class="case-num">01<span class="stamp">vu, approuvé ✓</span></div>
+        <div class="case-num">01<span class="stamp">testé en classe</span></div>
         <h3>Faire vivre un roman à toute une classe, seul, avec deux acteurs qui n'existent pas</h3>
         <div class="case-tags"><span class="tag ai">✦ Avatars IA</span><span class="tag teal">Narration</span><span class="tag gold">Différenciation</span></div>
         <div class="steps">
-          <div class="step"><span class="step-dot">📍</span><div><h4>Contexte</h4><p>En CM2, la lecture longue de <em>Jumanji</em> doit tenir huit séances sur plusieurs semaines : compréhension, vocabulaire, production d'écrit. La version classique (fiches, cahier, lecture à voix haute) épuise l'attention bien avant la fin.</p></div></div>
+          <div class="step"><span class="step-dot">📍</span><div><h4>Contexte</h4><p>En CM2, la lecture longue de <em>Jumanji</em> de Chris Van Allsburg doit tenir huit séances sur plusieurs semaines : compréhension, vocabulaire, production d'écrit. La version classique (fiches, cahier, lecture à voix haute) épuise l'attention bien avant la fin.</p></div></div>
           <div class="step"><span class="step-dot">⚡</span><div><h4>Le défi</h4><p>Garder vingt-cinq élèves de dix ans accrochés au texte pendant deux mois, sans moyens de production vidéo, ni acteurs, ni budget, et sans que ça dévore mes soirées.</p></div></div>
-          <div class="step"><span class="step-dot">✦</span><div><h4>Ma démarche avec l'IA</h4><p>Deux personnages créés avec Claude, Judy et Peter, doublés par des avatars vidéo générés (HeyGen, Pippit) qui introduisent chaque séance comme s'ils vivaient l'histoire. Sept vidéos scriptées, des visuels générés, des dictées différenciées et une séquence de grammaire adossée au texte, le tout assemblé en mini-site navigable séance par séance, fiches et corrections comprises.</p></div></div>
+          <div class="step"><span class="step-dot">✦</span><div><h4>Ma démarche avec l'IA</h4><p>Deux personnages créés avec Claude, Judy et Peter, doublés par des avatars vidéo générés (HeyGen, Pippit) qui introduisent les séances comme s'ils vivaient l'histoire. Sept vidéos scriptées, des visuels générés, des dictées différenciées et une séquence de grammaire adossée au texte, le tout assemblé en mini-site navigable séance par séance, fiches et corrections comprises.</p></div></div>
           <div class="step result"><span class="step-dot">✓</span><div><h4>Le résultat</h4><p>Huit séances clé en main, sept vidéos, deux personnages qui tiennent le fil narratif d'un bout à l'autre : une production qu'assurerait normalement une petite équipe, réalisée seul, en plus d'un temps plein d'enseignement.</p></div></div>
         </div>
         <div class="tools"><span class="tool">Claude</span><span class="tool">HeyGen</span><span class="tool">Pippit</span><span class="tool">DALL·E</span><span class="tool">HTML/CSS</span></div>
@@ -480,7 +510,7 @@ try{ const t = localStorage.getItem('dc-theme'); if(t) document.documentElement.
     <!-- CAS 2 : FATALE ERREUR -->
     <article class="case flip reveal" id="cas-enquete">
       <div>
-        <div class="case-num">02<span class="stamp">vu, approuvé ✓</span></div>
+        <div class="case-num">02<span class="stamp">testé en classe</span></div>
         <h3>Transformer une nouvelle policière en enquête qu'on peut vraiment mener</h3>
         <div class="case-tags"><span class="tag ai">✦ Outil codé avec Claude</span><span class="tag teal">Lecture pas à pas</span><span class="tag gold">Autonomie</span></div>
         <div class="steps">
@@ -500,7 +530,7 @@ try{ const t = localStorage.getItem('dc-theme'); if(t) document.documentElement.
           <div class="enquete-visual" aria-hidden="true">
             <svg viewBox="0 0 400 300" preserveAspectRatio="none"><path d="M70 70 Q 200 120 320 60 M70 70 Q 140 200 210 230 M320 60 Q 300 170 210 230" stroke="#c0392b" stroke-width="2" fill="none" stroke-dasharray="1 0"/></svg>
             <div class="postit" style="left:6%;top:12%;background:#ffe27a;transform:rotate(-5deg)">Qui est le cambrioleur ?</div>
-            <div class="postit" style="right:6%;top:6%;background:#ffc6a8;transform:rotate(4deg)">Indice n°2 : les gants</div>
+            <div class="postit" style="right:6%;top:6%;background:#ffc6a8;transform:rotate(4deg)">Indice n° 2 : les gants</div>
             <div class="postit" style="left:36%;bottom:8%;background:#bfe7d6;transform:rotate(-2deg)">Mon hypothèse…</div>
           </div>
         </div>
@@ -513,14 +543,14 @@ try{ const t = localStorage.getItem('dc-theme'); if(t) document.documentElement.
         <div class="case-num">03<span class="stamp">en test ⚓</span></div>
         <h3>« Plis et Butin » : sortir du cadre scolaire, du premier trait de code jusqu'à l'app mobile</h3>
         <div class="status">En test fermé sur Android</div>
-        <div class="case-tags"><span class="tag ai">✦ Développée avec Claude</span><span class="tag teal">Produit complet</span><span class="tag gold">Aucune donnée collectée</span></div>
+        <div class="case-tags"><span class="tag ai">✦ Conçue avec Claude Code</span><span class="tag teal">Produit complet</span><span class="tag gold">Aucune donnée collectée</span></div>
         <div class="steps">
           <div class="step"><span class="step-dot">📍</span><div><h4>Contexte</h4><p>Skull King est un jeu de société à scores complexes (plis, bonus, malus, primes) que mon entourage joue régulièrement. Personne n'a envie de faire les comptes à la main pendant dix manches.</p></div></div>
           <div class="step"><span class="step-dot">⚡</span><div><h4>Le défi</h4><p>Construire, sans framework ni équipe, une application complète, puis aller plus loin qu'une page web : une vraie app installable, sans que le nom « Skull King » (propriété d'un éditeur) pose problème.</p></div></div>
-          <div class="step"><span class="step-dot">✦</span><div><h4>Ma démarche avec l'IA</h4><p>Développée de bout en bout avec Claude : règles codées, navigation animée façon carte au trésor, artwork personnalisé. Puis rebranding complet en « Plis et Butin » (identité visuelle, mention légale), trois variantes de règles avec Kraken et Baleine blanche, journal des manches, courbe des scores, partage natif, et mise en boîte avec Capacitor (icônes, écrans de démarrage, retour haptique).</p></div></div>
+          <div class="step"><span class="step-dot">✦</span><div><h4>Ma démarche avec l'IA</h4><p>Développée de bout en bout avec Claude Code : règles codées, navigation animée façon carte au trésor, artwork personnalisé. Puis rebranding complet en « Plis et Butin » (identité visuelle, mention légale), trois variantes de règles avec Kraken et Baleine blanche, journal des manches, courbe des scores, partage natif, et mise en boîte avec Capacitor (icônes, écrans de démarrage, retour haptique).</p></div></div>
           <div class="step result"><span class="step-dot">✓</span><div><h4>Le résultat</h4><p>Une app fonctionnelle en test fermé sur Android. Pas de version iOS pour l'instant (le compte développeur Apple annuel ne se justifie pas pour un projet personnel), mais l'architecture Capacitor le permettrait.</p></div></div>
         </div>
-        <div class="tools"><span class="tool">Claude</span><span class="tool">Capacitor</span><span class="tool">HTML/JS</span><span class="tool">Android</span></div>
+        <div class="tools"><span class="tool">Claude Code</span><span class="tool">Capacitor</span><span class="tool">HTML/JS</span><span class="tool">Android</span></div>
         <div class="case-foot">
           <button class="btn btn-accent btn-sm" data-app-url="apps/plis-et-butin.html" data-app-title="Plis et Butin — version web">Essayer la version web →</button>
         </div>
@@ -538,14 +568,14 @@ try{ const t = localStorage.getItem('dc-theme'); if(t) document.documentElement.
     <!-- CAS 4 : COUPE DES SORCIERS -->
     <article class="case flip reveal" id="cas-sorciers">
       <div>
-        <div class="case-num">04<span class="stamp">vu, approuvé ✓</span></div>
+        <div class="case-num">04<span class="stamp">testé en classe</span></div>
         <h3>« Coupe des Sorciers » : transformer une semaine de classe en année à Poudlard</h3>
         <div class="case-tags"><span class="tag ai">✦ 6 outils codés avec Claude</span><span class="tag teal">Gamification</span><span class="tag gold">Interdisciplinaire</span></div>
         <div class="steps">
-          <div class="step"><span class="step-dot">📍</span><div><h4>Contexte</h4><p>Une semaine banalisée en CM2, sans fil conducteur imposé : l'occasion de sortir du planning habituel et d'embarquer toute la classe sur plusieurs jours d'affilée.</p></div></div>
+          <div class="step"><span class="step-dot">📍</span><div><h4>Contexte</h4><p>Une semaine banalisée en CM2, sans fil conducteur imposé, librement inspirée de l'univers Harry Potter de J.K. Rowling : l'occasion de sortir du planning habituel et d'embarquer toute la classe sur plusieurs jours d'affilée.</p></div></div>
           <div class="step"><span class="step-dot">⚡</span><div><h4>Le défi</h4><p>Faire tenir un univers entier (répartition, enjeux, progression) sur une semaine, avec de vrais apprentissages en maths, français, logique et culture générale derrière chaque étape.</p></div></div>
           <div class="step"><span class="step-dot">✦</span><div><h4>Ma démarche avec l'IA</h4><p>Une cérémonie d'ouverture façon Choixpeau qui répartit la classe en quatre maisons, quatre défis disciplinaires (potions de calcul, sortilèges de grammaire, escape game en équipe, quiz sur ardoise), et un tableau de points projeté, mis à jour en direct après chaque défi.</p></div></div>
-          <div class="step result"><span class="step-dot">✓</span><div><h4>Le résultat</h4><p>Six outils numériques interconnectés qui ont transformé une semaine ordinaire en évènement dont la classe a parlé bien après la dernière séance.</p></div></div>
+          <div class="step result"><span class="step-dot">✓</span><div><h4>Le résultat</h4><p>Six outils numériques interconnectés qui ont transformé une semaine ordinaire en évènement dont la classe a parlé bien après la dernière séance. Ce que j'ai observé : plus d'intérêt pour les apprentissages, et de l'entraide entre élèves.</p></div></div>
         </div>
         <div class="tools"><span class="tool">Claude</span><span class="tool">HTML/JS</span></div>
         <div class="case-foot">
@@ -561,6 +591,65 @@ try{ const t = localStorage.getItem('dc-theme'); if(t) document.documentElement.
           <button class="on"><img src="medias/images/hp-01-ceremonie.jpg" alt="Cérémonie du Choixpeau"/></button>
           <button><img src="medias/images/hp-02-portail.jpg" alt="Portail de la semaine"/></button>
           <button><img src="medias/images/hp-03-tableau.jpg" alt="Tableau des points par maison"/></button>
+        </div>
+      </div>
+    </article>
+
+    <!-- CAS 5 : JARVIS -->
+    <article class="case reveal" id="cas-jarvis">
+      <div>
+        <div class="case-num">05<span class="stamp">en rodage</span></div>
+        <h3>« Jarvis » : réunir sur un seul écran ce qu'il y a à faire et ce qui change dans l'IA</h3>
+        <div class="status">En rodage depuis novembre 2026</div>
+        <div class="case-tags"><span class="tag ai">✦ Construit avec Claude Code</span><span class="tag teal">Automatisation n8n</span><span class="tag gold">Rien ne part sans moi</span></div>
+        <div class="steps">
+          <div class="step"><span class="step-dot">📍</span><div><h4>Contexte</h4><p>Je l'ai construit pour un besoin réel, ma propre recherche de poste : des informations éparpillées sur des dizaines de sites, une veille à tenir et des relances à ne pas oublier. Je voulais un seul écran pour répondre à deux questions : que faire aujourd'hui, et que s'est-il passé dans l'IA.</p></div></div>
+          <div class="step"><span class="step-dot">⚡</span><div><h4>Le défi</h4><p>Automatiser la collecte sans coût à l'usage, sans contourner les sites qui bloquent les robots, et faire en sorte qu'une panne se voie au lieu de passer pour une donnée à jour.</p></div></div>
+          <div class="step"><span class="step-dot">✦</span><div><h4>Ma démarche avec l'IA</h4><p>J'ai cadré le besoin dans une spécification, puis construit l'ensemble avec Claude Code : des workflows n8n sur mon propre serveur pour collecter les offres et la veille, des routines Claude pour trier et résumer, et un écran local en HTML/JS, avec tests et résumé à écouter. Chaque source a droit à un second essai, puis elle est nommée si elle reste en panne.</p></div></div>
+          <div class="step result"><span class="step-dot">✓</span><div><h4>Le résultat</h4><p>Au test du 6 novembre 2026, les 23 sources d'offres répondent, et l'état de chaque flux reste visible à l'écran. Jarvis n'envoie jamais rien : chaque décision reste humaine. La même logique peut servir à une veille métier ou au suivi d'un plan d'action. Mes données personnelles restent privées : sur l'écran principal, elles sont remplacées par des exemples.</p></div></div>
+        </div>
+        <div class="tools"><span class="tool">Claude Code</span><span class="tool">n8n</span><span class="tool">Routines Claude</span><span class="tool">Node.js</span><span class="tool">HTML/JS</span><span class="tool">VPS</span></div>
+      </div>
+      <div class="case-media">
+        <div class="frame">
+          <div class="browser-bar"><i></i><i></i><i></i></div>
+          <img id="jarvis-main" src="medias/images/jarvis-00-ecran-complet.jpg" alt="Écran complet de Jarvis, avec des données d'exemple : priorités du jour, veille IA, objectifs et état des flux"/>
+        </div>
+        <div class="thumbs" data-target="jarvis-main">
+          <button class="on"><img src="medias/images/jarvis-00-ecran-complet.jpg" alt="Écran complet de Jarvis, avec des données d'exemple : priorités du jour, veille IA, objectifs et état des flux"/></button>
+          <button><img src="medias/images/jarvis-02-veille.jpg" alt="Veille IA : actualités classées par importance et vidéos les plus vues"/></button>
+          <button><img src="medias/images/jarvis-03-routines.jpg" alt="Routines et flux : état de chaque flux et des sources d'offres"/></button>
+        </div>
+      </div>
+    </article>
+
+    <!-- CAS 6 : UNE SEMAINE AVEC LÉA -->
+    <article class="case flip reveal" id="cas-lea">
+      <div>
+        <div class="case-num">06<span class="stamp">prototype</span></div>
+        <h3>« Une semaine avec Léa » : apprendre aux enseignants à préparer avec l'IA, sans mettre leurs élèves en danger</h3>
+        <div class="status">Prototype cliquable terminé</div>
+        <div class="case-tags"><span class="tag ai">✦ Vraies réponses de ChatGPT</span><span class="tag teal">Action mapping</span><span class="tag gold">Évaluation par la tâche</span></div>
+        <div class="steps">
+          <div class="step"><span class="step-dot">📍</span><div><h4>Contexte</h4><p>Un enseignant qui prépare sa classe avec l'IA prend deux risques : donner à ses élèves une réponse fausse, et confier à l'outil des informations qui permettent de les reconnaître.</p></div></div>
+          <div class="step"><span class="step-dot">⚡</span><div><h4>Le défi</h4><p>Faire acquérir des gestes plutôt qu'une théorie, à un public adulte et occupé, sans cours magistral sur l'IA ni erreurs inventées pour l'occasion.</p></div></div>
+          <div class="step"><span class="step-dot">✦</span><div><h4>Ma démarche avec l'IA</h4><p>Une conception par action mapping : la semaine d'une enseignante, avec un geste à maîtriser chaque jour. Au « labo du prompt », l'apprenant écrit son propre prompt et découvre ce que ChatGPT répond vraiment. Les pièges sont de vraies erreurs, testées et documentées. Script et prototype réalisés avec Claude, illustrations avec Canva IA.</p></div></div>
+          <div class="step result"><span class="step-dot">✓</span><div><h4>Le résultat</h4><p>Un prototype jouable du module entier, pensé pour une production sous Rise et Storyline. Cette production n'a pas été réalisée, et le module n'a pas encore été testé avec de vrais enseignants.</p></div></div>
+        </div>
+        <div class="tools"><span class="tool">Claude</span><span class="tool">ChatGPT</span><span class="tool">Canva IA</span><span class="tool">HTML/JS</span></div>
+        <div class="case-foot">
+          <button class="btn btn-accent btn-sm" data-app-url="apps/une-semaine-avec-lea.html" data-app-title="Une semaine avec Léa : prototype">Essayer le prototype →</button>
+        </div>
+      </div>
+      <div class="case-media">
+        <div class="frame">
+          <div class="browser-bar"><i></i><i></i><i></i></div>
+          <img id="lea-main" src="medias/images/lea-02-labo.jpg" alt="Le labo du prompt : l'apprenant écrit son propre prompt"/>
+        </div>
+        <div class="thumbs" data-target="lea-main">
+          <button class="on"><img src="medias/images/lea-02-labo.jpg" alt="Le labo du prompt : l'apprenant écrit son propre prompt"/></button>
+          <button><img src="medias/images/lea-03-donnees.jpg" alt="Différencier sans exposer : trier des notes fictives avant de les confier à l'IA"/></button>
+          <button><img src="medias/images/lea-01-accueil.png" alt="Léa, l'enseignante qui guide le module"/></button>
         </div>
       </div>
     </article>
@@ -582,6 +671,13 @@ try{ const t = localStorage.getItem('dc-theme'); if(t) document.documentElement.
       <div class="m-step"><h4>Tester en conditions réelles</h4><p>En classe, avec de vrais élèves, ou en test fermé pour une app.</p><small>Ex. : Plis et Butin sur Android</small></div>
       <div class="m-step"><h4>Itérer</h4><p>Corriger, enrichir et différencier à partir de ce qui a marché ou non.</p><small>Ex. : bilan de compétences en 5 versions</small></div>
     </div>
+    <h3 class="sub-title reveal" style="margin-top:3.5rem">Ce que j'ai observé en classe</h3>
+    <div class="apport reveal" style="grid-template-columns:repeat(auto-fit,minmax(250px,1fr))">
+      <div class="apport-card"><span class="ico">🎯</span><div><h4>Plus d'intérêt pour les cours</h4><p>Mes projets partent de la culture des élèves. Dans ma classe, beaucoup étaient fans de Harry Potter, et cet univers a aidé à les embarquer. Pendant un défi, un élève habituellement en retrait s'est mis à participer.</p></div></div>
+      <div class="apport-card"><span class="ico">🤝</span><div><h4>Un climat propice à l'entraide</h4><p>Ces projets ont nourri un climat de classe sain, où les élèves s'entraident.</p></div></div>
+      <div class="apport-card"><span class="ico">🎲</span><div><h4>Moins de fatigue face à la tâche</h4><p>Avec les escape games, les petits jeux et des touches d'humour, les élèves apprennent sans avoir l'impression de faire un exercice de plus.</p></div></div>
+    </div>
+    <p class="reveal" style="margin-top:1rem; font-size:.86rem; color:var(--ink-dim)">Ce sont mes observations d'enseignant, pas des résultats mesurés.</p>
   </div>
 </section>
 
@@ -602,21 +698,22 @@ try{ const t = localStorage.getItem('dc-theme'); if(t) document.documentElement.
 <section id="competences">
   <div class="wrap">
     <div class="section-head reveal">
-      <p class="eyebrow">Ce que je maîtrise</p>
-      <h2>Compétences et outils IA</h2>
+      <p class="eyebrow">Ce que je pratique</p>
+      <h2>Compétences et outils</h2>
       <p>Les outils et approches que j'utilise concrètement, projet après projet.</p>
     </div>
     <div class="skills reveal">
-      <div class="skill"><h4>🧠 LLMs et assistants</h4><ul><li>Claude (Anthropic)</li><li>ChatGPT (OpenAI)</li><li>Prompt engineering</li><li>Génération de documents</li></ul></div>
-      <div class="skill"><h4>🎬 Vidéo et avatars IA</h4><ul><li>HeyGen</li><li>Pippit</li><li>Scripts pour avatar</li><li>Vidéo pédagogique</li></ul></div>
-      <div class="skill"><h4>🎨 Images et design IA</h4><ul><li>DALL·E / Copilot Image</li><li>Illustrations</li><li>Prompts visuels</li></ul></div>
-      <div class="skill"><h4>📄 Documents et productivité</h4><ul><li>Word et PowerPoint IA</li><li>Excel assisté IA</li><li>Synthèse et rédaction</li><li>Cowork (Claude Desktop)</li></ul></div>
+      <div class="skill"><h4>🎓 Pédagogie</h4><ul><li>Scénarisation</li><li>Différenciation</li><li>Évaluation par la tâche</li><li>Animation de groupes</li></ul></div>
+      <div class="skill"><h4>🧠 LLM et assistants</h4><ul><li>Claude (Anthropic)</li><li>ChatGPT (OpenAI)</li><li>Ingénierie de prompt</li><li>Génération de documents</li></ul></div>
+      <div class="skill"><h4>⚙️ Agents et automatisation</h4><ul><li>Claude Code</li><li>Agents et skills</li><li>Connecteurs MCP</li><li>Notion, Gmail, Canva</li><li>n8n (en apprentissage)</li></ul></div>
+      <div class="skill"><h4>🎬 Vidéo, images et avatars IA</h4><ul><li>HeyGen</li><li>Pippit</li><li>Scripts pour avatar</li><li>DALL·E / Copilot Image</li><li>Illustrations</li></ul></div>
+      <div class="skill"><h4>📄 Documents et productivité</h4><ul><li>Word et PowerPoint avec l'IA</li><li>Excel assisté par l'IA</li><li>Synthèse et rédaction</li><li>Cowork (Claude Desktop)</li></ul></div>
     </div>
     <h3 class="sub-title reveal">Ce que je peux apporter à une équipe</h3>
     <div class="apport reveal">
-      <div class="apport-card"><span class="ico">⚡</span><div><h4>Accélérer la production de contenus</h4><p>Documents, présentations, communications en une fraction du temps habituel grâce aux LLMs.</p></div></div>
+      <div class="apport-card"><span class="ico">⚡</span><div><h4>Accélérer et automatiser</h4><p>Produire des contenus plus vite et confier les tâches répétitives à des workflows, avec une validation humaine.</p></div></div>
       <div class="apport-card"><span class="ico">🎬</span><div><h4>Produire des vidéos sans équipe</h4><p>Vidéos avec avatars IA, scripts et montage, sans caméra ni réalisateur.</p></div></div>
-      <div class="apport-card"><span class="ico">🔍</span><div><h4>Choisir les bons outils</h4><p>Tester, comparer et recommander les outils IA adaptés aux besoins de l'équipe.</p></div></div>
+      <div class="apport-card"><span class="ico">🔍</span><div><h4>Aider à adopter l'IA</h4><p>Choisir les bons outils, cadrer les usages et les expliquer à des équipes non techniques, avec une pédagogie d'enseignant.</p></div></div>
       <div class="apport-card"><span class="ico">📐</span><div><h4>Personnaliser à grande échelle</h4><p>Des contenus sur mesure pour chaque situation, par exemple des PPRE individuels pour cinq élèves.</p></div></div>
     </div>
   </div>
@@ -627,16 +724,14 @@ try{ const t = localStorage.getItem('dc-theme'); if(t) document.documentElement.
   <div class="wrap">
     <div class="section-head reveal">
       <p class="eyebrow">Ma feuille de route</p>
-      <h2>Prochaines étapes IA</h2>
-      <p>Ce que j'ai déjà mis en place, et ce que j'explore ensuite.</p>
+      <h2>Où j'en suis avec l'IA</h2>
+      <p>Ce que j'ai déjà mis en place, ce qui est en cours, et la prochaine étape.</p>
     </div>
     <div class="road reveal">
       <div class="road-card"><span class="lvl done">✓ Fait</span><h4>Publier le site en ligne</h4><p>Portfolio hébergé gratuitement et accessible depuis n'importe où.</p><div class="tools"><span class="tool">GitHub Pages</span></div></div>
-      <div class="road-card"><span class="lvl now">● En cours</span><h4>Faire vivre ce portfolio</h4><p>Le garder à jour et le partager en entretien.</p><div class="tools"><span class="tool">Claude Code</span><span class="tool">HTML/CSS</span></div></div>
-      <div class="road-card"><span class="lvl next">→ Prochain</span><h4>Automatisation avec Make / Zapier</h4><p>Des workflows qui connectent des apps entre elles sans coder.</p><div class="tools"><span class="tool">Make</span><span class="tool">Zapier</span><span class="tool">n8n</span></div></div>
-      <div class="road-card"><span class="lvl next">→ Prochain</span><h4>Génération d'images avancée</h4><p>Midjourney ou Flux pour des visuels de qualité studio.</p><div class="tools"><span class="tool">Midjourney</span><span class="tool">Flux</span><span class="tool">Ideogram</span></div></div>
-      <div class="road-card"><span class="lvl adv">◆ Avancé</span><h4>Créer un chatbot personnalisé</h4><p>Un assistant IA entraîné sur des données spécifiques, via des outils no-code.</p><div class="tools"><span class="tool">Botpress</span><span class="tool">Voiceflow</span></div></div>
-      <div class="road-card"><span class="lvl adv">◆ Avancé</span><h4>Analyse de données avec IA</h4><p>Analyser des fichiers Excel complexes et générer des rapports automatiques.</p><div class="tools"><span class="tool">NotebookLM</span><span class="tool">Julius AI</span></div></div>
+      <div class="road-card"><span class="lvl done">✓ Fait</span><h4>Travailler avec Claude Code</h4><p>Un assistant personnel avec ses propres commandes, des agents, et des connecteurs vers Notion, Gmail et Canva. C'est aussi lui qui maintient ce portfolio.</p><div class="tools"><span class="tool">Claude Code</span><span class="tool">MCP</span><span class="tool">HTML/CSS</span></div></div>
+      <div class="road-card"><span class="lvl now">● En cours</span><h4>Automatisation avec n8n</h4><p>Une instance n8n auto-hébergée sur un serveur privé, pilotée depuis Claude Code. À ce jour : des démos sur données fictives et mon propre poste de pilotage, Jarvis.</p><div class="tools"><span class="tool">n8n</span><span class="tool">VPS Hostinger</span><span class="tool">Claude Code</span></div></div>
+      <div class="road-card"><span class="lvl next">→ Prochain</span><h4>Animer une première formation à l'IA pour adultes</h4><p>Le programme d'une journée est prêt : apprendre à des débutants à utiliser l'IA avec méthode sur leurs vraies tâches, sans exposer de données sensibles.</p><div class="tools"><span class="tool">Formation</span><span class="tool">Adultes</span></div></div>
     </div>
   </div>
 </section>
@@ -649,9 +744,9 @@ try{ const t = localStorage.getItem('dc-theme'); if(t) document.documentElement.
       <h2 class="serif" style="font-size:clamp(1.8rem,3.6vw,2.6rem); line-height:1.15; margin:.6rem 0 0">Curriculum vitae</h2>
       <ul class="cv-facts">
         <li><b>Parcours</b>Professeur des écoles titularisé, CE1/CE2 puis CM2</li>
-        <li><b>Diplôme</b>Master MEEF 2 · CRPE 2024</li>
-        <li><b>Spécialité</b>Sciences de l'éducation et intégration de l'IA dans l'enseignement</li>
-        <li><b>Basé à</b>Bordeaux</li>
+        <li><b>Diplôme</b>Master MEEF 2 (Éducation et motricité) · CRPE 2024</li>
+        <li><b>Recherche</b>Poste en ingénierie pédagogique ou en formation à l'IA, missions de formateur</li>
+        <li><b>Lieu</b>Bordeaux ou à distance</li>
       </ul>
       <div class="hero-cta">
         <a href="cv/CV_Dylan_Collery.pdf" target="_blank" rel="noopener" class="btn btn-primary">Voir en plein écran</a>
@@ -667,8 +762,9 @@ try{ const t = localStorage.getItem('dc-theme'); if(t) document.documentElement.
   <div class="final reveal">
     <p class="eyebrow">Contact</p>
     <h2>Construisons ensemble des formations qui accrochent.</h2>
-    <p>Vous cherchez un ingénieur pédagogique à l'aise avec l'IA, qui sait concevoir, produire et tester ? Écrivez-moi directement.</p>
+    <p>Pour un poste ou une mission de formation, à Bordeaux ou à distance, écrivez-moi directement.</p>
     <a href="mailto:dylan.collery@gmail.com" class="btn btn-accent">✉ dylan.collery@gmail.com</a>
+    <a href="https://www.linkedin.com/in/dylan-collery-25a19519b/" target="_blank" rel="noopener" class="btn btn-outline">Mon profil LinkedIn</a>
   </div>
 </div>
 
@@ -680,8 +776,9 @@ try{ const t = localStorage.getItem('dc-theme'); if(t) document.documentElement.
         <p>Des expériences d'apprentissage qui donnent envie d'aller jusqu'au bout. Conçu et développé seul, avec l'IA comme partenaire de fabrication.</p>
       </div>
       <div><h5>Explorer</h5><ul><li><a href="#projets">Projets</a></li><li><a href="#methode">Méthode</a></li><li><a href="#realisations">Réalisations</a></li><li><a href="#cv">CV</a></li></ul></div>
-      <div><h5>Contact</h5><ul><li><a href="mailto:dylan.collery@gmail.com">E-mail</a></li><li><a href="cv/CV_Dylan_Collery.pdf" download>CV (PDF)</a></li></ul></div>
+      <div><h5>Contact</h5><ul><li><a href="mailto:dylan.collery@gmail.com">E-mail</a></li><li><a href="https://www.linkedin.com/in/dylan-collery-25a19519b/" target="_blank" rel="noopener">LinkedIn</a></li><li><a href="cv/CV_Dylan_Collery.pdf" download>CV (PDF)</a></li></ul></div>
     </div>
+    <p style="margin:0 0 1rem; font-size:.78rem; color:var(--ink-dim)">Crédits : « Fatale erreur », Fredric Brown. <em>Jumanji</em>, Chris Van Allsburg. Univers Harry Potter, J.K. Rowling et Warner Bros. Skull King, Grandpa Beck's Games. Ces œuvres et marques appartiennent à leurs ayants droit. Projets pédagogiques et personnels, sans but commercial et sans lien avec eux.</p>
     <div class="copy"><span>© 2026 Dylan Collery</span><span>Bordeaux · Portfolio 2026</span></div>
   </div>
 </footer>
@@ -713,7 +810,7 @@ const PROJECTS = [
     description:"Jeu de cartes pédagogique complet pour apprendre la grammaire en CM2 de manière ludique. Règles, cartes, design et contenu entièrement générés avec l'IA.",
     tools:['Claude'], images:['medias/images/gram_attack_01.jpg','medias/images/gram_attack_02.jpg','medias/images/gram_attack_03.jpg','medias/images/gram_attack_04.jpg'] },
   { icon:'📓', cat:'Éducation', title:'Cahier Journal Français P5 — CM2',
-    description:"Cahier journal pédagogique complet pour la période 5 en Français. Structure détaillée séance par séance, objectifs, déroulés, différenciations.",
+    description:"Cahier journal pédagogique complet pour la période 5 en français. Structure détaillée séance par séance, objectifs, déroulés, différenciations.",
     tools:['Claude'], images:['medias/images/cahier_journal_01.jpg','medias/images/cahier_journal_02.jpg','medias/images/cahier_journal_03.jpg'] },
   { icon:'☀️', cat:'Éducation', title:'Journée « Défis Canicule » — CM2',
     description:"Portail d'accès et 4 mini-jeux interactifs conçus dans l'urgence pour occuper la classe un jour de forte chaleur, sans salle de sport disponible.",
@@ -725,9 +822,9 @@ const PROJECTS = [
     description:"Deux escape games narratifs : « Station Polaire » (enquête scientifique) et « Formule Secrète » (énigmes de logique et français).",
     tools:['Claude','HTML/JS'], link:'apps/escape-station-polaire.html' },
   { icon:'🔍', cat:'Éducation', title:'COD Constructeur de phrases — Séquence CM2',
-    description:"Outil pédagogique 3 phases en un seul fichier : construction collective de phrases avec validation automatique, rappel de cours, tri de 15 phrases par glisser-déposer.",
+    description:"Outil pédagogique en 3 phases, dans un seul fichier : construction collective de phrases avec validation automatique, rappel de cours, tri de 15 phrases par glisser-déposer.",
     tools:['Claude','HTML/JS','Glisser-déposer'] },
-  { icon:'📅', cat:'Éducation', title:'Cahier Journal interactif — Semaines 18–29 mai',
+  { icon:'📅', cat:'Éducation', title:'Cahier Journal interactif — Du 18 au 29 mai',
     description:"Cahier journal HTML complet couvrant 2 semaines de classe. Liens cliquables vers chaque ressource, navigation responsive par semaine.",
     tools:['Claude','HTML/CSS'] },
   { icon:'📋', cat:'Éducation', title:'PPRE personnalisés par IA',
@@ -736,9 +833,9 @@ const PROJECTS = [
   { icon:'🎯', cat:'Développement personnel', title:'Bilan de compétences — 5 versions avec l’IA',
     description:"Bilan de compétences complet itéré en 5 versions avec l'IA : analyse de 3 pistes professionnelles, tableau comparatif, carnets de travail et présentations successivement améliorées.",
     tools:['Claude'] },
-  { icon:'📱', cat:'Analyse', title:'Comparatif Smartphones 2026',
-    description:"Tableau Excel de comparaison de smartphones généré et structuré avec l'IA : critères techniques, prix, scores, recommandations.",
-    tools:['Claude'] }
+  { icon:'⚙️', cat:'Automatisation', title:'Démo Bilan de session — n8n',
+    description:"Automatisation sur données fictives, pour les organismes de formation : le code calcule la moyenne, l'IA regroupe les commentaires, les oublis sont signalés, et rien ne part sans validation humaine. Démo présentée sur demande.",
+    tools:['n8n','Modèle d\'IA hébergé','Validation humaine'] }
 ];
 
 const JUMANJI_VIDEOS = [
