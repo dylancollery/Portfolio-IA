@@ -1,0 +1,3 @@
+Polices hébergées sur ce site, distribuées sous licence SIL Open Font License 1.1 (https://openfontlicense.org) :
+Bebas Neue, Caveat, Cinzel, Cinzel Decorative, DM Sans, Fraunces, IM Fell English, Inter, JetBrains Mono, Lato, MedievalSharp, Space Mono.
+Chaque police reste la propriété de ses auteurs. Fichiers obtenus via Google Fonts.
